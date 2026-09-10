@@ -97,6 +97,22 @@ already understands. Everything stored as a byte is saved, not just the two
 direction fields. First reported and fixed by vojin154; technical notes in
 `docs/direction-save.md`.
 
+### Visitors and civilians stuck at visitor doors
+
+Symptoms: reformed prisoners (Second Chances mentors), animal therapists, fire
+safety teachers, delivery men and some other event-spawned NPCs stop at a
+visitor door or visitor gate and never get through. Nobody comes to open it.
+Double visitor doors work because a guard is sent.
+
+Cause: the door's own "who may open me" list was never extended for the later
+DLC entities, while the movement code already treats every non-prisoner as able
+to open visitor doors, so it never asks a guard for help. The NPC is refused by
+the door and waits forever.
+
+Fix: the door now applies the same rule as the movement code: anyone who is
+not a prisoner can open a visitor door. Prisoners are still refused. Technical
+notes in `docs/visitor-door-access.md`.
+
 ## Optional tweaks
 
 These change game balance rather than fix bugs, so they are **off by default**.
