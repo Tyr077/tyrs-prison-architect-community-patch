@@ -63,6 +63,7 @@ fire at the `RechargeTime` from `materials.txt`. The Escape Mode player
 attack, which relied on that timer as its only rate limit, is given a proper
 rate limit based on the time since the last shot. Technical notes in
 `docs/weapon-firerate.md`.
+
 ### Alert icons with custom sprite-sheet mods
 
 Symptoms: as soon as any mod with its own `sprites.png` is enabled, many
@@ -80,6 +81,7 @@ Fix: the icon draw now uses the scale of the sheet the icon actually comes
 from. If you use the "Alert Icons Partial Fix" mod, disable it after applying
 this; its workaround would otherwise double-correct. Technical notes in
 `docs/alert-icons.md`.
+
 ### Prisoner and staff directions not saved
 
 Symptoms: direction markings you place for prisoners or staff are gone after
@@ -94,6 +96,7 @@ Fix: the game now writes those fields as plain numbers, which the loader
 already understands. Everything stored as a byte is saved, not just the two
 direction fields. First reported and fixed by vojin154; technical notes in
 `docs/direction-save.md`.
+
 ## Optional tweaks
 
 These change game balance rather than fix bugs, so they are **off by default**.
@@ -126,6 +129,7 @@ in-game day, and the "staff have died on duty" line in the staff morale panel
 counts down with it. This tweak needs a little new code, so the patcher also
 adds a small empty section to the executable; it is removed again when the
 tweak is reverted.
+
 ## Unsupported build
 
 The patcher checks the game file before touching anything. If it says
@@ -164,6 +168,7 @@ what happens instead.
 - **vojin154** (pa_fix_direction_serialization) found and fixed the lost
   directions first, and gave their blessing for the fix to be included here.
   Their DLL and this patch are compatible, but you only need one.
+
 ## Licence
 
 MIT. See `LICENSE`.
