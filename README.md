@@ -63,6 +63,23 @@ fire at the `RechargeTime` from `materials.txt`. The Escape Mode player
 attack, which relied on that timer as its only rate limit, is given a proper
 rate limit based on the time since the last shot. Technical notes in
 `docs/weapon-firerate.md`.
+### Alert icons with custom sprite-sheet mods
+
+Symptoms: as soon as any mod with its own `sprites.png` is enabled, many
+notification icons (gang alerts, contraband, overheating, tropical fever, fallen
+trees, chewed fences, CCTV misconduct, tracking belts, plumbers and repairmen on
+site) draw as the wrong piece of a sprite sheet. The bakery oven glow breaks the
+same way.
+
+Cause: those icons live in the `objects_d11_2` sheet, but the code that draws
+them scales their coordinates with the main object atlas. Both sheets are the
+same size in a vanilla install, so the mistake is invisible until a mod makes
+the atlas bigger.
+
+Fix: the icon draw now uses the scale of the sheet the icon actually comes
+from. If you use the "Alert Icons Partial Fix" mod, disable it after applying
+this; its workaround would otherwise double-correct. Technical notes in
+`docs/alert-icons.md`.
 ## Unsupported build
 
 The patcher checks the game file before touching anything. If it says

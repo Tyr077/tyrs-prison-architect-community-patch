@@ -1,0 +1,53 @@
+{
+    "id":  "alert-icons",
+    "name":  "Alert icons with custom sprite-sheet mods",
+    "version":  "1.0.0",
+    "description":  "Alert icons that live in objects_d11_2.png (gang, contraband, overheat, tropical fever, fallen tree, tracking belt, CCTV, plumbers/repairmen on site, and more) were drawn from the wrong part of their sheet whenever any mod adds its own sprites.png. The icon draw now uses the scale of the sheet the icon actually comes from.",
+    "game_build":  "Prison Architect 64-bit, Sunset Update (final)",
+    "sha256_original":  "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
+    "sha256_patched":  "dd8b12a1049ad244635a5a26a3be6d2bdee9c8afacf6a267e63c546c0add782d",
+    "edits":  [
+                  {
+                      "va":  "0x1405FD4F0",
+                      "offset":  6277360,
+                      "expect":  "4C8BC0488B0506A47500488B88B00700004A8B0CC1",
+                      "replace":  "488B0D09A47500488B89B0070000488B1CC1488BCB",
+                      "note":  "MarkerIcon::DrawSprite: keep the fetched sprite bank in RBX"
+                  },
+                  {
+                      "va":  "0x1405FD524",
+                      "offset":  6277412,
+                      "expect":  "498D9E30070000",
+                      "replace":  "0F1F8000000000",
+                      "note":  "MarkerIcon::DrawSprite: do not replace RBX with the Objects bank"
+                  },
+                  {
+                      "va":  "0x1406CFFE0",
+                      "offset":  7140320,
+                      "expect":  "488B88B0070000",
+                      "replace":  "488B98B0070000",
+                      "note":  "overlay draw: mov rbx,[rax+0x7B0] (bank array) instead of rcx"
+                  },
+                  {
+                      "va":  "0x1406CFFFE",
+                      "offset":  7140350,
+                      "expect":  "488B4908",
+                      "replace":  "488B4B08",
+                      "note":  "overlay draw: mov rcx,[rbx+8] (objects_d11_2 bank) for the sprite lookup"
+                  },
+                  {
+                      "va":  "0x1406D0033",
+                      "offset":  7140403,
+                      "expect":  "66440F6E4828F30F10A198070000660F6E682C0F28C4F30F10919C070000",
+                      "replace":  "488B5B0866440F6E4828F30F106368660F6E682C0F28C4F30F10536C6690",
+                      "note":  "overlay draw: rbx = bank; scale pads from [rbx+0x68]/[rbx+0x6C]"
+                  },
+                  {
+                      "va":  "0x1406D005B",
+                      "offset":  7140443,
+                      "expect":  "F30F109990070000F30F108994070000",
+                      "replace":  "F30F105B60F30F104B64660F1F440000",
+                      "note":  "overlay draw: cell scale from [rbx+0x60]/[rbx+0x64]"
+                  }
+              ]
+}
