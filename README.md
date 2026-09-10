@@ -80,6 +80,20 @@ Fix: the icon draw now uses the scale of the sheet the icon actually comes
 from. If you use the "Alert Icons Partial Fix" mod, disable it after applying
 this; its workaround would otherwise double-correct. Technical notes in
 `docs/alert-icons.md`.
+### Prisoner and staff directions not saved
+
+Symptoms: direction markings you place for prisoners or staff are gone after
+you load the save.
+
+Cause: the save writer does not know how to write single-byte fields. The
+directions are stored as bytes, so the key is written without a value and
+dropped on load. The same happens to visitor skin and clothing colours and a
+few other byte fields.
+
+Fix: the game now writes those fields as plain numbers, which the loader
+already understands. Everything stored as a byte is saved, not just the two
+direction fields. First reported and fixed by vojin154; technical notes in
+`docs/direction-save.md`.
 ## Unsupported build
 
 The patcher checks the game file before touching anything. If it says
@@ -103,7 +117,7 @@ what happens instead.
   `Start-Process -Wait` or the PowerShell script above.
 - `scripts/Build-Patch.ps1` regenerates the hand-off patch from the addresses
   in the script, and `tools/ghidra-scripts/` are the Ghidra scripts used to
-  find them. Full technical notes are in `docs/gang-handoff.md`.
+  find them. Each fix has technical notes under `docs/`.
 - Build the patcher with `dotnet build -c Release` in `patcher/`. It targets
   .NET Framework 4.8, which is already part of Windows 10 and 11.
 
@@ -113,8 +127,9 @@ what happens instead.
   fire-rate bug and that the pre-Sunset build had no such timer.
 - **Ozoneraxi** and **Deskius** (Alert Icons Partial Fix), with wackypanda and
   Quin_BNK: their offset formula pointed directly at the sprite-scale bug.
-- **vojin154** (pa_fix_direction_serialization) for an independent, compatible
-  fix that showed the community what binary patching of this game can do.
+- **vojin154** (pa_fix_direction_serialization) found and fixed the lost
+  directions first, and gave their blessing for the fix to be included here.
+  Their DLL and this patch are compatible, but you only need one.
 ## Licence
 
 MIT. See `LICENSE`.
