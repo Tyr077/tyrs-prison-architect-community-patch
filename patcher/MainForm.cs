@@ -27,7 +27,7 @@ namespace PAPatcher
 
         public MainForm()
         {
-            Text = "Prison Architect Community Patch";
+            Text = "Tyr's Prison Architect Community Patch";
             AutoScaleMode = AutoScaleMode.Dpi;
             ClientSize = new Size(600, 440);
             MinimumSize = new Size(520, 400);

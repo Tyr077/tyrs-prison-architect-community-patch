@@ -1,4 +1,4 @@
-# Prison Architect Community Patch
+# Tyr's Prison Architect Community Patch
 
 Bug fixes for Prison Architect 1 that cannot be done with mods, delivered as a
 small patcher that edits your own copy of the game.
@@ -13,9 +13,9 @@ game. Other builds (GOG, Epic, older versions) are detected and refused; see
 
 ## Install
 
-1. Download `PAPatcher.exe` from the latest release.
+1. Download `TyrsPAPatch.exe` from the latest release.
 2. Close Prison Architect.
-3. Run `PAPatcher.exe`. It finds the game in your Steam library, shows whether
+3. Run `TyrsPAPatch.exe`. It finds the game in your Steam library, shows whether
    you are patched, and has an **Apply patch** button. That is it.
 
 Windows SmartScreen will warn the first time because the file is not
@@ -65,7 +65,7 @@ what happens instead.
 - `patches/*.patch.json` are the actual patches: file offsets, the bytes
   expected there, and the replacement bytes. The patcher embeds these.
 - `scripts/Apply-ExePatch.ps1` applies a patch file from PowerShell without the
-  GUI. `PAPatcher.exe` also accepts `--status`, `--apply` and `--revert`. It is a
+  GUI. `TyrsPAPatch.exe` also accepts `--status`, `--apply` and `--revert`. It is a
   windowed program, so a console does not wait for it; scripts should use
   `Start-Process -Wait` or the PowerShell script above.
 - `scripts/Build-Patch.ps1` regenerates the hand-off patch from the addresses

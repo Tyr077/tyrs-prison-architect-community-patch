@@ -22,7 +22,7 @@ namespace PAPatcher
         }
 
         // Hidden command-line mode for scripting and testing:
-        //   PAPatcher.exe --status [exe]   --apply [exe]   --revert [exe]
+        //   TyrsPAPatch.exe --status [exe]   --apply [exe]   --revert [exe]
         static int Cli(string[] args)
         {
             AttachConsole(ATTACH_PARENT_PROCESS);
@@ -40,7 +40,7 @@ namespace PAPatcher
                 foreach (var f in fixes) stdout.WriteLine("  [" + PatchEngine.GetState(file, f) + "] " + f.DisplayName);
 
                 if (cmd == "--status") return 0;
-                if (cmd != "--apply" && cmd != "--revert") { stdout.WriteLine("Usage: PAPatcher.exe --status|--apply|--revert [path to Prison Architect64.exe]"); return 1; }
+                if (cmd != "--apply" && cmd != "--revert") { stdout.WriteLine("Usage: TyrsPAPatch.exe --status|--apply|--revert [path to Prison Architect64.exe]"); return 1; }
                 if (GameLocator.IsGameRunning()) { stdout.WriteLine("Prison Architect is running. Close it first."); return 3; }
                 if (!PatchEngine.IsSupportedBuild(file, fixes)) { stdout.WriteLine("Refusing to modify an unsupported build."); return 4; }
 
