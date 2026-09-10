@@ -107,6 +107,14 @@ what happens instead.
 - Build the patcher with `dotnet build -c Release` in `patcher/`. It targets
   .NET Framework 4.8, which is already part of Windows 10 and 11.
 
+## Credits
+
+- **Paul Kinnair** (Weapon Firerate Fix) confirmed the reload-timer cause of the
+  fire-rate bug and that the pre-Sunset build had no such timer.
+- **Ozoneraxi** and **Deskius** (Alert Icons Partial Fix), with wackypanda and
+  Quin_BNK: their offset formula pointed directly at the sprite-scale bug.
+- **vojin154** (pa_fix_direction_serialization) for an independent, compatible
+  fix that showed the community what binary patching of this game can do.
 ## Licence
 
 MIT. See `LICENSE`.
