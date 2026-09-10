@@ -113,6 +113,20 @@ Fix: the door now applies the same rule as the movement code: anyone who is
 not a prisoner can open a visitor door. Prisoners are still refused. Technical
 notes in `docs/visitor-door-access.md`.
 
+### Staff detour around keycard doors
+
+Symptoms: guards and other staff walk huge detours instead of going through a
+keycard door, even with the key and the door right in front of them.
+
+Cause: the route planner charges every keycard door a flat penalty of about a
+thousand tiles of walking, the same penalty it uses for swimming across water,
+and it charges it to staff with keys as well. Any other route, however long,
+looks cheaper.
+
+Fix: keycard doors are now costed like jail doors: key holders pass at normal
+cost, everyone else needs a guard as before. Technical notes in
+`docs/keycard-door-path-cost.md`.
+
 ## Optional tweaks
 
 These change game balance rather than fix bugs, so they are **off by default**.

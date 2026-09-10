@@ -9,3 +9,6 @@ extracted/
 # build output (release exe is attached to GitHub Releases, not committed)
 patcher/bin/
 patcher/obj/
+
+# test saves from reporters stay local
+*.prison
