@@ -19,6 +19,8 @@ namespace PAPatcher
 
         public byte[] ExpectBytes => Hex.Parse(expect);
         public byte[] ReplaceBytes => Hex.Parse(replace);
+        // An edit with no expected bytes appends its replacement at end of file (offset == original length).
+        public bool IsAppend => string.IsNullOrEmpty(expect);
     }
 
     [DataContract]
@@ -32,8 +34,16 @@ namespace PAPatcher
         [DataMember] public string sha256_original;
         [DataMember] public string sha256_patched;
         [DataMember] public List<PatchEdit> edits;
+        // Optional tweak: changes game balance rather than fixing a bug. Off by default in the UI and in --apply.
+        [DataMember] public bool optional;
+        // Hidden base patch (e.g. the appended code section): never listed, applied when a patch requires it.
+        [DataMember] public bool hidden;
+        // Ids of patches that must be applied first (their edits may live inside a base patch's section).
+        [DataMember] public List<string> requires;
+        public bool HasRequires => requires != null && requires.Count > 0;
 
         public string DisplayName => string.IsNullOrEmpty(version) ? name : name + " v" + version;
+        public string ListLabel => (optional ? "[Optional] " : "") + DisplayName;
     }
 
     public enum FixState { Unpatched, Patched, Mixed, NotApplicable }
@@ -77,7 +87,7 @@ namespace PAPatcher
             using (var ms = new MemoryStream(raw, start, raw.Length - start)) doc = (PatchDoc)ser.ReadObject(ms);
             if (doc.edits == null || doc.edits.Count == 0) throw new InvalidDataException("patch has no edits");
             foreach (var e in doc.edits)
-                if (e.ExpectBytes.Length != e.ReplaceBytes.Length) throw new InvalidDataException("edit at " + e.va + ": expect/replace length mismatch");
+                if (!e.IsAppend && e.ExpectBytes.Length != e.ReplaceBytes.Length) throw new InvalidDataException("edit at " + e.va + ": expect/replace length mismatch");
             return doc;
         }
 
@@ -92,7 +102,15 @@ namespace PAPatcher
             foreach (var e in p.edits)
             {
                 var exp = e.ExpectBytes; var rep = e.ReplaceBytes;
-                if (e.offset < 0 || e.offset + exp.Length > file.Length) return FixState.NotApplicable;
+                if (e.IsAppend)
+                {
+                    // Presence only: other patches write into the appended region, so its content is not compared.
+                    if (file.Length == e.offset) { allNew = false; continue; }
+                    if (file.Length >= e.offset + rep.Length) { allOrig = false; continue; }
+                    return FixState.NotApplicable;
+                }
+                // Edits inside a required base patch's section are out of range until that base is applied.
+                if (e.offset < 0 || e.offset + exp.Length > file.Length) return p.HasRequires ? FixState.Unpatched : FixState.NotApplicable;
                 for (int i = 0; i < exp.Length; i++)
                 {
                     byte cur = file[e.offset + i];
@@ -127,7 +145,9 @@ namespace PAPatcher
         public static byte[] WithEdits(byte[] file, IEnumerable<PatchDoc> fixes, bool apply)
         {
             var outb = (byte[])file.Clone();
-            foreach (var p in fixes)
+            // Bases (no requirements) go first when applying; dependents go first when reverting.
+            var ordered = apply ? fixes.OrderBy(p => p.HasRequires ? 1 : 0).ToList() : fixes.OrderBy(p => p.HasRequires ? 0 : 1).ToList();
+            foreach (var p in ordered)
             {
                 var st = GetState(outb, p);
                 if (apply && st == FixState.Patched) continue;
@@ -136,8 +156,52 @@ namespace PAPatcher
                     throw new InvalidOperationException("'" + p.name + "': bytes match neither the original nor the patched layout. Refusing to touch this file.");
                 foreach (var e in p.edits)
                 {
+                    if (e.IsAppend)
+                    {
+                        var rep = e.ReplaceBytes;
+                        if (apply && outb.Length == e.offset) { var n = new byte[outb.Length + rep.Length]; Array.Copy(outb, n, outb.Length); Array.Copy(rep, 0, n, outb.Length, rep.Length); outb = n; }
+                        else if (!apply && outb.Length >= e.offset + rep.Length) { var n = new byte[e.offset]; Array.Copy(outb, n, n.Length); outb = n; }
+                        continue;
+                    }
                     var src = apply ? e.ReplaceBytes : e.ExpectBytes;
                     Array.Copy(src, 0, outb, e.offset, src.Length);
+                }
+            }
+            return outb;
+        }
+
+        /// <summary>The selection plus every patch it requires, transitively.</summary>
+        public static List<PatchDoc> ExpandRequires(IList<PatchDoc> all, IEnumerable<PatchDoc> selected)
+        {
+            var result = new List<PatchDoc>(); var queue = new Queue<PatchDoc>(selected);
+            while (queue.Count > 0)
+            {
+                var p = queue.Dequeue();
+                if (result.Contains(p)) continue;
+                if (p.HasRequires)
+                    foreach (var id in p.requires)
+                    {
+                        var dep = all.FirstOrDefault(d => d.id == id);
+                        if (dep == null) throw new InvalidOperationException("'" + p.name + "' requires missing patch '" + id + "'.");
+                        queue.Enqueue(dep);
+                    }
+                result.Add(p);
+            }
+            return result;
+        }
+
+        /// <summary>Revert hidden base patches that no applied patch requires any more.</summary>
+        public static byte[] RevertOrphanedBases(byte[] file, IList<PatchDoc> all)
+        {
+            var outb = file; bool changed = true;
+            while (changed)
+            {
+                changed = false;
+                foreach (var b in all.Where(d => d.hidden))
+                {
+                    if (GetState(outb, b) != FixState.Patched) continue;
+                    bool needed = all.Any(d => d != b && d.HasRequires && d.requires.Contains(b.id) && GetState(outb, d) == FixState.Patched);
+                    if (!needed) { outb = WithEdits(outb, new[] { b }, apply: false); changed = true; }
                 }
             }
             return outb;

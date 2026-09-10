@@ -94,6 +94,38 @@ Fix: the game now writes those fields as plain numbers, which the loader
 already understands. Everything stored as a byte is saved, not just the two
 direction fields. First reported and fixed by vojin154; technical notes in
 `docs/direction-save.md`.
+## Optional tweaks
+
+These change game balance rather than fix bugs, so they are **off by default**.
+Tick the ones you want in the patcher before clicking Apply (or pass
+`--tweaks` on the command line to turn all of them on). Everything below is
+marked "[Optional]" in the list. Technical notes for all three are in
+`docs/tweaks.md`.
+
+### No reoffending fine (Second Chances)
+
+Every released prisoner who reoffends costs you a flat $5,000 "Prisoner
+Reoffending Fine" two days after release, whether or not you had any say in
+the release. This tweak removes the charge. Reoffending is still tracked,
+reoffenders can still return, and the reward for prisoners who stay clean is
+unchanged.
+
+### No returning prisoners (Second Chances)
+
+A reoffended prisoner can come back through intake as the exact prisoner who
+left, with every reputation they earned inside, which is how an Extremely
+Deadly, Extremely Volatile Min Sec turns up. With this tweak intake always
+generates prisoners by the normal category rules. Reoffending statistics and
+the fine are unaffected.
+
+### Staff death morale penalty fades
+
+Each staff member who dies on duty costs one point of staff morale for the
+rest of the session. With this tweak the penalty fades by one death per
+in-game day, and the "staff have died on duty" line in the staff morale panel
+counts down with it. This tweak needs a little new code, so the patcher also
+adds a small empty section to the executable; it is removed again when the
+tweak is reverted.
 ## Unsupported build
 
 The patcher checks the game file before touching anything. If it says
@@ -112,12 +144,14 @@ what happens instead.
 - `patches/*.patch.json` are the actual patches: file offsets, the bytes
   expected there, and the replacement bytes. The patcher embeds these.
 - `scripts/Apply-ExePatch.ps1` applies a patch file from PowerShell without the
-  GUI. `TyrsPAPatch.exe` also accepts `--status`, `--apply` and `--revert`. It is a
+  GUI. `TyrsPAPatch.exe` also accepts `--status`, `--apply` (add `--tweaks` for
+  the optional tweaks) and `--revert`. It is a
   windowed program, so a console does not wait for it; scripts should use
   `Start-Process -Wait` or the PowerShell script above.
-- `scripts/Build-Patch.ps1` regenerates the hand-off patch from the addresses
-  in the script, and `tools/ghidra-scripts/` are the Ghidra scripts used to
-  find them. Each fix has technical notes under `docs/`.
+- `scripts/Build-*.ps1` regenerate each patch from the addresses in the
+  script, and `tools/ghidra-scripts/` are the Ghidra scripts used to find them.
+  Each fix has technical notes under `docs/`. Patches that need new code use a
+  small section appended to the executable; see `docs/code-section.md`.
 - Build the patcher with `dotnet build -c Release` in `patcher/`. It targets
   .NET Framework 4.8, which is already part of Windows 10 and 11.
 

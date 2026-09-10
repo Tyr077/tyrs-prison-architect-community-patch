@@ -20,7 +20,8 @@ namespace PAPatcher
         readonly Button btnRefresh = new Button { Text = "Re-check", AutoSize = true };
         readonly Button btnCopyHash = new Button { Text = "Copy file hash", AutoSize = true };
 
-        List<PatchDoc> fixes = new List<PatchDoc>();
+        List<PatchDoc> all = new List<PatchDoc>();      // every embedded patch, including hidden bases
+        List<PatchDoc> fixes = new List<PatchDoc>();    // what the list shows
         string exePath;
         byte[] fileBytes;
         string fileHash = "";
@@ -56,7 +57,7 @@ namespace PAPatcher
             root.Controls.Add(pathRow, 0, 0);
             root.Controls.Add(lblStatus, 0, 1);
             root.Controls.Add(lblDetail, 0, 2);
-            root.Controls.Add(new Label { Text = "Fixes included in this patcher:", AutoSize = true, Margin = new Padding(0, 10, 0, 2) }, 0, 3);
+            root.Controls.Add(new Label { Text = "Fixes and optional tweaks. Tick what you want, then Apply:", AutoSize = true, Margin = new Padding(0, 10, 0, 2) }, 0, 3);
             root.Controls.Add(lstFixes, 0, 4);
             root.Controls.Add(lblFixInfo, 0, 5);
             root.Controls.Add(buttons, 0, 6);
@@ -72,9 +73,10 @@ namespace PAPatcher
 
             Load += (s, e) =>
             {
-                try { fixes = PatchEngine.LoadEmbedded(); }
+                try { all = PatchEngine.LoadEmbedded(); fixes = all.Where(f => !f.hidden).ToList(); }
                 catch (Exception ex) { MessageBox.Show(this, "The embedded patch data is corrupt:\n" + ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error); Close(); return; }
-                foreach (var f in fixes) lstFixes.Items.Add(f.DisplayName, true);
+                fixes = fixes.OrderBy(f => f.optional ? 1 : 0).ToList();
+                foreach (var f in fixes) lstFixes.Items.Add(f.ListLabel, !f.optional);
                 if (lstFixes.Items.Count > 0) lstFixes.SelectedIndex = 0;
                 RefreshState(GameLocator.Find());
                 lstFixes.Focus();
@@ -103,7 +105,7 @@ namespace PAPatcher
             catch (Exception ex) { SetStatus("Cannot read the game file", Color.DarkRed, ex.Message); UpdateButtons(); return; }
             fileHash = PatchEngine.Sha256(fileBytes);
 
-            if (!PatchEngine.IsSupportedBuild(fileBytes, fixes))
+            if (!PatchEngine.IsSupportedBuild(fileBytes, all))
             {
                 SetStatus("Unsupported game build", Color.DarkRed,
                     "This patcher was made for the Steam Sunset Update build and this file does not match it. " +
@@ -111,10 +113,16 @@ namespace PAPatcher
                 UpdateButtons(); return;
             }
 
-            int patched = fixes.Count(f => PatchEngine.GetState(fileBytes, f) == FixState.Patched);
-            if (patched == fixes.Count) SetStatus("Patched", Color.DarkGreen, "All " + fixes.Count + " fix(es) are applied. If Steam ever verifies game files it will undo this; just come back and click Apply again.");
-            else if (patched == 0) SetStatus("Not patched", Color.DarkOrange, "Original game file. Click Apply patch to install the selected fixes. A backup is kept next to the game file.");
-            else SetStatus("Partially patched", Color.DarkOrange, patched + " of " + fixes.Count + " fixes applied.");
+            // Fixes are ticked by default; optional tweaks only when they are already applied, so Revert can undo them.
+            for (int i = 0; i < fixes.Count; i++)
+                lstFixes.SetItemChecked(i, !fixes[i].optional || PatchEngine.GetState(fileBytes, fixes[i]) == FixState.Patched);
+            var required = fixes.Where(f => !f.optional).ToList();
+            int patched = required.Count(f => PatchEngine.GetState(fileBytes, f) == FixState.Patched);
+            int tweaks = fixes.Count(f => f.optional && PatchEngine.GetState(fileBytes, f) == FixState.Patched);
+            string tweakNote = tweaks == 0 ? "" : " " + tweaks + " optional tweak(s) are on.";
+            if (patched == required.Count) SetStatus("Patched", Color.DarkGreen, "All " + required.Count + " fix(es) are applied." + tweakNote + " If Steam ever verifies game files it will undo this; just come back and click Apply again.");
+            else if (patched == 0 && tweaks == 0) SetStatus("Not patched", Color.DarkOrange, "Original game file. Click Apply patch to install the ticked fixes. A backup is kept next to the game file.");
+            else SetStatus("Partially patched", Color.DarkOrange, patched + " of " + required.Count + " fixes applied." + tweakNote);
             UpdateButtons();
             ShowFixInfo();
         }
@@ -130,14 +138,14 @@ namespace PAPatcher
             if (i < 0 || i >= fixes.Count) { lblFixInfo.Text = ""; return; }
             var f = fixes[i];
             var st = fileBytes == null ? "" : "  [" + PatchEngine.GetState(fileBytes, f) + "]";
-            lblFixInfo.Text = f.description + st;
+            lblFixInfo.Text = (f.optional ? "Optional tweak, off by default, changes game balance: " : "") + f.description + st;
         }
 
         IEnumerable<PatchDoc> SelectedFixes() => fixes.Where((f, i) => lstFixes.GetItemChecked(i));
 
         void UpdateButtons()
         {
-            bool ok = fileBytes != null && PatchEngine.IsSupportedBuild(fileBytes, fixes);
+            bool ok = fileBytes != null && PatchEngine.IsSupportedBuild(fileBytes, all);
             var sel = ok ? SelectedFixes().ToList() : new List<PatchDoc>();
             btnApply.Enabled = ok && sel.Any(f => PatchEngine.GetState(fileBytes, f) == FixState.Unpatched);
             btnRevert.Enabled = ok && sel.Any(f => PatchEngine.GetState(fileBytes, f) == FixState.Patched);
@@ -157,8 +165,10 @@ namespace PAPatcher
             {
                 // Re-read right before writing so a Steam update between checks cannot be clobbered.
                 var current = File.ReadAllBytes(exePath);
-                if (!PatchEngine.IsSupportedBuild(current, fixes)) throw new InvalidOperationException("The game file changed since it was checked and is no longer a supported build.");
-                var result = PatchEngine.WithEdits(current, SelectedFixes(), apply);
+                if (!PatchEngine.IsSupportedBuild(current, all)) throw new InvalidOperationException("The game file changed since it was checked and is no longer a supported build.");
+                var set = apply ? PatchEngine.ExpandRequires(all, SelectedFixes()) : SelectedFixes().ToList();
+                var result = PatchEngine.WithEdits(current, set, apply);
+                if (!apply) result = PatchEngine.RevertOrphanedBases(result, all);
                 if (apply) PatchEngine.EnsureBackup(exePath, current);
                 PatchEngine.WriteAtomically(exePath, result);
             }
