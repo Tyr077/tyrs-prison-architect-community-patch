@@ -1,0 +1,32 @@
+{
+    "id":  "weapon-firerate",
+    "name":  "Ranged weapon fire-rate fix",
+    "version":  "1.0.0",
+    "description":  "Every ranged weapon was limited to one shot per two seconds regardless of its RechargeTime, so assault rifles and SMGs never fired automatically. Restores RechargeTime as the rate of fire for guards and prisoners, including in Escape Mode.",
+    "game_build":  "Prison Architect 64-bit, Sunset Update (final)",
+    "sha256_original":  "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
+    "sha256_patched":  "068ff8b1843f4cea82600c664f82f13a594a3238d601a536a9f1b2c464f7bc99",
+    "edits":  [
+                  {
+                      "va":  "0x140537CC5",
+                      "offset":  5468357,
+                      "expect":  "C7834C03000000000040",
+                      "replace":  "C7834C03000000000000",
+                      "note":  "FireRangedShot: ReloadTimer = 0 instead of 2.0 s"
+                  },
+                  {
+                      "va":  "0x140557372",
+                      "offset":  5597042,
+                      "expect":  "0F57C00F2F834C0300000F82A0000000",
+                      "replace":  "E949D04E009090909090909090909090",
+                      "note":  "escape-mode attack: gate on time since last shot \u003e= RechargeTime"
+                  },
+                  {
+                      "va":  "0x140A443C0",
+                      "offset":  10762176,
+                      "expect":  "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                      "replace":  "488BCB488D542440E8E328AFFFF30F5A4850488B0527353100488B8098010000F20F108080000000F20F5C8310030000660F2FC10F822830B1FFE9832FB1FF",
+                      "note":  "stub: escape-mode fire-rate gate"
+                  }
+              ]
+}

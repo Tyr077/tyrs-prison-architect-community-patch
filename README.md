@@ -47,6 +47,22 @@ clears himself if not. The guard routine clears stale gang members and aborts
 cleanly on regime changes. The system re-picks a guard when the old one is
 gone. Crooked guards, bribes and hand-offs keep working.
 
+### Ranged weapon fire rate
+
+Symptoms: assault rifles and SMGs fire one shot every two seconds, the same as
+a sniper rifle, so armed guards with automatic weapons are close to useless.
+
+Cause: after every ranged shot the game starts a two-second "reload" timer and
+refuses to count the weapon's real recharge time until it expires. The old 2.7
+build had no such timer. Community Lua mods work around it by zeroing the timer
+every tick, which is expensive and cannot be applied to prisoners without
+breaking Escape Mode.
+
+Fix: the reload timer is no longer set after a shot, so guards and prisoners
+fire at the `RechargeTime` from `materials.txt`. The Escape Mode player
+attack, which relied on that timer as its only rate limit, is given a proper
+rate limit based on the time since the last shot. Technical notes in
+`docs/weapon-firerate.md`.
 ## Unsupported build
 
 The patcher checks the game file before touching anything. If it says
