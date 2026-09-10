@@ -70,13 +70,16 @@ the A* itself, which has no cost cap, only a per-frame time slice
 `scripts/Build-KeycardDoorCost.ps1` generates the patch;
 `patches/keycard-door-path-cost.patch.json` is the result.
 
-## Open question
+## The "only route" report
 
-The Discord report also says that when a keycard door is the *only* route,
-nothing goes through it at all. Nothing in the router explains that statically:
-with the penalty in place the search should still succeed, just after
-exploring everything cheaper first. It needs to be re-tested with this patch
-applied; if it persists, the next places to look are the sector-level routing
+The Discord report also said that when a keycard door is the *only* route,
+nothing goes through it at all. Nothing in the router explains that as a
+separate bug: the A* has no cost cap, so the search still succeeds, just after
+expanding every cheaper cell first. With this patch applied, the reporter's
+test save (an office whose south exit is a large keycard door, guards deployed
+beyond it) routes the guards straight through the door, and the "only route"
+behaviour could not be reproduced. It is treated as the same defect. If it
+comes back, the next places to look are the sector-level routing
 (`FUN_140682050`, `FUN_140684330`) and the deployment branch of `Door::Open`
 (`FUN_1401c6b50(3,1)` with `World+0x4715`), which only lets guard types with an
 assigned position open locked doors.
