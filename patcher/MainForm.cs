@@ -9,7 +9,7 @@ namespace PAPatcher
 {
     public class MainForm : Form
     {
-        readonly TextBox txtPath = new TextBox { ReadOnly = true, Anchor = AnchorStyles.Left | AnchorStyles.Right };
+        readonly TextBox txtPath = new TextBox { ReadOnly = true, TabStop = false, Anchor = AnchorStyles.Left | AnchorStyles.Right };
         readonly Button btnBrowse = new Button { Text = "Browse…", AutoSize = true };
         readonly Label lblStatus = new Label { AutoSize = true, Font = new Font(SystemFonts.MessageBoxFont.FontFamily, 11f, FontStyle.Bold) };
         readonly Label lblDetail = new Label { AutoSize = true, MaximumSize = new Size(560, 0) };
@@ -77,6 +77,7 @@ namespace PAPatcher
                 foreach (var f in fixes) lstFixes.Items.Add(f.DisplayName, true);
                 if (lstFixes.Items.Count > 0) lstFixes.SelectedIndex = 0;
                 RefreshState(GameLocator.Find());
+                lstFixes.Focus();
             };
         }
 
