@@ -1,0 +1,74 @@
+{
+    "id":  "gang-handoff",
+    "name":  "Gang contraband hand-off fix",
+    "version":  "1.0.0",
+    "description":  "Prisoners stuck in the ContrabandHandOff state (pacing, unescortable, guards abandon search/return-to-cell jobs), the frozen crooked guard, and the hand-off system dying after the crooked guard is fired.",
+    "game_build":  "Prison Architect 64-bit, Sunset Update (final)",
+    "sha256_original":  "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
+    "sha256_patched":  "85467233c214139663fc1cbd6aec5a5e4f5cb1170f6714a64130fe1aa3baa929",
+    "edits":  [
+                  {
+                      "va":  "0x1405DD8DF",
+                      "offset":  6147295,
+                      "expect":  "0F84A0020000",
+                      "replace":  "0F8487020000",
+                      "note":  "guard routine: unresolvable gang member clears the slot"
+                  },
+                  {
+                      "va":  "0x1405DD8FF",
+                      "offset":  6147327,
+                      "expect":  "0F8880020000",
+                      "replace":  "0F885B694600",
+                      "note":  "guard routine: regime fail (idx\u003c0) -\u003e stub A"
+                  },
+                  {
+                      "va":  "0x1405DD90C",
+                      "offset":  6147340,
+                      "expect":  "0F8D73020000",
+                      "replace":  "0F8D4E694600",
+                      "note":  "guard routine: regime fail (idx\u003e=n) -\u003e stub A"
+                  },
+                  {
+                      "va":  "0x1405DD92B",
+                      "offset":  6147371,
+                      "expect":  "0F8554020000",
+                      "replace":  "0F852F694600",
+                      "note":  "guard routine: regime fail (type) -\u003e stub A"
+                  },
+                  {
+                      "va":  "0x1406AEC19",
+                      "offset":  7004185,
+                      "expect":  "83F80A750A",
+                      "replace":  "E95C563900",
+                      "note":  "prisoner update: state-10 validity -\u003e stub B"
+                  },
+                  {
+                      "va":  "0x1404F7609",
+                      "offset":  5204489,
+                      "expect":  "0F85A3000000",
+                      "replace":  "0F8538CD5400",
+                      "note":  "system update: guard set -\u003e stub C (resolve check)"
+                  },
+                  {
+                      "va":  "0x140A44260",
+                      "offset":  10761824,
+                      "expect":  "000000000000000000000000000000000000",
+                      "replace":  "83BB2C0A00000A0F851899B9FFE9F298B9FF",
+                      "note":  "stub A: regime abort"
+                  },
+                  {
+                      "va":  "0x140A4427A",
+                      "offset":  10761850,
+                      "expect":  "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                      "replace":  "83F80A0F85A5A9C6FF488B0576363100488B8098010000488D882C230000488D9338000000E86C5478FF84C00F8486000000488B054D363100488B8898010000488D9124230000E8FA6AD7FF4885C00F8463000000488B052A363100488B809801000080B8DC050000000F853B00000048638B340A000085C90F88390000003B88F40500000F8D2D000000488B80E8050000488B04C88B406083F8010F840900000083F8070F850D000000BA0A000000488BCBE9F1A8C6FF488BCBE8C6A9C6FFE968A9C6FF",
+                      "note":  "stub B: prisoner self-heal"
+                  },
+                  {
+                      "va":  "0x140A44347",
+                      "offset":  10762055,
+                      "expect":  "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                      "replace":  "488B0DB2353100488B8998010000488D9384010000E85F6AD7FF4885C00F854833ABFF488B0D8F353100488B8998010000488D938C010000E83C6AD7FF4885C00F841500000083B82C0A00000A0F8508000000488BC8E85EA9C6FFC78394010000FFFFFFFFC7839801000000000000E95432ABFF",
+                      "note":  "stub C: stale guard re-pick"
+                  }
+              ]
+}

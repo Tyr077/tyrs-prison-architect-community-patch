@@ -1,0 +1,11 @@
+# Never publish game binaries or anything derived from them
+ghidra/
+analysis/
+extracted/
+*.exe
+*.orig
+*.tmp
+
+# build output (release exe is attached to GitHub Releases, not committed)
+patcher/bin/
+patcher/obj/
