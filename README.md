@@ -234,8 +234,13 @@ what happens instead.
 
 ## Credits
 
-- **Paul Kinnair** (Weapon Firerate Fix) confirmed the reload-timer cause of the
-  fire-rate bug and that the pre-Sunset build had no such timer.
+- **Paul Kinnair** (Weapon Firerate Fix): their Lua work on the reload timer
+  established it as the cause of the fire-rate bug and that the pre-Sunset build
+  had no such timer; the 0.01 variant of that script is what showed the timer
+  also drives the shell casings.
+- **Ozoneraxi** (Less Lethal Expansion): their mod is the reference use of the
+  Alpha 28 `StatusEffects` scripting, and their scripts are what the scripted
+  status effects fix was built and checked against.
 - **Ozoneraxi** and **Deskius** (Alert Icons Partial Fix), with wackypanda and
   Quin_BNK: their offset formula pointed directly at the sprite-scale bug.
 - **vojin154** (pa_fix_direction_serialization) found and fixed the lost
