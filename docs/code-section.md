@@ -58,6 +58,7 @@ section must be listed here so ranges never overlap.
 | `+0x004..+0x007` | `0x140E89004` | tweak-staff-death-morale-decay | `forgiven` int32, starts 0 |
 | `+0x008..+0x00F` | `0x140E89008` | tweak-staff-death-morale-decay | double 1440.0 |
 | `+0x100..+0x166` | `0x140E89100` | tweak-staff-death-morale-decay | stub, 103 bytes |
+| `+0x170..+0x1C9` | `0x140E89170` | lua-status-effects | stub, 90 bytes |
 
 `scripts/Build-CodeSection.ps1` regenerates the base patch. Build scripts for
 dependents read `patches/code-section.patch.json`, apply it to the original

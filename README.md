@@ -144,6 +144,26 @@ the same as a jail door, and a guard opens it for them. Prisoners still
 serving time are refused as before, tracking belt or not. Technical notes in
 `docs/keycard-door-released-prisoners.md`.
 
+### Scripted status effects (mods)
+
+Symptoms: mods that give prisoners a status effect from a Lua script
+(`prisoner.StatusEffects.tazed = 60`, the feature added in Alpha 28 and used
+by Less Lethal Expansion among others) do nothing. The script runs, reading
+the value back shows it was set, but the prisoner is never tazed, sedated or
+suppressed and the effect is not in the save file.
+
+Cause: a later update made the game keep a separate list of which effects are
+active on each prisoner. Everything that acts on effects, the per-tick decay,
+the status icons, the AI checks and the save file, goes by that list. The
+game's own code keeps it up to date; the Lua setter was never taught to, so a
+scripted effect is written into a slot nobody looks at.
+
+Fix: the Lua setter now activates the effect exactly as the game does, and
+clears it again when set to 0, so scripted effects show up, wear off and
+survive a save. This fix needs a little new code, so the patcher also adds a
+small section to the executable; it is removed again on revert. Technical
+notes in `docs/lua-status-effects.md`.
+
 ## Optional tweaks
 
 These change game balance rather than fix bugs, so they are **off by default**.
@@ -174,8 +194,7 @@ Each staff member who dies on duty costs one point of staff morale for the
 rest of the session. With this tweak the penalty fades by one death per
 in-game day. The death count itself is left alone, so the "staff have died on
 duty" line in the staff morale panel still shows the real number. This tweak
-needs a little new code, so the patcher also adds a small empty section to the
-executable; it is removed again when the tweak is reverted.
+uses the same small code section as the scripted status effects fix.
 
 ## Unsupported build
 

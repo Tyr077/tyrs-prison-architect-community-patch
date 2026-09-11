@@ -1,0 +1,28 @@
+{
+    "id":  "lua-status-effects",
+    "name":  "Lua StatusEffects assignment",
+    "version":  "1.0.0",
+    "requires":  [
+                     "code-section"
+                 ],
+    "description":  "Restores the modding feature from Alpha 28 that lets a Lua script set a prisoner\u0027s status effects (\"prisoner.StatusEffects.tazed = 60\"). A later update made the game track active effects in a separate flag set and forgot to update the Lua setter, so scripted effects were written but never took effect. The setter now activates (or, for 0, clears) the effect the same way the game does. Used by mods such as Less Lethal Expansion.",
+    "game_build":  "Prison Architect 64-bit, Sunset Update (final)",
+    "sha256_original":  "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
+    "sha256_patched":  "58525a27624241d5a3173d91efe57fc5354ed0ab9453f20e05672ea9c17e2aa4",
+    "edits":  [
+                  {
+                      "va":  "0x140E89170",
+                      "offset":  14425456,
+                      "expect":  "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+                      "replace":  "48984C6BC0384C03C7F3410F1130488B157BE7ECFF488B9298010000488B9280000000498950288BC8BA01000000D3E20F57C00F2FF0770AF7D2219720060000EB060997200600008B972006000048899728060000E94E4C8AFF",
+                      "note":  "stub: store the charge, stamp the apply time, set (value \u003e 0) or clear the active bit, mirror the bitset"
+                  },
+                  {
+                      "va":  "0x14072DE0D",
+                      "offset":  7524877,
+                      "expect":  "4898486BC838F30F113439",
+                      "replace":  "E95EB37500660F1F440000",
+                      "note":  "StatusEffects Lua setter: jump to the stub instead of storing the charge alone"
+                  }
+              ]
+}
