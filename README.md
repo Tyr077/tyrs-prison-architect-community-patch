@@ -53,16 +53,20 @@ Symptoms: assault rifles and SMGs fire one shot every two seconds, the same as
 a sniper rifle, so armed guards with automatic weapons are close to useless.
 
 Cause: after every ranged shot the game starts a two-second "reload" timer and
-refuses to count the weapon's real recharge time until it expires. The old 2.7
-build had no such timer. Community Lua mods work around it by zeroing the timer
-every tick, which is expensive and cannot be applied to prisoners without
+refuses to count the weapon's real recharge time until it expires. There is no
+magazine or burst logic behind it; the two seconds are simply added to every
+shot by everyone. Community Lua mods work around it by zeroing the timer every
+tick on guards, which is expensive and cannot be applied to prisoners without
 breaking Escape Mode.
 
-Fix: the reload timer is no longer set after a shot, so guards and prisoners
-fire at the `RechargeTime` from `materials.txt`. The Escape Mode player
-attack, which relied on that timer as its only rate limit, is given a proper
-rate limit based on the time since the last shot. Technical notes in
-`docs/weapon-firerate.md`.
+Fix: the reload timer is set to a hair above zero instead of two seconds, so
+it expires on the next tick and guards and prisoners fire at the
+`RechargeTime` from `materials.txt`. The timer is kept rather than removed
+because its expiry is also what ejects the shell casing and plays the shotgun
+pump sound; the first version of this fix zeroed it and lost both. The Escape
+Mode player attack, which relied on that timer as its only rate limit, is
+given a proper rate limit based on the time since the last shot. Technical
+notes, including the per-weapon values, in `docs/weapon-firerate.md`.
 
 ### Alert icons with custom sprite-sheet mods
 

@@ -1,4 +1,4 @@
-Adds one bug fix for modders. Existing users: download the new `TyrsPAPatch.exe`,
+Adds one bug fix for modders and corrects the fire-rate fix. Existing users: download the new `TyrsPAPatch.exe`,
 run it, click **Apply patch**. Your tweak choices are kept.
 
 ## New in 1.5.0
@@ -18,10 +18,22 @@ section to the executable that was previously only used by the morale tweak. It
 is removed again on revert. Technical notes in `docs/lua-status-effects.md`; a
 small test mod is in `tools/testmods/lua-status-effects-test/`.
 
+**Fire-rate fix keeps shell casings and the shotgun pump sound.** The fix that
+restores `RechargeTime` as the rate of fire used to switch the per-shot reload
+timer off completely. Testers noticed that guards had stopped ejecting shell
+casings: the timer's expiry is also what spawns the casing and plays the
+shotgun pump sound. The timer is now set to a hair above zero instead, so it
+expires on the next tick and both come back, right after the shot instead of
+two seconds later. Rates are unchanged: revolver 0.5 s, shotgun 1 s, sniper
+rifle 2 s, assault rifle and SMG 0.1 s, as in `materials.txt`. The game has no
+magazine or burst logic for guards; `Ammo` only applies to the player's gang in
+Escape Mode. The notes in `docs/weapon-firerate.md` now list every weapon's
+values and the shipped-versus-fixed cadence.
+
 ## Fixes included
 
 - Gang contraband hand-off (Gangs DLC)
-- Ranged weapon fire rate
+- Ranged weapon fire rate (changed, see above)
 - Alert icons with custom sprite-sheet mods
 - Prisoner and staff directions not saved
 - Staff detour around keycard doors
@@ -52,5 +64,5 @@ If Steam verifies game files it restores the original executable. Run the patche
 
 - `TyrsPAPatch.exe`: (recorded at release)
 - Original `Prison Architect64.exe` this patch targets: `cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9`
-- `Prison Architect64.exe` with the eight fixes applied: `3d94d5edcf2e6e1c767016b1a09c82ba5241cd5b85bb77c74b81ab80d6ef8cb0`
-- `Prison Architect64.exe` with the eight fixes and all three tweaks: `66eb297f6cb3a590c8e2b1a74938d55180efc0a671ffcdb607031d8a79113cb4`
+- `Prison Architect64.exe` with the eight fixes applied: `18d53efe09301f0d9f37c2cdb77008d138365f2157a2dd43c0ddc9856510823f`
+- `Prison Architect64.exe` with the eight fixes and all three tweaks: `90fa1c9b3578497547200430737d14a17c0382c086e8d93a9b22c00ea6210aa6`

@@ -1,18 +1,21 @@
 {
     "id":  "weapon-firerate",
     "name":  "Ranged weapon fire-rate fix",
-    "version":  "1.0.0",
-    "description":  "Every ranged weapon was limited to one shot per two seconds regardless of its RechargeTime, so assault rifles and SMGs never fired automatically. Restores RechargeTime as the rate of fire for guards and prisoners, including in Escape Mode.",
+    "version":  "1.1.0",
+    "description":  "Every ranged weapon was limited to one shot per two seconds regardless of its RechargeTime, so assault rifles and SMGs never fired automatically. Restores RechargeTime as the rate of fire for guards and prisoners, including in Escape Mode. Shell casings and the shotgun pump sound are kept (1.1.0; version 1.0.0 lost them).",
     "game_build":  "Prison Architect 64-bit, Sunset Update (final)",
     "sha256_original":  "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
-    "sha256_patched":  "068ff8b1843f4cea82600c664f82f13a594a3238d601a536a9f1b2c464f7bc99",
+    "sha256_patched":  "f5065bc20e1b219863aa92607ff6f971e86e3f0f741e3f2455b2af5afb2e5fdf",
     "edits":  [
                   {
                       "va":  "0x140537CC5",
                       "offset":  5468357,
                       "expect":  "C7834C03000000000040",
-                      "replace":  "C7834C03000000000000",
-                      "note":  "FireRangedShot: ReloadTimer = 0 instead of 2.0 s"
+                      "replace":  "C7834C0300006F12833A",
+                      "note":  "FireRangedShot: ReloadTimer = 0.001 s instead of 2.0 s (expires next tick: casing and reload sound kept, no wait)",
+                      "superseded":  [
+                                         "C7834C03000000000000"
+                                     ]
                   },
                   {
                       "va":  "0x140557372",

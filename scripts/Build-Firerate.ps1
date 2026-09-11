@@ -8,7 +8,12 @@
   fires at most once per two seconds and RechargeTime (0.1 for the assault rifle) is ignored.
 
   Fix:
-    1. FireRangedShot stores ReloadTimer = 0. NPC cadence becomes RechargeTime via AttackTimer.
+    1. FireRangedShot stores ReloadTimer = 0.001 instead of 2.0. NPC cadence becomes RechargeTime via
+       AttackTimer (plus at most one tick). The value is not zero because the reload countdown
+       (FUN_140537d00, run from the entity update while ReloadTimer > 0) is also what ejects the shell
+       casing (FUN_1403f75b0) and plays the Reload_<weapon> sound when the timer expires; version 1.0.0
+       wrote 0 and lost both. A tiny positive value expires on the next tick, so each shot still gets
+       its casing and pump sound, right after the shot instead of two seconds later.
     2. The escape-mode player attack (FUN_140557310) gated on ReloadTimer, so it would now fire
        without limit. Its gate is replaced by a stub that compares the time since the last shot
        (Entity+0x310, set by FireRangedShot) with the weapon's RechargeTime.
@@ -50,9 +55,15 @@ function J([string]$cc, $to) { $pre = switch ($cc) { 'jmp' {@(0xE9)} 'call' {@(0
 function RipMovRax([long]$abs) { return @{ pre = [byte[]]@(0x48,0x8B,0x05); to = $abs } }
 
 $edits = New-Object System.Collections.Generic.List[object]
-function AddEdit([long]$va, [byte[]]$new, [string]$note) {
+function AddEdit([long]$va, [byte[]]$new, [string]$note, [string[]]$superseded) {
     $off = VaToFile $va; $old = $b[$off..($off + $new.Length - 1)]
-    $edits.Add([ordered]@{ va = ('0x{0:X}' -f $va); offset = $off; expect = (Hex $old); replace = (Hex $new); note = $note })
+    $e = [ordered]@{ va = ('0x{0:X}' -f $va); offset = $off; expect = (Hex $old); replace = (Hex $new); note = $note }
+    # Bytes an earlier release wrote here, so the patcher recognises an exe patched by that release
+    # instead of calling it an unsupported build.
+    if ($superseded) {
+        $e.superseded = @($superseded | ForEach-Object { $h = ($_ -replace '\s',''); if ($h.Length -ne $new.Length * 2) { throw "superseded bytes must match the edit length at $va" }; $h })
+    }
+    $edits.Add($e)
 }
 
 # ---- Stub: escape-mode player attack gate. rbx = entity. Frame has shadow space; [rsp+0x40] is scratch. ----
@@ -72,8 +83,10 @@ $stub = Asm $stubAddr @(
 $stubEnd = $stubAddr + $stub.Length
 if ($stubEnd -gt 0x140A44400) { throw ("stub overflows cave: end 0x{0:X}" -f $stubEnd) }
 
-# 1. FireRangedShot: ReloadTimer = 2.0f -> 0.0f  (mov dword [rbx+0x34c], imm32)
-AddEdit 0x140537CC5 (Bytes 'C7 83 4C 03 00 00 00 00 00 00') 'FireRangedShot: ReloadTimer = 0 instead of 2.0 s'
+# 1. FireRangedShot: ReloadTimer = 2.0f -> 0.001f  (mov dword [rbx+0x34c], imm32; 0x3A83126F = 0.001f)
+#    Version 1.0.0 wrote 0.0f here, which skipped the reload countdown and with it the casing and reload sound.
+$RELOAD_V100 = 'C7834C03000000000000'
+AddEdit 0x140537CC5 (Bytes 'C7 83 4C 03 00 00 6F 12 83 3A') 'FireRangedShot: ReloadTimer = 0.001 s instead of 2.0 s (expires next tick: casing and reload sound kept, no wait)' @($RELOAD_V100)
 # 2. Escape-mode attack gate: "xorps xmm0,xmm0; comiss xmm0,[rbx+0x34c]; jc ret" (16 bytes) -> jmp stub + nops
 $hook = New-Object System.Collections.Generic.List[byte]
 $hook.AddRange([byte[]](Asm 0x140557372 @((J 'jmp' $stubAddr))))
@@ -95,8 +108,8 @@ $shaP = [BitConverter]::ToString([System.Security.Cryptography.SHA256]::Create()
 $doc = [ordered]@{
     id              = 'weapon-firerate'
     name            = 'Ranged weapon fire-rate fix'
-    version         = '1.0.0'
-    description     = 'Every ranged weapon was limited to one shot per two seconds regardless of its RechargeTime, so assault rifles and SMGs never fired automatically. Restores RechargeTime as the rate of fire for guards and prisoners, including in Escape Mode.'
+    version         = '1.1.0'
+    description     = 'Every ranged weapon was limited to one shot per two seconds regardless of its RechargeTime, so assault rifles and SMGs never fired automatically. Restores RechargeTime as the rate of fire for guards and prisoners, including in Escape Mode. Shell casings and the shotgun pump sound are kept (1.1.0; version 1.0.0 lost them).'
     game_build      = 'Prison Architect 64-bit, Sunset Update (final)'
     sha256_original = $sha
     sha256_patched  = $shaP
