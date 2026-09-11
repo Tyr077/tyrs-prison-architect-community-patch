@@ -20,7 +20,7 @@ small test mod is in `tools/testmods/lua-status-effects-test/`.
 
 **Fire-rate fix keeps shell casings and the shotgun pump sound.** The fix that
 restores `RechargeTime` as the rate of fire used to switch the per-shot reload
-timer off completely. Testers noticed that guards had stopped ejecting shell
+timer off completely. It was reported that guards had stopped ejecting shell
 casings: the timer's expiry is also what spawns the casing and plays the
 shotgun pump sound. The timer is now set to a hair above zero instead, so it
 expires on the next tick and both come back, right after the shot instead of
@@ -57,7 +57,7 @@ If Steam verifies game files it restores the original executable. Run the patche
 
 ## Credits
 
-- **Ozoneraxi** (Less Lethal Expansion) and the modders who reported that the Alpha 28 `StatusEffects` scripting had stopped working.
+- Everyone who reported that the Alpha 28 `StatusEffects` scripting had stopped working and that shell casings had gone missing.
 - **vojin154** (pa_fix_direction_serialization), **Paul Kinnair** (Weapon Firerate Fix), **Ozoneraxi** and **Deskius** (Alert Icons Partial Fix), with wackypanda and Quin_BNK, for the earlier fixes.
 
 ## Checksums (SHA-256)

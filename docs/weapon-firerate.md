@@ -78,8 +78,8 @@ from the entity's facing at 3 to 7 tiles per second with random spin and
 gravity of 600. That particle is the ejected shell casing. With `ReloadTimer`
 written as 0.0 the countdown never ran, so 1.0.0 lost every casing and the
 shotgun pump sound (`Reload_Shotgun`, the only `Reload_` event in
-`sounds.txt`). Testers noticed the missing casings; a Lua workaround that
-writes 0.01 instead of 0 brought them back, which is the same mechanism.
+`sounds.txt`). It was reported that the casings were missing; a Lua workaround
+that writes 0.01 instead of 0 brought them back, which is the same mechanism.
 
 With 0.001 the countdown runs on the very next update: the casing pops and the
 pump sound plays immediately after the shot rather than two seconds later.

@@ -18,8 +18,8 @@ prisoner.StatusEffects.surrendered = 40
 On the Sunset build the assignment is silently ignored. Reading the value back
 (`prisoner.StatusEffects.tazed`) returns what was written, but the prisoner is
 never tazed, sedated or suppressed, the status icon never appears, and the
-value is not in the save file. Modders reported it as "the StatusEffects thing
-no longer works".
+value is not in the save file. It was reported as "the StatusEffects thing no
+longer works".
 
 ## How the table is built
 
