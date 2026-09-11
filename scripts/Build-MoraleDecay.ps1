@@ -39,7 +39,24 @@ foreach ($e in $sec.edits) { $nb = Bytes $e.replace; for ($i = 0; $i -lt $nb.Cou
 $SEC_VA = 0x140E89000; $SEC_RAW = 0xDC1C00
 function VaToFile([long]$va) { if ($va -ge $SEC_VA) { return [int]($va - $SEC_VA + $SEC_RAW) }; return [int]($va - 0x140000C00) }
 $edits = New-Object System.Collections.Generic.List[object]
-function AddEdit([long]$va, [byte[]]$new, [string]$note) { $off = VaToFile $va; $old = $b[$off..($off + $new.Length - 1)]; $edits.Add([ordered]@{ va = ('0x{0:X}' -f $va); offset = $off; expect = (Hex $old); replace = (Hex $new); note = $note }) }
+function AddEdit([long]$va, [byte[]]$new, [string]$note, [string[]]$superseded) {
+    $off = VaToFile $va; $old = $b[$off..($off + $new.Length - 1)]
+    $e = [ordered]@{ va = ('0x{0:X}' -f $va); offset = $off; expect = (Hex $old); replace = (Hex $new); note = $note }
+    # Bytes an earlier release wrote here, padded to today's length with the section's INT3 fill, so the
+    # patcher recognises an exe patched by that release instead of calling it an unsupported build.
+    if ($superseded) {
+        $e.superseded = @($superseded | ForEach-Object {
+            $h = ($_ -replace '\s','')
+            if ($h.Length -gt $new.Length * 2) { throw "superseded bytes longer than the current edit at $va" }
+            $h + ('CC' * ($new.Length - $h.Length / 2))
+        })
+    }
+    $edits.Add($e)
+}
+
+# Stub bytes written by tweak version 1.0.0, which decremented the game's counter. Kept so that an exe
+# patched by 1.0.0 is recognised and rewritten rather than rejected as an unsupported build.
+$STUB_V100 = '8B829827000085C07E35F20F108280000000F20F5E05EEFEFFFFF2440F2CC0448B0DDAFEFFFF453BC17414448905CEFEFFFF4585C97408FFC8898298270000F30F2AC0F30F5CD8E9F6548BFF'
 
 # ---- data: section +0x000 lastDay (int32, 0), +0x004 forgiven (int32, 0), +0x008 double 1440.0 ----
 $LASTDAY = $SEC_VA + 0x000; $FORGIVEN = $SEC_VA + 0x004; $K1440 = $SEC_VA + 0x008
@@ -74,7 +91,7 @@ Emit '41 2B C1'                     # +57 apply: sub eax,r9d           deaths - 
 Emit 'F3 0F 2A C0'                  # +5A cvtsi2ss xmm0,eax
 Emit 'F3 0F 5C D8'                  # +5E subss xmm3,xmm0
 EmitRip 'E9' $RET                   # +62 jmp back
-AddEdit $STUB ($code.ToArray()) 'stub: subtract (deaths - forgiven) from morale; forgiven grows by one per consecutive in-game day, capped at deaths'
+AddEdit $STUB ($code.ToArray()) 'stub: subtract (deaths - forgiven) from morale; forgiven grows by one per consecutive in-game day, capped at deaths' @($STUB_V100)
 
 # ---- hook: 15 bytes at 0x14073E633 -> jmp stub + 10-byte NOP ----
 $hookBytes = New-Object System.Collections.Generic.List[byte]

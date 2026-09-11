@@ -115,10 +115,10 @@ namespace PAPatcher
 
             // Fixes are ticked by default; optional tweaks only when they are already applied, so Revert can undo them.
             for (int i = 0; i < fixes.Count; i++)
-                lstFixes.SetItemChecked(i, !fixes[i].optional || PatchEngine.GetState(fileBytes, fixes[i]) == FixState.Patched);
+                lstFixes.SetItemChecked(i, !fixes[i].optional || PatchEngine.GetState(fileBytes, fixes[i]).IsApplied());
             var required = fixes.Where(f => !f.optional).ToList();
-            int patched = required.Count(f => PatchEngine.GetState(fileBytes, f) == FixState.Patched);
-            int tweaks = fixes.Count(f => f.optional && PatchEngine.GetState(fileBytes, f) == FixState.Patched);
+            int patched = required.Count(f => PatchEngine.GetState(fileBytes, f).IsApplied());
+            int tweaks = fixes.Count(f => f.optional && PatchEngine.GetState(fileBytes, f).IsApplied());
             string tweakNote = tweaks == 0 ? "" : " " + tweaks + " optional tweak(s) are on.";
             if (patched == required.Count) SetStatus("Patched", Color.DarkGreen, "All " + required.Count + " fix(es) are applied." + tweakNote + " If Steam ever verifies game files it will undo this; just come back and click Apply again.");
             else if (patched == 0 && tweaks == 0) SetStatus("Not patched", Color.DarkOrange, "Original game file. Click Apply patch to install the ticked fixes. A backup is kept next to the game file.");
@@ -147,8 +147,8 @@ namespace PAPatcher
         {
             bool ok = fileBytes != null && PatchEngine.IsSupportedBuild(fileBytes, all);
             var sel = ok ? SelectedFixes().ToList() : new List<PatchDoc>();
-            btnApply.Enabled = ok && sel.Any(f => PatchEngine.GetState(fileBytes, f) == FixState.Unpatched);
-            btnRevert.Enabled = ok && sel.Any(f => PatchEngine.GetState(fileBytes, f) == FixState.Patched);
+            btnApply.Enabled = ok && sel.Any(f => { var st = PatchEngine.GetState(fileBytes, f); return st == FixState.Unpatched || st == FixState.Outdated; });
+            btnRevert.Enabled = ok && sel.Any(f => PatchEngine.GetState(fileBytes, f).IsApplied());
             btnCopyHash.Enabled = fileHash != "";
             btnRefresh.Enabled = exePath != null;
         }

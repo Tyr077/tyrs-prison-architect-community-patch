@@ -16,9 +16,16 @@ namespace PAPatcher
         [DataMember] public string expect;
         [DataMember] public string replace;
         [DataMember] public string note;
+        // Replacement bytes written by earlier versions of this patch, newest first. Lets the patcher
+        // recognise a file left by an older release and rewrite or revert it cleanly.
+        [DataMember] public List<string> superseded;
 
         public byte[] ExpectBytes => Hex.Parse(expect);
         public byte[] ReplaceBytes => Hex.Parse(replace);
+        public int SupersededCount => superseded == null ? 0 : superseded.Count;
+        /// <summary>The bytes version <paramref name="k"/> of this patch wrote at this site: its own if this edit changed, else the current ones.</summary>
+        public byte[] SupersededBytes(int k) =>
+            (superseded != null && k < superseded.Count && !string.IsNullOrEmpty(superseded[k])) ? Hex.Parse(superseded[k]) : ReplaceBytes;
         // An edit with no expected bytes appends its replacement at end of file (offset == original length).
         public bool IsAppend => string.IsNullOrEmpty(expect);
     }
@@ -46,7 +53,13 @@ namespace PAPatcher
         public string ListLabel => (optional ? "[Optional] " : "") + DisplayName;
     }
 
-    public enum FixState { Unpatched, Patched, Mixed, NotApplicable }
+    public enum FixState { Unpatched, Patched, Outdated, Mixed, NotApplicable }
+
+    public static class FixStateExt
+    {
+        /// <summary>Present in the file, whether written by this release or an older one.</summary>
+        public static bool IsApplied(this FixState s) => s == FixState.Patched || s == FixState.Outdated;
+    }
 
     public static class Hex
     {
@@ -98,19 +111,31 @@ namespace PAPatcher
 
         public static FixState GetState(byte[] file, PatchDoc p)
         {
+            // One flag per layout this patch has ever written: the current one, the original bytes,
+            // and one for each superseded version, so a file left by an older release is still recognised.
+            int versions = p.edits.Count == 0 ? 0 : p.edits.Max(e => e.SupersededCount);
             bool allOrig = true, allNew = true;
+            var allOld = new bool[versions];
+            for (int k = 0; k < versions; k++) allOld[k] = true;
             foreach (var e in p.edits)
             {
                 var exp = e.ExpectBytes; var rep = e.ReplaceBytes;
                 if (e.IsAppend)
                 {
                     // Presence only: other patches write into the appended region, so its content is not compared.
-                    if (file.Length == e.offset) { allNew = false; continue; }
+                    if (file.Length == e.offset) { allNew = false; for (int k = 0; k < versions; k++) allOld[k] = false; continue; }
                     if (file.Length >= e.offset + rep.Length) { allOrig = false; continue; }
                     return FixState.NotApplicable;
                 }
                 // Edits inside a required base patch's section are out of range until that base is applied.
                 if (e.offset < 0 || e.offset + exp.Length > file.Length) return p.HasRequires ? FixState.Unpatched : FixState.NotApplicable;
+                for (int k = 0; k < versions; k++)
+                {
+                    if (!allOld[k]) continue;
+                    var oldBytes = e.SupersededBytes(k);
+                    if (oldBytes.Length != exp.Length) { allOld[k] = false; continue; }
+                    for (int i = 0; i < exp.Length && allOld[k]; i++) if (file[e.offset + i] != oldBytes[i]) allOld[k] = false;
+                }
                 for (int i = 0; i < exp.Length; i++)
                 {
                     byte cur = file[e.offset + i];
@@ -120,6 +145,7 @@ namespace PAPatcher
             }
             if (allNew) return FixState.Patched;
             if (allOrig) return FixState.Unpatched;
+            for (int k = 0; k < versions; k++) if (allOld[k]) return FixState.Outdated;
             return FixState.Mixed;
         }
 
@@ -199,8 +225,8 @@ namespace PAPatcher
                 changed = false;
                 foreach (var b in all.Where(d => d.hidden))
                 {
-                    if (GetState(outb, b) != FixState.Patched) continue;
-                    bool needed = all.Any(d => d != b && d.HasRequires && d.requires.Contains(b.id) && GetState(outb, d) == FixState.Patched);
+                    if (!GetState(outb, b).IsApplied()) continue;
+                    bool needed = all.Any(d => d != b && d.HasRequires && d.requires.Contains(b.id) && GetState(outb, d).IsApplied());
                     if (!needed) { outb = WithEdits(outb, new[] { b }, apply: false); changed = true; }
                 }
             }

@@ -134,3 +134,10 @@ death per in-game day. Because the counter is untouched, the top-bar line
 keeps showing the real number of deaths while the morale penalty fades.
 `scripts/Build-MoraleDecay.ps1` assembles it; the patch declares
 `"requires": ["code-section"]`.
+
+Version 1.0.0 of this tweak wrote a shorter stub that decremented the game's
+counter. Those bytes are kept in the patch as the stub edit's `superseded`
+entry, padded to the current length with the section's `0xCC` fill, so a game
+file patched by an earlier release reads as outdated rather than unknown and is
+rewritten in place. Without it the whole file is rejected as an unsupported
+build, and even Revert stops working.

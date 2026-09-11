@@ -193,7 +193,10 @@ what happens instead.
 ## For the technically inclined
 
 - `patches/*.patch.json` are the actual patches: file offsets, the bytes
-  expected there, and the replacement bytes. The patcher embeds these.
+  expected there, and the replacement bytes. The patcher embeds these. An edit
+  may also carry `superseded`, the bytes earlier releases wrote at that site, so
+  a game file patched by an older version is recognised and rewritten instead of
+  being rejected as an unknown build.
 - `scripts/Apply-ExePatch.ps1` applies a patch file from PowerShell without the
   GUI. `TyrsPAPatch.exe` also accepts `--status`, `--apply` (add `--tweaks` for
   the optional tweaks) and `--revert`. It is a
