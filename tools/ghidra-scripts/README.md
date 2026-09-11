@@ -24,6 +24,7 @@ For a patched copy, use a throwaway project instead:
 | `DumpFuncRange` | `<lo> <hi>` | decompile every function whose entry lies in `[lo, hi)` |
 | `DumpAsmRange` | `<lo> <hi> [...]` | disassembly with bytes for address ranges (patch verification) |
 | `DumpDisp` | `0x<disp>...` | functions using each displacement; decompile those using all of them |
+| `DumpDispSites` | `<ctx> 0x<disp>...` | every instruction using a displacement with `ctx` instructions of context; works for functions too big to decompile |
 | `DumpCallers` | `<fn>...` | every call site of a function, then decompiles the target and its callers |
 | `DumpDataRefs` | `<addr>...` | code references to a data address, plus the referencing functions |
 | `DumpImmRefs` | `<imm>...` | instructions whose immediate equals a value (object type ids, magic numbers); noisy for values that are also common struct offsets |

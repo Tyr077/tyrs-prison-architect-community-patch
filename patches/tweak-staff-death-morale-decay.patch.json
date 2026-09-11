@@ -1,29 +1,29 @@
 {
     "id":  "tweak-staff-death-morale-decay",
     "name":  "Staff death morale penalty fades",
-    "version":  "1.0.0",
+    "version":  "1.1.0",
     "optional":  true,
     "requires":  [
                      "code-section"
                  ],
-    "description":  "The staff morale penalty for staff who died on duty normally lasts for the whole session, one point per death. With this tweak it fades by one death per in-game day, and the \"staff have died on duty\" line in the staff morale panel counts down with it. Balance tweak, not a bug fix.",
+    "description":  "The staff morale penalty for staff who died on duty normally lasts for the whole session, one point per death. With this tweak it fades by one death per in-game day. The death count itself is untouched, so the \"staff have died on duty\" line in the staff morale panel still shows the real number. Balance tweak, not a bug fix.",
     "game_build":  "Prison Architect 64-bit, Sunset Update (final)",
     "sha256_original":  "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
-    "sha256_patched":  "f6474ca9602e281a50b1d41ff582b2b05f4246f064a5574fcfcfaebc9d88d778",
+    "sha256_patched":  "432d7d6bede2bc80d5a30b62db999bf9a23a7945cb1d85a1697515402e3587a9",
     "edits":  [
                   {
                       "va":  "0x140E89000",
                       "offset":  14425088,
                       "expect":  "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
                       "replace":  "00000000000000000000000000809640",
-                      "note":  "data: lastDay int32 = 0, pad, double 1440.0 (minutes per day)"
+                      "note":  "data: lastDay int32 = 0, forgiven int32 = 0, double 1440.0 (minutes per day)"
                   },
                   {
                       "va":  "0x140E89100",
                       "offset":  14425344,
-                      "expect":  "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
-                      "replace":  "8B829827000085C07E35F20F108280000000F20F5E05EEFEFFFFF2440F2CC0448B0DDAFEFFFF453BC17414448905CEFEFFFF4585C97408FFC8898298270000F30F2AC0F30F5CD8E9F6548BFF",
-                      "note":  "stub: decay the staff-death counter once per in-game day, then apply it to morale"
+                      "expect":  "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+                      "replace":  "8B8298270000448B0DF7FEFFFF443BC87E0A4533C944890DE8FEFFFFF20F108280000000F20F5E05DCFEFFFFF2440F2CC041FFC8443B05C5FEFFFF458D4001448905BAFEFFFF750F443BC87D0A41FFC144890DADFEFFFF412BC1F30F2AC0F30F5CD8E9DB548BFF",
+                      "note":  "stub: subtract (deaths - forgiven) from morale; forgiven grows by one per consecutive in-game day, capped at deaths"
                   },
                   {
                       "va":  "0x14073E633",

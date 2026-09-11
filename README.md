@@ -172,10 +172,10 @@ the fine are unaffected.
 
 Each staff member who dies on duty costs one point of staff morale for the
 rest of the session. With this tweak the penalty fades by one death per
-in-game day, and the "staff have died on duty" line in the staff morale panel
-counts down with it. This tweak needs a little new code, so the patcher also
-adds a small empty section to the executable; it is removed again when the
-tweak is reverted.
+in-game day. The death count itself is left alone, so the "staff have died on
+duty" line in the staff morale panel still shows the real number. This tweak
+needs a little new code, so the patcher also adds a small empty section to the
+executable; it is removed again when the tweak is reverted.
 
 ## Unsupported build
 

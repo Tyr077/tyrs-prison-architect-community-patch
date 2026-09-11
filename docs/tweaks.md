@@ -79,9 +79,16 @@ desired = 100
 ```
 
 `World+0x2798` is `VictorySystem+0x210`, incremented in `FUN_1407551e0` for
-any dying entity whose type has the staff flag. Its only other reader is the
-top bar, which prints "*X staff have died on duty" from it. It is not part of
-the Victory save data, so it is per session, not per save.
+any dying entity whose type has the staff flag (the staff branch only bumps
+the counter; prisoner deaths take a different branch that bumps
+`VictorySystem+0xF8` and appends a type-4 record to the log). An exhaustive
+scan of every instruction touching the field (`DumpDispSites 0x2798`, plus
+`+0x210` inside the Victory code) finds exactly two readers: this formula and
+the top-bar staff morale tooltip in `FUN_14039bc00`
+(`interfacetopbar_staffmorale_staffdeaths`). It is not registered with the
+data registry, so it is per session, not per save. It has nothing to do with
+the death log, the "too many deaths" failure condition or gravestones (those
+are Undead-DLC zombie spawners with their own timers).
 
 Edit: the 15 bytes at `0x14073E633`
 (`movd xmm0,[rdx+0x2798]; cvtdq2ps xmm0,xmm0; subss xmm3,xmm0`) become a jump
@@ -89,28 +96,41 @@ to a stub in the `.tyrs` section (see `code-section.md`) that returns to
 `0x14073E642`. Free at that point: `rax`, `r8`, `r9`, `xmm0`, flags. `rdx` is
 the World, `xmm3` the running desired morale.
 
+The stub never writes the game's counter. It keeps its own `forgiven` count
+in the section and subtracts `deaths - forgiven` instead:
+
 ```
 mov   eax, [rdx+0x2798]      ; deaths
-test  eax, eax
-jle   apply
+mov   r9d, [forgiven]
+cmp   r9d, eax
+jle   day
+xor   r9d, r9d               ; forgiven > deaths: a fresh world, reset
+mov   [forgiven], r9d
+day:
 movsd xmm0, [rdx+0x80]       ; world time in minutes
 divsd xmm0, [K1440]          ; days
 cvttsd2si r8d, xmm0          ; day number
-mov   r9d, [lastDay]
-cmp   r8d, r9d
-je    apply                  ; same day, nothing to do
-mov   [lastDay], r8d
-test  r9d, r9d
-je    apply                  ; first tick after a load only records the day
-dec   eax
-mov   [rdx+0x2798], eax      ; one death forgiven
+dec   r8d
+cmp   r8d, [lastDay]         ; ZF: exactly one day since the last tick
+lea   r8d, [r8+1]            ; flags kept
+mov   [lastDay], r8d         ; always track the day
+jne   apply                  ; same day, first tick, or a jump of days
+cmp   r9d, eax
+jge   apply                  ; nothing left to forgive
+inc   r9d                    ; one death forgiven per day
+mov   [forgiven], r9d
 apply:
+sub   eax, r9d
 cvtsi2ss xmm0, eax
 subss xmm3, xmm0
 jmp   0x14073E642
 ```
 
-`lastDay` lives at section `+0x000` and starts at 0; `K1440` is a double at
-`+0x008`. The rate is one death per in-game day. Because the top bar reads the
-same counter, its line counts down with the penalty. `scripts/Build-MoraleDecay.ps1`
-assembles it; the patch declares `"requires": ["code-section"]`.
+`lastDay` lives at section `+0x000` and `forgiven` at `+0x004`, both starting
+at 0; `K1440` is a double at `+0x008`. Decay only happens on a day change of
+exactly one, so the first tick after a load, or a different save loaded in the
+same process, records the day without forgiving anything. The rate is one
+death per in-game day. Because the counter is untouched, the top-bar line
+keeps showing the real number of deaths while the morale penalty fades.
+`scripts/Build-MoraleDecay.ps1` assembles it; the patch declares
+`"requires": ["code-section"]`.
