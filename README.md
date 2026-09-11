@@ -127,6 +127,23 @@ Fix: keycard doors are now costed like jail doors: key holders pass at normal
 cost, everyone else needs a guard as before. Technical notes in
 `docs/keycard-door-path-cost.md`.
 
+### Released prisoners stuck behind revoked keycard doors
+
+Symptoms: a keycard door with prisoner access revoked is the only way out of a
+cell block. Prisoners whose sentence ends get the RELEASED nameplate and then
+stand still forever; no guard is ever sent to let them out.
+
+Cause: the route planner treats a revoked keycard door as a solid wall for
+anyone without a staff key, instead of the usual "a guard has to open this"
+that every other locked door gets. A released prisoner has no key, so there is
+no route to the exit at all and they never start walking.
+
+Fix: released prisoners (and prisoners under escort, who the game already lets
+ignore deployment zones) now see a revoked keycard door as "needs a guard",
+the same as a jail door, and a guard opens it for them. Prisoners still
+serving time are refused as before, tracking belt or not. Technical notes in
+`docs/keycard-door-released-prisoners.md`.
+
 ## Optional tweaks
 
 These change game balance rather than fix bugs, so they are **off by default**.
