@@ -35,7 +35,7 @@ If Steam verifies game files it restores the original executable. Run the patche
 
 ## Checksums (SHA-256)
 
-- `TyrsPAPatch.exe`: see the release page; recorded in the follow-up commit.
+- `TyrsPAPatch.exe`: `958a7e4fc2d4528dd85418d5236cfb8327af3b8030755e7cbc8599a8ceb80417`
 - Original `Prison Architect64.exe` this patch targets: `cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9`
 - `Prison Architect64.exe` with the seven fixes applied: `836e77f484cdb5d263b1d7e11234d96d073ec2a542acc3f06b77c8ca669bd303`
 - `Prison Architect64.exe` with the seven fixes and all three tweaks: `d5fbb38573214524e00e267091ff04ffdcced3f11df785916559a97f68e31a3d`
