@@ -1,0 +1,56 @@
+{
+    "id":  "shop-front",
+    "name":  "Shops usable from outside the shop",
+    "version":  "1.0.0",
+    "requires":  [
+                     "code-section"
+                 ],
+    "description":  "Prisoners can buy from a shop front without being able to walk into the shop. The game decides where someone stands to use an object from a marker in the object\u0027s artwork, and the shop front is the one such object that was never given one, so it fell back to the shop front itself: a wall. Prisoners were then required to reach, and be allowed inside, the room the counter serves from, which is why shops so often did nothing and why a shop serving two wings needed a door into each. A wall-mounted object can now be used from any tile beside it that the prisoner can reach and is allowed on. Objects standing on ordinary floor tiles are unaffected.",
+    "game_build":  "Prison Architect 64-bit, Sunset Update (final)",
+    "sha256_original":  "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
+    "sha256_patched":  "a25a8471bc9af330ea560ca06a6a072e80a888c9d6d3398139c1188709f9f144",
+    "edits":  [
+                  {
+                      "va":  "0x140E89010",
+                      "offset":  14425104,
+                      "expect":  "CCCCCCCCCCCCCCCC",
+                      "replace":  "FF00010000FF0001",
+                      "note":  "neighbour offsets: west, east, north, south"
+                  },
+                  {
+                      "va":  "0x140E89250",
+                      "offset":  14425680,
+                      "expect":  "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+                      "replace":  "53565741544155415641574883EC40488BD9498BF14189D44589C5F3440F2C7648F3440F2C7E4C33FF488D0590FDFFFF0FBE0C780FBE5478014401E14401EA894C243089542434488BCB4189D08B5424304589F144897C242048C744242800000000E8E95388FF84C0741C488BCB8B542430448B4424344C8BCEE8115D88FF84C07404B001EB09FFC783FF047C9B32C04883C440415F415E415D415C5F5E5BC3",
+                      "note":  "TryNeighbours: is any tile touching the provider both reachable and permitted for this entity"
+                  },
+                  {
+                      "va":  "0x140E89320",
+                      "offset":  14425888,
+                      "expect":  "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+                      "replace":  "4883EC4848894C243089542438448944243C8B84247000000089442420488B8424780000004889442428E8515388FF84C075434863462485C078393B056BF2F7FF7D314869C0980100004803052F39F6FF0FBAA098000000187319488B4C24308B542438448B44243C4D8B4E20E8BEFEFFFFEB0232C04883C448C3",
+                      "note":  "reach stub: a wall-mounted provider may also be reached from a tile beside it"
+                  },
+                  {
+                      "va":  "0x140E893A0",
+                      "offset":  14426016,
+                      "expect":  "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+                      "replace":  "4883EC3848894C242089542428448944242C4C894C2430E8245C88FF84C075444863462485C0783A3B05FEF1F7FF7D324869C098010000480305C238F6FF0FBAA09800000018731A488B4C24208B542428448B44242C4C8B4C2430E850FEFFFFEB0232C04883C438C3",
+                      "note":  "permission stub: a wall-mounted provider may also be permitted from a tile beside it"
+                  },
+                  {
+                      "va":  "0x140623DCD",
+                      "offset":  6435277,
+                      "expect":  "E8CEA80E00",
+                      "replace":  "E84E558600",
+                      "note":  "provider validity: route the reachability check through the stub"
+                  },
+                  {
+                      "va":  "0x140623EDD",
+                      "offset":  6435549,
+                      "expect":  "E8FEB00E00",
+                      "replace":  "E8BE548600",
+                      "note":  "provider validity: route the sector permission check through the stub"
+                  }
+              ]
+}

@@ -49,7 +49,7 @@ and reading the stub bytes back at `image + 0xE89100`.
 
 ## Allocation map
 
-Data area `+0x000..+0x0FF`, code from `+0x100`; next free code offset `+0x250`. Every patch that uses the
+Data area `+0x000..+0x0FF`, code from `+0x100`; next free code offset `+0x410`. Every patch that uses the
 section must be listed here so ranges never overlap.
 
 | range (section offset) | VA | owner | use |
@@ -57,9 +57,13 @@ section must be listed here so ranges never overlap.
 | `+0x000..+0x003` | `0x140E89000` | tweak-staff-death-morale-decay | `lastDay` int32, starts 0 |
 | `+0x004..+0x007` | `0x140E89004` | tweak-staff-death-morale-decay | `forgiven` int32, starts 0 |
 | `+0x008..+0x00F` | `0x140E89008` | tweak-staff-death-morale-decay | double 1440.0 |
+| `+0x010..+0x017` | `0x140E89010` | shop-front | neighbour offset table, 8 bytes |
 | `+0x100..+0x166` | `0x140E89100` | tweak-staff-death-morale-decay | stub, 103 bytes |
 | `+0x170..+0x1C9` | `0x140E89170` | lua-status-effects | stub, 90 bytes |
 | `+0x1D0..+0x243` | `0x140E891D0` | exercise-grading | stub, 116 bytes |
+| `+0x250..+0x2EF` | `0x140E89250` | shop-front | TryNeighbours, 160 bytes |
+| `+0x320..+0x39A` | `0x140E89320` | shop-front | reach stub, 123 bytes |
+| `+0x3A0..+0x408` | `0x140E893A0` | shop-front | permission stub, 105 bytes |
 
 `scripts/Build-CodeSection.ps1` regenerates the base patch. Build scripts for
 dependents read `patches/code-section.patch.json`, apply it to the original

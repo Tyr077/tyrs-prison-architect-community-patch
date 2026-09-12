@@ -175,6 +175,28 @@ survive a save. This fix needs a little new code, so the patcher also adds a
 small section to the executable; it is removed again on revert. Technical
 notes in `docs/lua-status-effects.md`.
 
+### Shops only worked if prisoners could walk into the shop
+
+Symptoms: a shop is built, staffed and stocked, prisoners have free time and
+money, and nobody ever buys anything — or it serves one wing and not another.
+The usual advice is to put the shop front on a wall zoned as part of the shop
+and cut a door into the shop from every wing that should use it, which rather
+defeats the point of a serving hatch.
+
+Cause: the game decides where someone stands to use an object from a marker in
+the object's artwork. The shop front is the one such object that was never given
+one, so the game fell back to the only spot it had: the shop front itself, which
+is a wall. It then asked whether the prisoner could walk to that spot and was
+allowed there — that is, whether they could get inside the shop and were
+permitted in it. A shop built the sensible way, staff behind the counter and
+prisoners queueing outside, fails both questions, and the prisoner decides the
+shop is unusable.
+
+Fix: an object built into a wall can now be used from any tile beside it that
+the prisoner can reach and is allowed to stand on. Objects standing on ordinary
+floor tiles are untouched, so nothing else changes behaviour. Found by
+Ozoneraxi; technical notes in `docs/shop-front.md`.
+
 ### Exercise on equipment not counted for grading
 
 Symptoms: a prisoner's Health grade scores "% of stay exercising", but a prison
@@ -275,6 +297,9 @@ what happens instead.
   against.
 - **Ozoneraxi** and **Deskius** (Alert Icons Partial Fix), with wackypanda and
   Quin_BNK: their offset formula pointed directly at the sprite-scale bug.
+- **Ozoneraxi** (AIO bug tracker) established that shops need the customers to be
+  able to path inside, and published the layouts that work around it, which is
+  what sent this fix straight to the standing position the game picks.
 - **Ozoneraxi** (AIO bug tracker) worked out why exercise on equipment never
   counted towards the Health grade, down to the action tag responsible, and
   noted that no mod could fix it without losing the animations. That is exactly
