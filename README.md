@@ -26,6 +26,9 @@ Both are a single `TyrsPAPatch.exe` on the
 there is nothing to build. Either way your game file is backed up before
 anything is written, and **Revert to original** puts it back at any time.
 
+The fixes listed below are what is in the newest test build. The stable release
+may be behind them; each release says what is in it.
+
 ## Install
 
 1. Download `TyrsPAPatch.exe` from the latest release.
