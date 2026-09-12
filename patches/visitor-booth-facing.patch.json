@@ -1,0 +1,28 @@
+{
+    "id":  "visitor-booth-facing",
+    "name":  "Visitor booths facing up",
+    "version":  "1.0.0",
+    "requires":  [
+                     "code-section"
+                 ],
+    "description":  "Visitor booths work in every orientation. A booth has a prisoner side and a visitor side, and which is which follows the way the booth faces; prisoners and visitors already walk to the right sides. But the check that pairs a prisoner with a visitor always looked at the side a booth facing down would give the prisoner, so for a booth facing up it demanded that the prisoner could reach, and was allowed on, the visitor side. Unless prisoners could walk into the visitor half of the room no visit was ever arranged there, and opening that half to them defeats the booth. The pairing check now looks at the side the prisoner will actually use.",
+    "game_build":  "Prison Architect 64-bit, Sunset Update (final)",
+    "sha256_original":  "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
+    "sha256_patched":  "78d695ceea9d0173c33f2fcdd9f2a0b8627a2100e002db29a26852d00c0d20b2",
+    "edits":  [
+                  {
+                      "va":  "0x140E89500",
+                      "offset":  14426368,
+                      "expect":  "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+                      "replace":  "33D2817B4018010000750E817B58000080BF7505BA01000000488BCBFF5068E97C518DFF",
+                      "note":  "pairing check: ask for the slot the prisoner will use (1 for a booth facing up)"
+                  },
+                  {
+                      "va":  "0x14075E698",
+                      "offset":  7723672,
+                      "expect":  "33D2488BCBFF5068",
+                      "replace":  "E963AE7200909090",
+                      "note":  "VisitationSystem pairing check: slot choice routed through the stub"
+                  }
+              ]
+}

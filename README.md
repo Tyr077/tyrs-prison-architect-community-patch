@@ -234,6 +234,50 @@ piece of equipment. DLC and modded equipment are covered without naming
 anything, and the animations are untouched. Reported by Ozoneraxi, who
 identified the cause; technical notes in `docs/exercise-grading.md`.
 
+### Intake routes that accept only some categories
+
+Symptoms: Logistics > Transport lets each road, helipad and boat dock accept
+only some prisoner categories. Use that, say a helipad for Max Sec and the road
+for everyone else, and after a while nobody arrives at all. The sidebar says
+*Your prison is closed to new inmates* while cells stand empty, whatever the
+intake setting. Setting every route to accept everything, and forcing the
+queue to refill, was the only way out.
+
+Cause: when a vehicle is loaded for a route, the game draws prisoners from the
+intake queue in list order and throws away every queued prisoner of a category
+that route does not accept until it finds one it does. Those prisoners are
+never created, but they are still counted as on their way, and a prisoner on
+its way counts against capacity. The count creeps up day after day until, on
+paper, the prison is full.
+
+Fix: a vehicle now takes the queued prisoners of the categories its route
+accepts and leaves the rest queued for a route that does. A category that no
+route accepts still waits for ever, as before; make sure every category you
+take is accepted somewhere. Ozoneraxi's test matrix on the AIO tracker
+established that any partially filtered route triggers it; technical notes in
+`docs/intake-route-categories.md`.
+
+### Visitor booths facing up
+
+Symptoms: a row of visitor booths across a visitation room works when the
+prisoners' side is at the bottom and never arranges a visit when it is at the
+top, unless prisoners are let into the visitor half of the room, which defeats
+the booth.
+
+Cause: a booth's prisoner side is the side it faces, and both the prisoner and
+the visitor already walk to the correct sides for every facing. But the check
+that pairs a prisoner with a visitor always looked at the side a booth facing
+down gives the prisoner, so for a booth facing up it demanded that the prisoner
+could reach, and was allowed on, the visitor side.
+
+Fix: the pairing check now looks at the side the prisoner will actually use.
+Note that the game draws a booth facing up exactly like one facing down, so
+there is no visual cue: if your prisoners' sector is above the booths, rotate
+the booths to face up while placing them. Booths facing down, left or right
+and visitor tables are unchanged. Ozoneraxi's AIO tracker recorded the failing layout and
+the workaround that pointed at the check;
+technical notes in `docs/visitor-booth-facing.md`.
+
 ## Optional tweaks
 
 These change game balance rather than fix bugs, so they are **off by default**.

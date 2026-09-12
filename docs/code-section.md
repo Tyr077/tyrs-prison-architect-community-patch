@@ -49,7 +49,7 @@ and reading the stub bytes back at `image + 0xE89100`.
 
 ## Allocation map
 
-Data area `+0x000..+0x0FF`, code from `+0x100`; next free code offset `+0x410`. Every patch that uses the
+Data area `+0x000..+0x0FF`, code from `+0x100`; next free code offset `+0x530`. Every patch that uses the
 section must be listed here so ranges never overlap.
 
 | range (section offset) | VA | owner | use |
@@ -58,13 +58,32 @@ section must be listed here so ranges never overlap.
 | `+0x004..+0x007` | `0x140E89004` | tweak-staff-death-morale-decay | `forgiven` int32, starts 0 |
 | `+0x008..+0x00F` | `0x140E89008` | tweak-staff-death-morale-decay | double 1440.0 |
 | `+0x010..+0x017` | `0x140E89010` | shop-front | neighbour offset table, 8 bytes |
+| `+0x018..+0x01F` | `0x140E89018` | intake-route-categories | pointer to the accepted-category bytes of the stop being loaded, 0 when none |
 | `+0x100..+0x166` | `0x140E89100` | tweak-staff-death-morale-decay | stub, 103 bytes |
 | `+0x170..+0x1C9` | `0x140E89170` | lua-status-effects | stub, 90 bytes |
 | `+0x1D0..+0x243` | `0x140E891D0` | exercise-grading | stub, 116 bytes |
 | `+0x250..+0x2EF` | `0x140E89250` | shop-front | TryNeighbours, 160 bytes |
 | `+0x320..+0x39A` | `0x140E89320` | shop-front | reach stub, 123 bytes |
 | `+0x3A0..+0x408` | `0x140E893A0` | shop-front | permission stub, 105 bytes |
+| `+0x410..+0x482` | `0x140E89410` | intake-route-categories | queue scan stub, 115 bytes |
+| `+0x4A0..+0x4C2` | `0x140E894A0` | intake-route-categories | spawn wrapper, 35 bytes |
+| `+0x500..+0x523` | `0x140E89500` | visitor-booth-facing | pairing-check slot stub, 36 bytes |
 
 `scripts/Build-CodeSection.ps1` regenerates the base patch. Build scripts for
 dependents read `patches/code-section.patch.json`, apply it to the original
 image and take their `expect` bytes from that.
+
+## Antivirus
+
+An appended read-write-execute section full of `int3` padding is the kind of
+thing heuristics look at, and Windows Defender's cloud model
+(`Trojan:Win32/Bearfoos.A!ml`) has quarantined one patched layout: the twelve
+fixes of 1.8.0 with the booth stub at `+0x4D0` and no tweaks. Moving that stub
+to `+0x500`, adding the tweaks, or removing either new fix made the same code
+pass, so the score is a knife edge on bytes, not a signature. Every release
+should be checked: apply the fixes-only and fixes-plus-tweaks selections to
+scratch copies and scan them (`Start-MpScan -ScanType CustomScan -ScanPath`).
+The build scripts take section offsets as parameters so a layout can be moved
+without editing them. The structural cure would be a read-execute section with
+the few bytes of writable data kept elsewhere, which changes the base patch's
+header bytes and so needs `superseded` entries for upgrades.
