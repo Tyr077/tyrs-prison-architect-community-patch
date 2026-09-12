@@ -11,6 +11,21 @@ Works with the Steam "Sunset Update" build, which is the final version of the
 game. Other builds (GOG, Epic, older versions) are detected and refused; see
 "Unsupported build" below.
 
+## Download
+
+Two kinds of release, the way mod sites do it:
+
+- **Stable** — the normal release, marked *Latest*. Confirmed in a real prison.
+  This is the one to take unless you have a reason not to.
+- **Test build** — a pre-release, tagged `-testN`. Has the newest fixes in it,
+  but they have not been confirmed in-game yet. Take one of these if you want to
+  help test, or if it fixes something that is bothering you now.
+
+Both are a single `TyrsPAPatch.exe` on the
+[Releases page](https://github.com/Tyr077/tyrs-prison-architect-community-patch/releases);
+there is nothing to build. Either way your game file is backed up before
+anything is written, and **Revert to original** puts it back at any time.
+
 ## Install
 
 1. Download `TyrsPAPatch.exe` from the latest release.

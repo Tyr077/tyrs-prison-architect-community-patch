@@ -10,9 +10,5 @@ extracted/
 patcher/bin/
 patcher/obj/
 
-# except on the testing branch, where testers download the patcher straight from the
-# repo. This is our own build, not anything derived from the game.
-!test-build/TyrsPAPatch.exe
-
 # test saves from reporters stay local
 *.prison
