@@ -23,13 +23,28 @@ files.
 
 | | |
 |---|---|
-| Version | 1.6.0 |
-| SHA-256 | `5eb8efe06405035ec6537739b697691c06fb19059d351dff1656fe5be2bbea67` |
+| Version | 1.7.0 |
+| SHA-256 | `e1d51b361cf7a8d61b3413ba9c77070c12ba6ff167ae0d855da383f2fa5f21b4` |
 | Branch | `testing` |
 
-Full notes for what is in it: [`docs/release-notes-v1.6.0.md`](../docs/release-notes-v1.6.0.md).
+Full notes for what is in it: [`docs/release-notes-v1.7.0.md`](../docs/release-notes-v1.7.0.md).
 
-## What needs confirming in 1.6.0
+## What needs confirming in 1.7.0
+
+**Shops work without a way into the shop.** This is the one most worth an
+experienced eye. Build a shop the way the game suggests but the way that never
+worked: shop front in the wall, prisoners queueing in the corridor outside, no
+door letting them into the shop room, and the shop room not in a sector they are
+allowed into. Staff it, give prisoners free time and money, and see whether they
+now buy. Then try the case that needed a workaround before — one shop serving two
+wings from opposite sides — and see whether both wings use it.
+
+Worth watching for: prisoners should still queue at the counter and stand beside
+it, exactly as they do in a shop that works today, because the fix does not move
+where they walk to. If anyone is standing *in* the wall, or using a shop front
+from a sector that ought to be closed to them, that is a bug — please say so.
+Objects that sit on ordinary floor tiles, beds, benches, phones, gym equipment,
+are not meant to behave any differently at all.
 
 **Exercise on equipment counts towards the Health grade.** Build a gym with
 equipment (weights bench, treadmill, punch bag, ...) that prisoners reach
