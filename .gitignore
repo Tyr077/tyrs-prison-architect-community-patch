@@ -6,9 +6,13 @@ extracted/
 *.orig
 *.tmp
 
-# build output (release exe is attached to GitHub Releases, not committed)
+# build output (the release exe is attached to GitHub Releases, not committed)
 patcher/bin/
 patcher/obj/
+
+# except on the testing branch, where testers download the patcher straight from the
+# repo. This is our own build, not anything derived from the game.
+!test-build/TyrsPAPatch.exe
 
 # test saves from reporters stay local
 *.prison
