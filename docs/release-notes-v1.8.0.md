@@ -74,7 +74,10 @@ If Steam verifies game files it restores the original executable. Run the patche
 ## Testing these two
 
 They have been verified by disassembling the patched executable but not yet in
-a running prison. If you try them, this is what to look for:
+a running prison. The patcher and the game file with either selection applied
+were scanned clean by Windows Defender on the day of this build; if your
+antivirus objects to the patched game file, please say so in an issue. If you
+try the fixes, this is what to look for:
 
 - **Intake:** one route that accepts only some categories (a helipad for Max
   Sec, say) and another that accepts the rest, Fill Capacity, a few days at
@@ -95,7 +98,7 @@ a running prison. If you try them, this is what to look for:
 
 ## Checksums (SHA-256)
 
-- `TyrsPAPatch.exe`: (filled in by the follow-up commit)
+- `TyrsPAPatch.exe`: `c6c3e3bb899e6dd006bb8e593dc4606c0754ce577d2e7385478847bc13aa00d2`
 - Original `Prison Architect64.exe` this patch targets: `cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9`
 - `Prison Architect64.exe` with the twelve fixes applied: `abc00ad59876212f79a879af269879fdae5982ed8e1e5f1bd3296cf7f891e300`
 - `Prison Architect64.exe` with the twelve fixes and all three tweaks: `99c12563ad0c79c5d5791a56a32cc80801892458543750f2df6f252205647630`
