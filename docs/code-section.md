@@ -49,7 +49,7 @@ and reading the stub bytes back at `image + 0xE89100`.
 
 ## Allocation map
 
-Data area `+0x000..+0x0FF`, code from `+0x100`. Every patch that uses the
+Data area `+0x000..+0x0FF`, code from `+0x100`; next free code offset `+0x250`. Every patch that uses the
 section must be listed here so ranges never overlap.
 
 | range (section offset) | VA | owner | use |
@@ -59,6 +59,7 @@ section must be listed here so ranges never overlap.
 | `+0x008..+0x00F` | `0x140E89008` | tweak-staff-death-morale-decay | double 1440.0 |
 | `+0x100..+0x166` | `0x140E89100` | tweak-staff-death-morale-decay | stub, 103 bytes |
 | `+0x170..+0x1C9` | `0x140E89170` | lua-status-effects | stub, 90 bytes |
+| `+0x1D0..+0x243` | `0x140E891D0` | exercise-grading | stub, 116 bytes |
 
 `scripts/Build-CodeSection.ps1` regenerates the base patch. Build scripts for
 dependents read `patches/code-section.patch.json`, apply it to the original
