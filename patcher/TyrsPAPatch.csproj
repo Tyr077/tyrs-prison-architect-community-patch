@@ -8,7 +8,7 @@
     <Nullable>disable</Nullable>
     <AssemblyName>TyrsPAPatch</AssemblyName>
     <RootNamespace>PAPatcher</RootNamespace>
-    <Version>1.5.0</Version>
+    <Version>1.6.0</Version>
     <Product>Tyr's Prison Architect Community Patch</Product>
     <AssemblyTitle>Tyr's Prison Architect Community Patch</AssemblyTitle>
     <Description>Applies community bug-fix patches to a locally installed Prison Architect executable.</Description>

@@ -15,8 +15,8 @@ game. Other builds (GOG, Epic, older versions) are detected and refused; see
 
 1. Download `TyrsPAPatch.exe` from the latest release.
 2. Close Prison Architect.
-3. Run `TyrsPAPatch.exe`. It finds the game in your Steam library, shows whether
-   you are patched, and has an **Apply patch** button. That is it.
+3. Run `TyrsPAPatch.exe`. It finds the game in your Steam library, shows which
+   fixes are installed, and has an **Apply selection** button. That is it.
 
 Windows SmartScreen will warn the first time because the file is not
 code-signed. Click **More info**, then **Run anyway**. Each release lists the
@@ -25,7 +25,14 @@ SHA256 of the download so you can check it.
 If Steam ever runs "Verify integrity of game files", it restores the original
 executable. Just run the patcher again and click Apply.
 
-**Revert to original** restores the unpatched game at any time.
+The patcher groups everything into **Bug fixes** and **Optional tweaks**. Both
+groups are ticked or unticked as a whole, or expanded to pick individual items,
+and each line says whether it is currently installed in your game. Your choices
+are remembered for next time, and **Apply selection** makes the game match them:
+it installs what you ticked and removes what you unticked.
+
+**Revert to original** restores the unpatched game at any time, whatever is
+ticked.
 
 ## Fixes included
 
@@ -168,10 +175,29 @@ survive a save. This fix needs a little new code, so the patcher also adds a
 small section to the executable; it is removed again on revert. Technical
 notes in `docs/lua-status-effects.md`.
 
+### Exercise on equipment not counted for grading
+
+Symptoms: a prisoner's Health grade scores "% of stay exercising", but a prison
+whose prisoners work out on gym equipment scores nothing for it however much
+time they spend. Only prisoners jogging laps around a yard ever earn it.
+
+Cause: the game credits that time from the prisoner's current *action*, and the
+only activity tagged as the Exercise action is jogging in a yard. Weights
+benches, treadmills, punch bags, gym mats and every other piece of equipment are
+tagged "use an object", so their time is filed under free time instead, even
+though the game is discharging the prisoner's Exercise need the whole while. A
+poor Health grade also adds up to 25% to a prisoner's re-offending chance.
+
+Fix: time on an object now counts as exercise whenever the thing being used is
+one that serves the Exercise need, which is how the game already describes every
+piece of equipment. DLC and modded equipment are covered without naming
+anything, and the animations are untouched. Reported by Ozoneraxi, who
+identified the cause; technical notes in `docs/exercise-grading.md`.
+
 ## Optional tweaks
 
 These change game balance rather than fix bugs, so they are **off by default**.
-Tick the ones you want in the patcher before clicking Apply (or pass
+Tick the ones you want in the patcher before clicking Apply selection (or pass
 `--tweaks` on the command line to turn all of them on). Everything below is
 marked "[Optional]" in the list. Technical notes for all three are in
 `docs/tweaks.md`.
@@ -231,6 +257,10 @@ what happens instead.
   small section appended to the executable; see `docs/code-section.md`.
 - Build the patcher with `dotnet build -c Release` in `patcher/`. It targets
   .NET Framework 4.8, which is already part of Windows 10 and 11.
+- `docs/modding-framework-design.md` is a proposal (not yet built) for adding
+  new Lua modding capabilities through the patcher, with stable and
+  experimental tiers. First candidate: status effects on staff and other
+  non-prisoner entities.
 
 ## Credits
 
@@ -245,6 +275,10 @@ what happens instead.
   against.
 - **Ozoneraxi** and **Deskius** (Alert Icons Partial Fix), with wackypanda and
   Quin_BNK: their offset formula pointed directly at the sprite-scale bug.
+- **Ozoneraxi** (AIO bug tracker) worked out why exercise on equipment never
+  counted towards the Health grade, down to the action tag responsible, and
+  noted that no mod could fix it without losing the animations. That is exactly
+  what this patch avoids by fixing the grading side instead.
 - **vojin154** (pa_fix_direction_serialization) found and fixed the lost
   directions first, and gave their blessing for the fix to be included here.
   Their DLL and this patch are compatible, but you only need one.
