@@ -31,8 +31,8 @@ If Steam verifies game files it restores the original executable. Run the patche
 ## Credits
 
 - The player on the community Discord who reported the released-prisoner behaviour and shared the test save that reproduces it.
-- **Ozoneraxi** (All-in-One patch, AIO): fixed the ranged weapon fire rate a year before this patch did, as part of their all-in-one patching work.
-- **vojin154** (pa_fix_direction_serialization), **Paul Kinnair** (Weapon Firerate Fix), **Ozoneraxi** and **Deskius** (Alert Icons Partial Fix), with wackypanda and Quin_BNK, for the earlier fixes.
+- **Ozoneraxi** (All-in-One patch, AIO): fixed the ranged weapon fire rate a year before this patch did, as part of their all-in-one patching work, and their notes on the reload timer are what this fix was built and checked against.
+- **vojin154** (pa_fix_direction_serialization), **Ozoneraxi** and **Deskius** (Alert Icons Partial Fix), with wackypanda and Quin_BNK, for the earlier fixes.
 
 ## Checksums (SHA-256)
 
