@@ -57,7 +57,8 @@ If Steam verifies game files it restores the original executable. Run the patche
 
 ## Credits
 
-- **Ozoneraxi** (Less Lethal Expansion): their mod is the reference use of the Alpha 28 `StatusEffects` scripting, and their scripts and notes on it are what the fix was built and checked against.
+- **BurpBurp**, main contributor, and **Ozoneraxi** (Less Lethal Expansion): their mod is the reference use of the Alpha 28 `StatusEffects` scripting, and their scripts and notes on it are what the fix was built and checked against.
+- **Ozoneraxi** (All-in-One patch, AIO): fixed the ranged weapon fire rate a year before this patch did, as part of their all-in-one patching work.
 - **Paul Kinnair** (Weapon Firerate Fix): their Lua work on the reload timer, and the 0.01 variant of it that keeps the casings, showed exactly which part of the timer mattered.
 - **vojin154** (pa_fix_direction_serialization), **Ozoneraxi** and **Deskius** (Alert Icons Partial Fix), with wackypanda and Quin_BNK, for the earlier fixes.
 

@@ -28,6 +28,7 @@ If Steam verifies game files it restores the original executable. Run the patche
 ## Credits
 
 - **vojin154** (pa_fix_direction_serialization): found and fixed the lost-directions bug first, and blessed its inclusion.
+- **Ozoneraxi** (All-in-One patch, AIO): fixed the ranged weapon fire rate a year before this patch did, as part of their all-in-one patching work.
 - **Paul Kinnair** (Weapon Firerate Fix): confirmed the reload-timer cause of the fire-rate bug and that the pre-Sunset build had no such timer.
 - **Ozoneraxi** and **Deskius** (Alert Icons Partial Fix), with wackypanda and Quin_BNK: their offset formula pointed directly at the sprite-scale bug.
 - The players on the community Discord who described the Second Chances and staff morale behaviour that these tweaks address.

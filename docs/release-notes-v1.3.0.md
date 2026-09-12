@@ -32,6 +32,7 @@ If Steam verifies game files it restores the original executable. Run the patche
 ## Credits
 
 - The players on the community Discord who reported the visitor-door behaviour, narrowed it down to specific NPC types and door types, and shared their save-side workaround.
+- **Ozoneraxi** (All-in-One patch, AIO): fixed the ranged weapon fire rate a year before this patch did, as part of their all-in-one patching work.
 - **vojin154** (pa_fix_direction_serialization), **Paul Kinnair** (Weapon Firerate Fix), **Ozoneraxi** and **Deskius** (Alert Icons Partial Fix), with wackypanda and Quin_BNK, for the earlier fixes.
 
 ## Checksums (SHA-256)
