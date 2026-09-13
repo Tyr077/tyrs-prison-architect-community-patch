@@ -1,100 +1,50 @@
-Adds two bug fixes on top of 1.7.0. Existing users: download the new `TyrsPAPatch.exe`, run it,
-click **Apply selection**. Your tweak choices are kept.
+Test build. Download the new `TyrsPAPatch.exe`, run it, click **Apply selection**. Your tweak choices are kept.
 
-1.6.0 and 1.7.0 were only ever test builds and were never released, so their changes are listed
-here too.
+## New since 1.5.0
 
-## New in 1.8.0
+- **Intake with route-restricted categories.** A helipad, boat dock or road that accepts only some prisoner categories no longer ends with *Your prison is closed to new inmates* while cells stand empty. Every category you take still needs at least one route that accepts it.
+- **Visitor booths facing up.** Booths now work with the prisoners' side at the top, not just the bottom. The game draws both facings the same, so rotate the booth to face your prisoners while placing it.
+- **Shops without prisoners inside.** The shop front can face a hallway and prisoners buy from it without being allowed into the shop, so who works in a shop and who shops there can be kept apart.
+- **Exercise equipment counts for grading.** Time on gym equipment now counts towards the Health grade's exercise score, not just jogging laps around the yard.
+- **Patcher window rebuilt.** Fixes and tweaks are grouped, your selections are remembered, and **Apply selection** also removes anything you untick.
 
-**Intake keeps working when a route accepts only some categories.** Logistics >
-Transport lets each road, helipad and boat dock accept only some prisoner
-categories. Prisons that used that — a helipad for Max Sec, the road for
-everyone else — found after a while that nobody arrived any more: the sidebar
-said *Your prison is closed to new inmates* while cells stood empty, whatever
-the intake setting. When a vehicle was loaded for such a route, the game drew
-prisoners from the intake queue in list order and threw away every queued
-prisoner of a category the route did not accept until it found one it did.
-Those prisoners were never created but were still counted as on their way, and a
-prisoner on its way counts against capacity, so day after day the prison filled
-up on paper. A vehicle now takes the queued prisoners of the categories its route
-accepts and leaves the rest queued for a route that does. One thing to know: a
-category that no route accepts still waits for ever, as it always did, so make
-sure every category you take is accepted somewhere. Technical notes in
-`docs/intake-route-categories.md`.
+## Also included
 
-**Visitor booths work facing up.** A row of booths across a visitation room
-worked with the prisoners' side at the bottom and never arranged a visit with it
-at the top, unless prisoners were let into the visitor half of the room, which
-defeats the booth. A booth's prisoner side is the side it faces, and both the
-prisoner and the visitor already walked to the right sides; but the check that
-pairs a prisoner with a visitor always looked at the side a booth facing down
-gives the prisoner, so for a booth facing up it demanded that the prisoner could
-reach, and was allowed on, the visitor side. The pairing check now looks at the
-side the prisoner will actually use. The game draws a booth facing up exactly
-like one facing down, so there is no visual cue: if your prisoners' sector is
-above the booths, rotate the booths to face up while placing them. Technical
-notes in `docs/visitor-booth-facing.md`.
+- Mods that set status effects from Lua, such as Less Lethal Expansion, work again: tazed, sedated and suppressed prisoners actually are.
+- Staff go through keycard doors instead of taking long detours around them.
+- Prisoner and staff directions are saved (first fixed by vojin154, included with their permission).
+- Visitors and civilians no longer get stuck at single visitor doors.
+- Released prisoners whose only way out is a keycard door with belt access revoked now call a guard to let them out.
+- Alert icons draw correctly with mods that bring their own sprite sheet. Disable the Alert Icons Partial Fix mod if you use it.
+- Gang contraband hand-offs no longer leave prisoners and crooked guards stuck.
+- Assault rifles and SMGs fire at their real rate instead of once every two seconds.
 
-## Also in this release, from 1.7.0
+## Optional tweaks (off by default)
 
-**Shops work without letting prisoners into the shop.** The game decides where
-someone stands to use an object from a marker in the object's artwork, and the
-shop front is the one such object that was never given one, so the game fell
-back to the shop front itself, a wall, and then asked whether the prisoner could
-walk to that spot and was allowed there. A shop built the sensible way, staff
-behind the counter and prisoners queueing outside, failed both questions. An
-object built into a wall can now be used from any tile beside it that the
-prisoner can reach and is allowed to stand on. Technical notes in
-`docs/shop-front.md`.
-
-## Also in this release, from 1.6.0
-
-**Exercise on equipment counts for grading.** Only jogging laps around a yard
-ever earned the "% of stay exercising" part of the Health grade; every piece of
-gym equipment is tagged "use an object", so its time went to free time. Time on
-an object now counts as exercise whenever the thing being used serves the
-Exercise need. Technical notes in `docs/exercise-grading.md`.
-
-**The patcher window was rebuilt.** Everything is grouped under **Bug fixes**
-and **Optional tweaks**; every line says whether that fix is installed right
-now; your selections are remembered in `%AppData%\TyrsPAPatch\settings.json`;
-**Apply selection** installs what you ticked and removes what you unticked, and
-**Revert to original** always takes the game back to the unpatched file. The
-command line (`--status`, `--apply`, `--apply --tweaks`, `--revert`) is
-unchanged.
+- No reoffending fine (Second Chances)
+- No returning prisoners (Second Chances)
+- Staff death morale penalty fades by one death per day
 
 ## Install
 
-1. Download `TyrsPAPatch.exe`.
-2. Close Prison Architect.
-3. Run it, tick what you want, click **Apply selection**. Windows SmartScreen will warn once because the file is not code-signed: click **More info**, then **Run anyway**.
+1. Download `TyrsPAPatch.exe` and close Prison Architect.
+2. Run it, tick what you want, click **Apply selection**. SmartScreen warns once because the file is not code-signed: **More info**, then **Run anyway**.
 
-If Steam verifies game files it restores the original executable. Run the patcher again and click Apply selection. **Revert to original** undoes everything, tweaks included, at any time.
+If Steam verifies game files, run the patcher again. **Revert to original** undoes everything at any time.
 
-## Testing these two
+## Please test
 
-They have been verified by disassembling the patched executable but not yet in
-a running prison. The patcher and the game file with either selection applied
-were scanned clean by Windows Defender on the day of this build; if your
-antivirus objects to the patched game file, please say so in an issue. If you
-try the fixes, this is what to look for:
+Intake and booths are verified in the code but not yet in a running prison. Report what you find in an issue; if your antivirus objects to the patched game file, say so too.
 
-- **Intake:** one route that accepts only some categories (a helipad for Max
-  Sec, say) and another that accepts the rest, Fill Capacity, a few days at
-  speed. Prisoners of both kinds should keep arriving and the sidebar should not
-  report intake closed while cells are free. Any change in what arrives with
-  every route accepting every category would be a bug.
-- **Booths:** a visitation room with booths across the middle, the prisoners'
-  sector above the booths, no way for prisoners into the lower half, booths
-  rotated to face up. Visits should be arranged and take place with the prisoner
-  at the top. Booths facing the other three ways and visitor tables should be
-  unchanged.
+- **Intake:** one route for some categories (a helipad for Max Sec), another for the rest, Fill Capacity, a few days at speed. Both kinds should keep arriving.
+- **Booths:** prisoners' sector above the booths, booths rotated to face up. Visits should take place. Other facings and visitor tables should be unchanged.
+
+The long explanation of every fix is in `docs/fixes-explained.md`.
 
 ## Credits
 
-- **Ozoneraxi** (AIO bug tracker) established that any transport route accepting only some categories breaks Fill Capacity, with a test matrix that ruled out mixed transport as such; that is what pointed at the loading step. They also recorded that booths only fail in the prisoner-up layout and that the workaround needs both halves of the room reachable, which is precisely the check that was wrong.
-- **Ozoneraxi** (AIO bug tracker) for the shop-front and exercise-grading findings behind the 1.7.0 and 1.6.0 fixes.
-- **BurpBurp** and **Ozoneraxi** (Less Lethal Expansion), **vojin154** (pa_fix_direction_serialization), **Deskius**, wackypanda and Quin_BNK (Alert Icons Partial Fix), for the earlier fixes.
+- **Ozoneraxi** (AIO bug tracker) for the findings behind the intake, booth, shop and exercise fixes.
+- **BurpBurp** and **Ozoneraxi** (Less Lethal Expansion), **Ozoneraxi** (AIO, fire rate), **vojin154** (pa_fix_direction_serialization), **Deskius**, wackypanda and Quin_BNK (Alert Icons Partial Fix), for the earlier fixes.
 
 ## Checksums (SHA-256)
 

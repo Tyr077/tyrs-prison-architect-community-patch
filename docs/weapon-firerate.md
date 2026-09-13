@@ -129,7 +129,16 @@ judging "too fast": `Attack_AssaultRifle` and `Attack_SubMachineGun` both play
 a multi-round burst sample (`gi_m16_burst_*`), so at ten shots per second the
 audio is ten overlapping bursts. That is a sound-design mismatch, not a rate
 problem; a mod can raise `RechargeTime` on those two weapons if the cadence is
-felt to be too high, and with this fix that value is honoured.
+felt to be too high, and with this fix that value is honoured. The game's older
+firing code played the burst at most every 0.5 s for these rifles; the
+weapon-effects fix restores that (`weapon-effects.md`).
+
+The same older code (`FUN_1401AC610`, now unreachable) also set ReloadTimer per
+weapon instead of a flat 2.0: 0.02 s for the AssaultRifle and SubMachineGun,
+2.0 s for the Tazer and 0.7 s for every other gun. If that was the intended
+cadence, a revolver shot took 1.2 s and a shotgun 1.7 s, slower than
+`RechargeTime` alone. This fix does not adopt those values; it is noted here in
+case the non-automatic weapons are felt to be too fast.
 
 ## Not verified
 

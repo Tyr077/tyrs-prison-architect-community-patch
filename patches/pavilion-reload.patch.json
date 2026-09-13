@@ -1,0 +1,28 @@
+{
+    "id":  "pavilion-reload",
+    "name":  "Armed guards reload in pavilions",
+    "version":  "1.0.0",
+    "requires":  [
+                     "code-section"
+                 ],
+    "description":  "Armed guards manning a Guard Pavilion fire more than once. A guard on a pavilion counts as carried by it, and the game skipped the whole update for carried people, including the reload timer that runs after every shot. A stationed armed guard fired once and then waited for a reload that never finished. The reload timer now keeps running while a guard is stationed.",
+    "game_build":  "Prison Architect 64-bit, Sunset Update (final)",
+    "sha256_original":  "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
+    "sha256_patched":  "054b29dba0cd206727a864aaab5e25845b5d132cfa958bea38c5d54b25b5c9a6",
+    "edits":  [
+                  {
+                      "va":  "0x140E89790",
+                      "offset":  14427024,
+                      "expect":  "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+                      "replace":  "0F57C00F2F814C03000073264883EC3048894C2420F30F115424280F28CAE84DE56AFF488B4C2420F30F105424284883C4304863414085C0E91A276BFF",
+                      "note":  "loaded entities: run the reload countdown before skipping the rest of the update"
+                  },
+                  {
+                      "va":  "0x14053BEE1",
+                      "offset":  5485281,
+                      "expect":  "4863414085C0",
+                      "replace":  "E9AAD8940090",
+                      "note":  "FUN_14053BED0 loaded branch routed through the reload stub"
+                  }
+              ]
+}

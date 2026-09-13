@@ -1,0 +1,28 @@
+{
+    "id":  "disarmed-armed-guards",
+    "name":  "Disarmed armed guards can fight",
+    "version":  "1.0.0",
+    "requires":  [
+                     "code-section"
+                 ],
+    "description":  "Armed guards who lose their shotgun fight with their fists. While Freefire is on, or once an armed guard is badly hurt, the game has it fight with the weapon it carries, without checking that it still carries one. A disarmed armed guard fought with an empty hand that does no damage and stayed stuck in the fight. It now uses its fists, as it already does with the weapon holstered.",
+    "game_build":  "Prison Architect 64-bit, Sunset Update (final)",
+    "sha256_original":  "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
+    "sha256_patched":  "a8a42d21715725481e392613c0b9a75f9f067be49a9e87048500b323aad49c20",
+    "edits":  [
+                  {
+                      "va":  "0x140E897D0",
+                      "offset":  14427088,
+                      "expect":  "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+                      "replace":  "488BCF83BFF8020000000F85A0D274FF32C0C3",
+                      "note":  "ArmedGuard weapon choice: a guard carrying nothing counts as not drawn (Fists)"
+                  },
+                  {
+                      "va":  "0x140536DF3",
+                      "offset":  5464563,
+                      "expect":  "488BCFE885FC0900",
+                      "replace":  "E8D8299500909090",
+                      "note":  "GetEquipmentDef: weapon-drawn check for armed guards routed through the stub"
+                  }
+              ]
+}

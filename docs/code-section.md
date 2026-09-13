@@ -49,7 +49,7 @@ and reading the stub bytes back at `image + 0xE89100`.
 
 ## Allocation map
 
-Data area `+0x000..+0x0FF`, code from `+0x100`; next free code offset `+0x530`. Every patch that uses the
+Data area `+0x000..+0x0FF`, code from `+0x100`; next free code offset `+0x8F0`. Every patch that uses the
 section must be listed here so ranges never overlap.
 
 | range (section offset) | VA | owner | use |
@@ -68,6 +68,14 @@ section must be listed here so ranges never overlap.
 | `+0x410..+0x482` | `0x140E89410` | intake-route-categories | queue scan stub, 115 bytes |
 | `+0x4A0..+0x4C2` | `0x140E894A0` | intake-route-categories | spawn wrapper, 35 bytes |
 | `+0x500..+0x523` | `0x140E89500` | visitor-booth-facing | pairing-check slot stub, 36 bytes |
+| `+0x530..+0x705` | `0x140E89530` | weapon-effects | effects stub, 470 bytes (constants at the end) |
+| `+0x710..+0x782` | `0x140E89710` | weapon-effects | burst-sound stub, 115 bytes |
+| `+0x790..+0x7CC` | `0x140E89790` | pavilion-reload | reload stub, 61 bytes |
+| `+0x7D0..+0x7E2` | `0x140E897D0` | disarmed-armed-guards | weapon-drawn stub, 19 bytes |
+| `+0x7F0..+0x839` | `0x140E897F0` | escape-freefire-sectors | Freefire on stub, 74 bytes |
+| `+0x840..+0x87B` | `0x140E89840` | escape-freefire-sectors | Freefire off stub, 60 bytes |
+| `+0x880..+0x89B` | `0x140E89880` | full-auto-hold | Escape Mode stub, 28 bytes |
+| `+0x8A0..+0x8EC` | `0x140E898A0` | full-auto-hold | warden mode stub, 77 bytes |
 
 `scripts/Build-CodeSection.ps1` regenerates the base patch. Build scripts for
 dependents read `patches/code-section.patch.json`, apply it to the original
