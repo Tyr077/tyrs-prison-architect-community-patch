@@ -60,7 +60,7 @@ How each fix works, in plain English, is in `docs/fixes-explained.md`.
 
 ## Checksums (SHA-256)
 
-- `TyrsPAPatch.exe`: (filled in after the release build)
+- `TyrsPAPatch.exe`: `a2142e699ba7cd5d9f075f401447432c682e26b710ca8cda3d44db9a936f0aca`
 - Original `Prison Architect64.exe` this patch targets: `cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9`
 - `Prison Architect64.exe` with the seventeen fixes applied: `337000bbf6df779f18f942519713c628298602276d4442341cc6f8bcd06a34bd`
 - `Prison Architect64.exe` with the seventeen fixes and all three tweaks: `071ac1adcb32b3cacef8dd3c6fbab5ff283b092772357abcdae0496ce4e7cbac`
