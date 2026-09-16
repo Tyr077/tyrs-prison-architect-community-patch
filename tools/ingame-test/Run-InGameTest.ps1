@@ -134,7 +134,7 @@ function Invoke-InGameRun {
     $result = [ordered]@{
         Name = $Name; Save = $Save; Selection = $Selection; ExeSha256 = $exeSha; Mods = @(); TimeWarp = $TimeWarp
         Started = $null; LoadedAt = $null; LoadedMap = $null; AutosavesSeen = 0; Ended = $null
-        Autosave = $null; Debug = $null; ResultDir = $out; Ok = $false; Note = ''
+        Autosave = $null; Debug = $null; ResultDir = $out; Ok = $false; Note = ''; Snapshots = 'autosave-<n>.prison in ResultDir'
     }
     try {
         Copy-Item -LiteralPath $Save $staged -Force
@@ -171,7 +171,7 @@ function Invoke-InGameRun {
         $proc = Start-Process -FilePath (Join-Path $GameDir 'Prison Architect64.exe') -ArgumentList '--continuelastsave' -WorkingDirectory $GameDir -PassThru
         $deadline = $result.Started.AddMinutes($MaxMinutes)
         $loadRx = [regex]::Escape($script:Defaults.StagedName + '.prison')
-        $seen = 0
+        $seen = 0; $lastWrite = [datetime]::MinValue
         while ((Get-Date) -lt $deadline) {
             Start-Sleep -Seconds 5
             if ($proc.HasExited) { $result.Note = "game exited early with code $($proc.ExitCode)"; break }
@@ -183,8 +183,21 @@ function Invoke-InGameRun {
                 elseif ($lines | Where-Object { $_ -match 'Failed to launch game through Steam' }) { $result.Note = 'Steam relaunch refused (steam_appid.txt missing?)'; break }
                 continue
             }
-            $seen = @($lines | Where-Object { $_ -match "Saving map to '.*autosave\.prison-temp'.*Save completed" }).Count
-            if ($seen -ne $result.AutosavesSeen) { $result.AutosavesSeen = $seen; Write-Host "autosave $seen at $(Get-Date -Format HH:mm:ss)" }
+            # Count autosaves by the file itself: the game's debug.txt can stop being written (seen after
+            # five minutes of play) while autosaves continue. The log count is only a floor.
+            $logSeen = @($lines | Where-Object { $_ -match "Saving map to '.*autosave\.prison-temp'.*Save completed" }).Count
+            $seen = $result.AutosavesSeen
+            if (Test-Path -LiteralPath $autosave) {
+                $fi = Get-Item -LiteralPath $autosave
+                if ($fi.LastWriteTime -gt $result.LoadedAt -and $fi.LastWriteTime -ne $lastWrite) { $lastWrite = $fi.LastWriteTime; $seen++ }
+            }
+            if ($logSeen -gt $seen) { $seen = $logSeen }
+            if ($seen -ne $result.AutosavesSeen) {
+                $result.AutosavesSeen = $seen; Write-Host "autosave $seen at $(Get-Date -Format HH:mm:ss)"
+                # keep every autosave so a test can look at the timeline, not only the end state
+                Start-Sleep -Milliseconds 1500
+                try { Copy-Item -LiteralPath $autosave (Join-Path $out ("autosave-{0}.prison" -f $seen)) -Force } catch { }
+            }
             if ($seen -ge $Autosaves) { break }
         }
         if (-not $result.LoadedMap -and -not $result.Note) { $result.Note = 'map never loaded before the deadline' }

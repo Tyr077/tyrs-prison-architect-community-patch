@@ -34,8 +34,10 @@ or in a Lua mod's debug output. Anything that needs mouse or keyboard input
    enabled by the manifest `Name`).
 6. The game is launched with `--continuelastsave`. The runner watches
    `debug.txt` for `Loading map from '...tyrs-test.prison'`, then counts
-   `Saving map to '...autosave.prison-temp'...Save completed` lines until
-   `-Autosaves` are seen or `-MaxMinutes` pass.
+   autosaves by the write time of `saves\autosave.prison` (the log's
+   `Save completed` lines are only a floor: the game stops writing debug.txt
+   after a few minutes of play while it keeps autosaving) until `-Autosaves`
+   are seen or `-MaxMinutes` pass.
 7. The game is killed, `autosave.prison` and `debug.txt` are copied to the
    results folder, and `preferences.txt` and `continue_game.json` are put
    back, also when the run fails.
@@ -71,12 +73,31 @@ in `debug.txt`, which the run copies. Pass the mod folder with `-Mod`.
 |---|---|---|
 | `load-smoke.ps1` | keycardtest3local.prison | the save loads, autosaves, and the clock advances |
 | `keycard-released-prisoners.ps1` | keycardtest3local.prison | prisoners whose sentence is served leave (with `-Selection original`: they stay stuck) |
+| `visitor-booth-facing.ps1` | built from base3z.prison | booths facing up in a room split into a prisoner half and a VisitorOnly visitor half: a visit starts (fixes) or never does (original) |
+
+## Building a scenario save
+
+Saves are plain text, so a test can build its scenario instead of needing a
+hand-made save. `visitor-booth-facing.ps1` shows the pattern: remove objects
+by their one-line entries, add new ones after the `Objects` `Size` line with
+fresh `Id.i`/`Id.u` values (bump `Size` and `ObjectId.next`), and change
+cells in the `Cells` block (4-space `BEGIN "x y"` lines; the same keys appear
+again in later blocks, so match on `Mat`). The game recomputes sectors when it
+loads changed walls, so anything that needs a sector setting (`Zone
+VisitorOnly` on a sector entry) is done in a second stage: load the edited
+save once for a few game minutes, take that autosave, edit the sector entry
+by its rectangle, and use the result as the test save. A .NET regex `$` does
+not match before a carriage return, so anchor line ends with a negated
+character class for CR and LF instead of `$` on these CRLF files.
+
+Every autosave of a run is kept as `autosave-<n>.prison` in the results
+folder, so a test can read the timeline, not only the end state.
 
 ## Limits
 
 - Real time. Even at `-TimeWarp 1.25` an in-game hour is about a minute.
-- The scenario has to be in the save already; Lua can spawn objects but not
-  start fights or give orders.
+- The scenario has to be in the save already, hand-built or edited in by the
+  test; Lua can spawn objects but not start fights or give orders.
 - Randomness: one run shows something happened, not that it always does.
 - Needs a desktop session and the GPU; no headless mode, no CI.
 - The built patcher decides what `fixes` means. Rebuild it after changing a
