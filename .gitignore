@@ -12,3 +12,6 @@ patcher/obj/
 
 # test saves from reporters stay local
 *.prison
+
+# In-game test harness output (autosaves, debug logs)
+tools/ingame-test/results/
