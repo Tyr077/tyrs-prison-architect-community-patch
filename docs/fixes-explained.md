@@ -230,6 +230,23 @@ and visitor tables are unchanged. Ozoneraxi's AIO tracker recorded the failing
 layout and the workaround that pointed at the check; technical notes in
 `docs/visitor-booth-facing.md`.
 
+### Armed guard warnings with Staff Needs
+
+Symptoms: with Staff Needs on, armed guards rarely shout a warning before they
+shoot, even when the guard itself is content, and the lower the prison's staff
+morale the rarer the warnings; at 0% they never warn. With Staff Needs off
+they warn normally.
+
+Cause: an armed guard's warning chance already drops to nothing when that
+guard's own needs are neglected, which is the rule players expect. On top of
+that, with Staff Needs on, the game multiplied the chance by the prison's
+overall staff morale percentage. Staff deaths pull that figure down for the
+rest of the session, so armed prisons drift towards guards that shoot first.
+
+Fix: the multiply by overall morale is skipped. The per-guard rule stays, and
+with Staff Needs off nothing changes. Technical notes in
+`docs/armed-guard-warnings.md`.
+
 ### Muzzle flash, smoke and buckshot
 
 Symptoms: guns fire with nothing but a thin tracer. Assault rifles and SMGs have
@@ -301,7 +318,10 @@ Cause: Warden Mode only ever looked at "the button was just pressed", and Escape
 Mode's check for holding the button named the assault rifle and nothing else.
 
 Fix: holding the button keeps firing the assault rifle, SMG and modified
-assault rifle in both modes, at each weapon's own rate of fire. Other weapons
+assault rifle in both modes, at each weapon's own rate of fire, at anything a
+click would attack. That includes zombies, which the game lets the warden shoot
+without switching to attack mode; the first test build only kept firing in
+attack mode, so holding the button did nothing against them. Other weapons
 still fire once per click. In Escape Mode the ranged weapon fire-rate fix is
 what makes that rate faster than one shot every two seconds. Technical notes in
 `docs/full-auto-hold.md`.

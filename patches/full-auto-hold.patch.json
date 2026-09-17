@@ -1,14 +1,14 @@
 {
     "id":  "full-auto-hold",
     "name":  "Hold to fire automatic weapons",
-    "version":  "1.0.0",
+    "version":  "1.1.0",
     "requires":  [
                      "code-section"
                  ],
-    "description":  "Assault rifles and SMGs fire while the mouse button is held, in Warden Mode and Escape Mode. Warden Mode fired one shot per click whatever the weapon, and Escape Mode only let the assault rifle keep firing, not the SMG or the modified assault rifle. The rate of fire still comes from each weapon; in Escape Mode it needs the ranged weapon fire-rate fix to be faster than one shot every two seconds.",
+    "description":  "Assault rifles and SMGs fire while the mouse button is held, in Warden Mode and Escape Mode, against anything a click would attack, zombies included. Warden Mode fired one shot per click whatever the weapon, and Escape Mode only let the assault rifle keep firing, not the SMG or the modified assault rifle. The rate of fire still comes from each weapon; in Escape Mode it needs the ranged weapon fire-rate fix to be faster than one shot every two seconds.",
     "game_build":  "Prison Architect 64-bit, Sunset Update (final)",
     "sha256_original":  "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
-    "sha256_patched":  "5db6e3812502bec1f25d15beba869ab9f04b750a8d4ea14cbc44278f866fe01c",
+    "sha256_patched":  "5f594d81853959e04f28ef9071f9a5a3a3bd0f49f6de9cf3e3c473c4887aea7f",
     "edits":  [
                   {
                       "va":  "0x140E89880",
@@ -28,8 +28,11 @@
                       "va":  "0x140E898A0",
                       "offset":  14427296,
                       "expect":  "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
-                      "replace":  "80B84D010000000F8560A88DFF80B84A010000000F8428AB8DFF80BBA9000000000F841BAB8DFF8B8FF802000083F92D0F8437A88DFF83F92E0F842EA88DFF83F9680F8425A88DFFE9F5AA8DFF",
-                      "note":  "Warden mode: holding the button in attack mode keeps firing an automatic weapon"
+                      "replace":  "80B84D010000000F8560A88DFF80B84A010000000F8428AB8DFF8B8FF802000083F92D0F8444A88DFF83F92E0F843BA88DFF83F9680F8432A88DFFE902AB8DFFCCCCCCCCCCCCCCCCCCCCCCCCCC",
+                      "note":  "Warden mode: holding the button keeps firing an automatic weapon",
+                      "superseded":  [
+                                         "80B84D010000000F8560A88DFF80B84A010000000F8428AB8DFF80BBA9000000000F841BAB8DFF8B8FF802000083F92D0F8437A88DFF83F92E0F842EA88DFF83F9680F8425A88DFFE9F5AA8DFF"
+                                     ]
                   },
                   {
                       "va":  "0x140764100",
@@ -37,6 +40,26 @@
                       "expect":  "80B84D010000000F84D5020000",
                       "replace":  "E99B5772009090909090909090",
                       "note":  "warden attack: click check routed through the stub"
+                  },
+                  {
+                      "va":  "0x140E898F0",
+                      "offset":  14427376,
+                      "expect":  "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+                      "replace":  "80BC2498000000000F852FAA8DFF488B0543DDECFF80B84D010000000F84BCAA8DFFE9E6A98DFF",
+                      "note":  "Warden mode: a held frame outside attack mode leaves without the order-failed sound",
+                      "superseded":  [
+                                         "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
+                                     ]
+                  },
+                  {
+                      "va":  "0x1407642F3",
+                      "offset":  7747315,
+                      "expect":  "80BC2498000000007530",
+                      "replace":  "E9F85572009090909090",
+                      "note":  "warden attack: zombie test before \"order failed\" routed through the stub",
+                      "superseded":  [
+                                         "80BC2498000000007530"
+                                     ]
                   }
               ]
 }

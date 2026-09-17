@@ -15,17 +15,25 @@
 
   Fix:
     - Warden mode, hook 0x140764100 (cmp [rax+0x14D],0 / jz no-fire): also fire while the button
-      is held, when the warden is in attack mode (+0xA9, the same condition that lets a click
-      through without "order failed") and carries an automatic weapon (+0x2F8 = 0x2D, 0x2E or
-      0x68).
+      is held and the warden carries an automatic weapon (+0x2F8 = 0x2D, 0x2E or 0x68).
+    - Warden mode, hook 0x1407642F3 (the zombie test in front of "order failed"): outside attack
+      mode a click is refused ("order failed") unless the target is a Zombie (0x239). A held frame
+      that the game would refuse now leaves quietly instead of replaying the failure sound, so
+      holding the button attacks exactly what a click would.
     - Escape Mode, hook 0x14055308F (cmp item,0x2D / jne): the held-button shot accepts all three
       automatic weapons.
+
+  Version 1.0.0 required attack mode (+0xA9) for a held shot, which left out zombies: the game lets
+  a click attack a zombie without attack mode, so players fight them that way. Its warden stub is
+  kept in $WAR_V100 and the two new sites carry their original bytes as superseded, so an exe
+  patched by 1.0.0 is recognised and rewritten.
 
   How fast a held weapon fires is still decided by the weapon's RechargeTime; in Escape Mode that
   needs the weapon fire-rate fix, without which the old two-second reload applies.
 
   Registers: warden hook - rax = mouse state, rbx = warden controller, rdi = warden entity, rcx
-  free; Escape hook - rax = inventory slot array, rcx = slot index, rcx free afterwards.
+  free; order-failed hook - rax free, [rsp+0x98] = target-is-zombie byte; Escape hook - rax =
+  inventory slot array, rcx = slot index, rcx free afterwards.
 #>
 [CmdletBinding()]
 param(
@@ -33,7 +41,8 @@ param(
     [string] $Out = (Join-Path $PSScriptRoot '../patches/full-auto-hold.patch.json'),
     [string] $SectionPatch = (Join-Path $PSScriptRoot '../patches/code-section.patch.json'),
     [int] $EscAt = 0x880,
-    [int] $WarAt = 0x8A0
+    [int] $WarAt = 0x8A0,
+    [int] $RefuseAt = 0x8F0
 )
 $ErrorActionPreference = 'Stop'
 $src = $Exe; if (Test-Path -LiteralPath ($Exe + '.orig')) { $src = $Exe + '.orig' }
@@ -51,9 +60,19 @@ foreach ($e in $sec.edits) { $nb = Bytes $e.replace; for ($i = 0; $i -lt $nb.Cou
 $SEC_VA = 0x140E89000; $SEC_RAW = 0xDC1C00
 function VaToFile([long]$va) { if ($va -ge $SEC_VA) { return [int]($va - $SEC_VA + $SEC_RAW) }; return [int]($va - 0x140000C00) }
 $edits = New-Object System.Collections.Generic.List[object]
-function AddEdit([long]$va, [byte[]]$new, [string]$note) {
+function AddEdit([long]$va, [byte[]]$new, [string]$note, [string[]]$superseded) {
     $off = VaToFile $va; $old = $b[$off..($off + $new.Length - 1)]
-    $edits.Add([ordered]@{ va = ('0x{0:X}' -f $va); offset = $off; expect = (Hex $old); replace = (Hex $new); note = $note })
+    $e = [ordered]@{ va = ('0x{0:X}' -f $va); offset = $off; expect = (Hex $old); replace = (Hex $new); note = $note }
+    # Bytes an earlier release wrote here, padded to today's length with the section's INT3 fill, so the
+    # patcher recognises an exe patched by that release instead of calling it an unsupported build.
+    if ($superseded) {
+        $e.superseded = @($superseded | ForEach-Object {
+            $h = ($_ -replace '\s','')
+            if ($h.Length -gt $new.Length * 2) { throw "superseded bytes longer than the current edit at $va" }
+            $h + ('CC' * ($new.Length - $h.Length / 2))
+        })
+    }
+    $edits.Add($e)
 }
 
 $script:code = $null; $script:base = 0; $script:fix = $null; $script:lbl = $null
@@ -78,11 +97,23 @@ function JmpHook([long]$hook, [long]$stub, [int]$len) {
     for ($i = 5; $i -lt $len; $i++) { $h.Add(0x90) }
     return $h.ToArray()
 }
+function PadCC([byte[]]$a, [int]$len) {
+    if ($a.Length -gt $len) { throw "block of $($a.Length) bytes does not fit in $len" }
+    $l = New-Object System.Collections.Generic.List[byte]; $l.AddRange($a); while ($l.Count -lt $len) { $l.Add(0xCC) }
+    return $l.ToArray()
+}
 
 $ESC_HOOK = 0x14055308F; $ESC_FIRE = 0x140553095; $ESC_SKIP = 0x1405530A0
 $WAR_HOOK = 0x140764100; $WAR_FIRE = 0x14076410D; $WAR_SKIP = 0x1407643E2
+$REF_HOOK = 0x1407642F3; $REF_ATTACK = 0x14076432D; $REF_FAIL = 0x1407642FD; $REF_QUIET = 0x1407643CE
+$MOUSE_PTR = 0x140D57648
 $ESC = $SEC_VA + $EscAt
 $WAR = $SEC_VA + $WarAt
+$REFUSE = $SEC_VA + $RefuseAt
+
+# Warden stub written by version 1.0.0 at +0x8A0 (held shot only in attack mode), 77 bytes.
+$WAR_V100 = '80B84D010000000F8560A88DFF80B84A010000000F8428AB8DFF80BBA9000000000F841BAB8DFF8B8FF802000083F92D0F8437A88DFF83F92E0F842EA88DFF83F9680F8425A88DFFE9F5AA8DFF'
+$WAR_LEN = 77
 
 # ---- Escape Mode: held button fires any of the three automatic weapons ----
 NewBlock $ESC
@@ -103,28 +134,41 @@ Emit '80 B8 4D 01 00 00 00'               # cmp byte [rax+0x14d],0        clicke
 Ref32 '0F 85' $WAR_FIRE
 Emit '80 B8 4A 01 00 00 00'               # cmp byte [rax+0x14a],0        held?
 Ref32 '0F 84' $WAR_SKIP
-Emit '80 BB A9 00 00 00 00'               # cmp byte [rbx+0xa9],0         in attack mode?
-Ref32 '0F 84' $WAR_SKIP
 Emit '8B 8F F8 02 00 00'                  # mov ecx,[rdi+0x2f8]           carried weapon
 Emit '83 F9 2D'; Ref32 '0F 84' $WAR_FIRE
 Emit '83 F9 2E'; Ref32 '0F 84' $WAR_FIRE
 Emit '83 F9 68'; Ref32 '0F 84' $WAR_FIRE
 Ref32 'E9' $WAR_SKIP
-$warBytes = CloseBlock
-AddEdit $WAR $warBytes 'Warden mode: holding the button in attack mode keeps firing an automatic weapon'
+$warCode = CloseBlock
+$warBytes = PadCC $warCode $WAR_LEN
+AddEdit $WAR $warBytes 'Warden mode: holding the button keeps firing an automatic weapon' @($WAR_V100)
 AddEdit $WAR_HOOK (JmpHook $WAR_HOOK $WAR 13) 'warden attack: click check routed through the stub'
 
+# ---- Warden mode: a held frame the game would refuse leaves quietly ----
+NewBlock $REFUSE
+Emit '80 BC 24 98 00 00 00 00'            # cmp byte [rsp+0x98],0         target is a zombie (replayed)
+Ref32 '0F 85' $REF_ATTACK
+Ref32 '48 8B 05' $MOUSE_PTR               # mov rax,[0x140D57648]         mouse state
+Emit '80 B8 4D 01 00 00 00'               # cmp byte [rax+0x14d],0        clicked this frame?
+Ref32 '0F 84' $REF_QUIET                  # held only: no "order failed", leave
+Ref32 'E9' $REF_FAIL                      # click: "order failed" as before
+$refBytes = CloseBlock
+$REF_ORIG = '80BC24980000000075 30'
+AddEdit $REFUSE $refBytes 'Warden mode: a held frame outside attack mode leaves without the order-failed sound' @('CC')
+AddEdit $REF_HOOK (JmpHook $REF_HOOK $REFUSE 10) 'warden attack: zombie test before "order failed" routed through the stub' @($REF_ORIG)
+
 if ($EscAt + $escBytes.Length -gt $WarAt) { throw 'escape stub runs into the warden stub' }
-$expectOrig = @{ $ESC_HOOK = '833C882D750B'; $WAR_HOOK = '80B84D010000000F84D5020000' }
+if ($WarAt + $warBytes.Length -gt $RefuseAt) { throw 'warden stub runs into the refuse stub' }
+$expectOrig = @{ $ESC_HOOK = '833C882D750B'; $WAR_HOOK = '80B84D010000000F84D5020000'; $REF_HOOK = ($REF_ORIG -replace '\s','') }
 foreach ($e in $edits) { $va = [long]$e.va; if ($expectOrig.ContainsKey($va) -and $e.expect -ne $expectOrig[$va]) { throw ("site 0x{0:X}: found {1}, expected {2}" -f $va, $e.expect, $expectOrig[$va]) }; if ($va -ge $SEC_VA -and ($e.expect -replace 'CC','') -ne '') { throw ("section bytes at 0x{0:X} are not free" -f $va) } }
 $p2 = [byte[]]$b.Clone(); foreach ($e in $edits) { $nb = Bytes $e.replace; for ($i = 0; $i -lt $nb.Count; $i++) { $p2[$e.offset + $i] = $nb[$i] } }
 $shaP = [BitConverter]::ToString([System.Security.Cryptography.SHA256]::Create().ComputeHash($p2)).Replace('-','').ToLower()
 $doc = [ordered]@{
-    id = 'full-auto-hold'; name = 'Hold to fire automatic weapons'; version = '1.0.0'
+    id = 'full-auto-hold'; name = 'Hold to fire automatic weapons'; version = '1.1.0'
     requires = @('code-section')
-    description = 'Assault rifles and SMGs fire while the mouse button is held, in Warden Mode and Escape Mode. Warden Mode fired one shot per click whatever the weapon, and Escape Mode only let the assault rifle keep firing, not the SMG or the modified assault rifle. The rate of fire still comes from each weapon; in Escape Mode it needs the ranged weapon fire-rate fix to be faster than one shot every two seconds.'
+    description = 'Assault rifles and SMGs fire while the mouse button is held, in Warden Mode and Escape Mode, against anything a click would attack, zombies included. Warden Mode fired one shot per click whatever the weapon, and Escape Mode only let the assault rifle keep firing, not the SMG or the modified assault rifle. The rate of fire still comes from each weapon; in Escape Mode it needs the ranged weapon fire-rate fix to be faster than one shot every two seconds.'
     game_build = 'Prison Architect 64-bit, Sunset Update (final)'; sha256_original = $sha; sha256_patched = $shaP; edits = $edits
 }
 [System.IO.File]::WriteAllText($Out, ($doc | ConvertTo-Json -Depth 5) + [Environment]::NewLine, (New-Object System.Text.UTF8Encoding($false)))
 Write-Host "patched sha256 (with code-section): $shaP"
-Write-Host ("wrote $Out ({0} edits; escape {1} bytes at +0x{2:X}, warden {3} bytes at +0x{4:X})" -f $edits.Count, $escBytes.Length, $EscAt, $warBytes.Length, $WarAt)
+Write-Host ("wrote $Out ({0} edits; escape {1} bytes at +0x{2:X}, warden {3} bytes at +0x{4:X}, refuse {5} bytes at +0x{6:X})" -f $edits.Count, $escBytes.Length, $EscAt, $warCode.Length, $WarAt, $refBytes.Length, $RefuseAt)

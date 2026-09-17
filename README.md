@@ -58,6 +58,10 @@ The short version. For what each bug looked like, why it happened and what the
 fix changes, in plain English, see [Fixes explained](docs/fixes-explained.md).
 Each entry also links to its technical notes.
 
+- **Armed guards warn again with Staff Needs on.** An armed guard's chance to
+  shout a warning before firing no longer scales with the prison's overall
+  staff morale. A guard whose own needs are neglected still fires without
+  warning. [Details](docs/armed-guard-warnings.md)
 - **Muzzle flash, smoke and buckshot.** Assault rifles and SMGs show a muzzle
   flash and the shotgun fires a spread of buckshot with smoke again. Automatic
   rifles also stop playing a full burst sound for every round.
@@ -72,7 +76,7 @@ Each entry also links to its technical notes.
   after your gang kills someone now reaches the guards when "Search and Actions
   per sector" is on. [Details](docs/escape-freefire-sectors.md)
 - **Hold to fire automatic weapons.** Holding the mouse button keeps assault
-  rifles and SMGs firing in Warden Mode and Escape Mode.
+  rifles and SMGs firing in Warden Mode and Escape Mode, at zombies too.
   [Details](docs/full-auto-hold.md)
 - **Intake with route-restricted categories.** A helipad, boat dock or road that
   accepts only some prisoner categories no longer ends with *Your prison is
