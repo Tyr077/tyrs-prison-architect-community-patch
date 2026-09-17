@@ -74,6 +74,9 @@ in `debug.txt`, which the run copies. Pass the mod folder with `-Mod`.
 | `load-smoke.ps1` | keycardtest3local.prison | the save loads, autosaves, and the clock advances |
 | `keycard-released-prisoners.ps1` | keycardtest3local.prison | prisoners whose sentence is served leave (with `-Selection original`: they stay stuck) |
 | `visitor-booth-facing.ps1` | built from base3z.prison | booths facing up in a room split into a prisoner half and a VisitorOnly visitor half: a visit starts (fixes) or never does (original) |
+| `exercise-grading.ps1` | built from base3z.prison | the Yard retyped so nobody can jog for credit; bench users gain an Exercise counter (fixes) or nobody does (original); runs both builds. 2026-09-16: original 0 gains, fixes 9 (4 confirmed on a bench); the PASS line was masked by a scoring bug since fixed, rerun pending |
+| `shop-front.ps1` | built from base3z.prison | the shop zoned MinSecOnly with most prisoners recategorised Normal, so only MinSec shopkeepers may enter: non-MinSec shoppers and revenue appear (fixes) or not (original); runs both builds. Not yet run in this form (StaffOnly zoning starved the shop of its prisoner staff; shopping starts about 13:00) |
+| `armed-guard-warnings.ps1` | built from RIOT(ROCKHARD).prison | riot with low staff morale (pay factor 0, StaffMorale 10; the game holds it near 14%): peak count of prisoners with the surrendered effect, clearly higher with the fix; runs both builds. 2026-09-16: original peak 5; the fixed run had 10 surrendered and 2 rioting (vs 8) at its first autosave, then the game closed the map on its own about an hour later (orderly exit, code 18, no crash dump, cause unknown; failure conditions are on in preferences), so the run counts as unfinished |
 
 ## Building a scenario save
 
@@ -92,6 +95,18 @@ character class for CR and LF instead of `$` on these CRLF files.
 
 Every autosave of a run is kept as `autosave-<n>.prison` in the results
 folder, so a test can read the timeline, not only the end state.
+
+## Where things stand (2026-09-16 evening)
+
+Proven in the game by this harness: keycard released prisoners, visitor booths
+facing up, exercise grading (see the scoring note in the table). Pending: the
+shop test in its MinSec-only form has not been run; the warnings test needs
+its fixed run repeated (turn off failure conditions in preferences.txt for the
+run, or read the Events block of the last autosave to see what ended it); the
+intake test is not staged because the road stop's per-category toggles are
+not found in the save (the accepted set comes from a byte array at the stop
+record `+0x50`; no registered name seen). Not testable here: weapon effects,
+Escape Mode Freefire, hold to fire, disarmed armed guards, the three tweaks.
 
 ## Limits
 
