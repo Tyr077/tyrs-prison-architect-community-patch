@@ -36,7 +36,9 @@ namespace PAPatcher
 
         public MainForm()
         {
-            Text = "Tyr's Prison Architect Community Patch";
+            // The version in the title lets a bug report say which build it was made with.
+            var ver = typeof(MainForm).Assembly.GetName().Version;
+            Text = "Tyr's Prison Architect Community Patch " + ver.Major + "." + ver.Minor + "." + ver.Build;
             AutoScaleMode = AutoScaleMode.Dpi;
             ClientSize = new Size(620, 520);
             MinimumSize = new Size(540, 460);

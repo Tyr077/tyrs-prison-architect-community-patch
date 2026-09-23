@@ -141,3 +141,57 @@ entry, padded to the current length with the section's `0xCC` fill, so a game
 file patched by an earlier release reads as outdated rather than unknown and is
 rewritten in place. Without it the whole file is rejected as an unsupported
 build, and even Revert stops working.
+
+## Armed guard warnings ignore overall staff morale (`tweak-armed-guard-warnings`)
+
+With Staff Needs enabled, armed guards shout a warning before opening fire less
+often the lower the prison's overall staff morale is; at 0% they never warn,
+whatever the state of the guard itself. Reported as GitHub issue #1 and shipped
+as a fix in the 1.10.0 test build. The 2018 version of the game has the same
+multiply in the same place, and the wiki documents it ("Overall staff morale
+also affects this behaviour"), so it is how the game was designed and not
+something a later update broke. It is therefore a tweak. The byte is the same as
+the test build's, so an exe patched by that build shows the tweak as installed.
+
+A guard's combat step, `FUN_1405D7680`, decides once per engagement whether to
+shout (`FUN_1405DC370`, which calls the prisoner's OnWarnedBy and usually ends
+in surrender) or to attack. The warning chance for an armed guard:
+
+| step | chance |
+|---|---|
+| base | 0.7; 0.8 when this guard is the prisoner's own attacker and has no other target; 0.4 or 0 when another staff member is already fighting the prisoner within 5 or 3 tiles |
+| guard more than half dead | x 0.2 |
+| prisoner flagged to be fired on at sight (`+0xD38` bit `0x140`, or an escort flag) | 0 |
+| guard pissed off (`Staff+0xA88`, set every tick from the needs vtable slot `0x1B0` while Staff Needs is on) | 0 |
+| **Staff Needs on** | **x StaffMorale / 100** (`World+0x2064`, the top-bar figure) |
+| the `World+0x2F6E` flag | x 1.5 |
+
+The result is compared with a random number; below it the guard attacks. A
+prison at 40% morale gets a warning from a healthy, content armed guard 28% of
+the time instead of 70%. Staff deaths pull the figure down for the rest of the
+session (see the morale tweak above), which is why armed prisons drift towards
+"never warn".
+
+```
+1405D7DE5  cmp   byte [r11+0x46E9], 0        ; StaffNeeds option
+1405D7DED  jz    1405D7E04                   ; off: skip
+1405D7DEF  movss xmm0, [r11+0x2064]          ; StaffMorale
+1405D7DF8  mulss xmm0, [0x140B1B1B4]         ; 0.01
+1405D7E00  mulss xmm6, xmm0                  ; chance *= morale/100
+1405D7E04  cmp   byte [r11+0x2F6E], 0        ; next factor
+```
+
+Edit: one byte. The `jz` at `0x1405D7DED` (`74 15`) becomes `jmp` (`EB 15`), so
+the multiply is skipped whether or not Staff Needs is on. The pissed-off test,
+the fire-on-sight flags, the damage factor and the base chances are untouched: a
+guard whose own needs are neglected still fires without warning, and with Staff
+Needs off the code path is identical to the original. The other reader of the
+morale value in guard behaviour, the contraband search job `FUN_1407A99C0`, is
+left alone.
+
+`scripts/Build-ArmedGuardWarnings.ps1` builds the patch and checks the 31 bytes
+from the `cmp` to the next factor against the expected instructions. Verified by
+disassembly and the patcher round trip. In the in-game harness
+(`tools/ingame-test/tests/armed-guard-warnings.ps1`) a riot at about 14% morale
+had 10 prisoners surrendered at the first autosave with the tweak against a peak
+of 5 without; that run ended early, so it counts as an indication only.

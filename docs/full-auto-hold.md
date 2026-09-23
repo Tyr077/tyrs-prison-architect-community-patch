@@ -60,9 +60,9 @@ patched by 1.9.0-test1 shows as an older version and is rewritten rather than
 refused.
 
 The rate while held is unchanged: `AttackTimer` in Warden Mode, and in Escape
-Mode the gate in `FUN_140557310`, which the fire-rate fix turns into "time since
-the last shot >= RechargeTime". Without the fire-rate fix, Escape Mode still
-waits the old two-second reload between shots.
+Mode the `ReloadTimer` gate in `FUN_140557310`. With the fire-rate fix that timer
+is 0.02 s for the automatic weapons, as in the 2018 version; without it, Escape
+Mode still waits the two-second reload between shots.
 
 `scripts/Build-FullAutoHold.ps1` builds the patch; `-EscAt`, `-WarAt` and
 `-RefuseAt` move the stubs.

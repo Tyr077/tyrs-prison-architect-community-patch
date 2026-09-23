@@ -36,14 +36,17 @@ shot by everyone. Community Lua mods work around it by zeroing the timer every
 tick on guards, which is expensive and cannot be applied to prisoners without
 breaking Escape Mode.
 
-Fix: the reload timer is set to a hair above zero instead of two seconds, so
-it expires on the next tick and guards and prisoners fire at the
-`RechargeTime` from `materials.txt`. The timer is kept rather than removed
-because its expiry is also what ejects the shell casing and plays the shotgun
-pump sound; the first version of this fix zeroed it and lost both. The Escape
-Mode player attack, which relied on that timer as its only rate limit, is
-given a proper rate limit based on the time since the last shot. Technical
-notes, including the per-weapon values, in `docs/weapon-firerate.md`.
+Fix: the 2018 version of the game has the same timer, but with three values
+instead of one: 0.02 s for assault rifles and SMGs, 2 s for the Tazer and 0.7 s
+for every other weapon. The final version kept only the Tazer's and applies it
+to everything. The fix puts the three values back, so a guard or prisoner fires
+at the wait above plus the weapon's `RechargeTime` from `materials.txt`: a
+revolver every 1.2 s, a shotgun every 1.7 s, an assault rifle about eight times
+a second. Shell casings and the shotgun pump sound come when the timer runs
+out, as before. Earlier versions of this fix removed the wait altogether, which
+made pistols, shotguns and rifles fire faster than they ever had; version 2.0.0
+goes back to what the game did in 2018. Technical notes, including the
+per-weapon values, in `docs/weapon-firerate.md`.
 
 ### Alert icons with custom sprite-sheet mods
 
@@ -230,22 +233,23 @@ and visitor tables are unchanged. Ozoneraxi's AIO tracker recorded the failing
 layout and the workaround that pointed at the check; technical notes in
 `docs/visitor-booth-facing.md`.
 
-### Armed guard warnings with Staff Needs
+### Prisoners near gunfire surrender
 
-Symptoms: with Staff Needs on, armed guards rarely shout a warning before they
-shoot, even when the guard itself is content, and the lower the prison's staff
-morale the rarer the warnings; at 0% they never warn. With Staff Needs off
-they warn normally.
+Symptoms: when an armed guard opens fire, only the prisoner being shot at
+reacts. Everyone standing around it carries on rioting. Older players remember,
+and the wiki still says, that prisoners within four squares of a shot might
+surrender, up to ten per shot.
 
-Cause: an armed guard's warning chance already drops to nothing when that
-guard's own needs are neglected, which is the rule players expect. On top of
-that, with Staff Needs on, the game multiplied the chance by the prison's
-overall staff morale percentage. Staff deaths pull that figure down for the
-rest of the session, so armed prisons drift towards guards that shoot first.
+Cause: that rule was real. In the 2018 version of the game every shot, from
+anyone but a prisoner and with anything but the Tazer, picked up to ten random
+prisoners within four squares of where the shot was aimed or of the shooter and
+made each react as if it had been shot at itself. Against an armed guard that
+usually means surrender; the toughest prisoners may go for the guard instead.
+The final version's shooting code simply ends before that part, and nothing else
+does the job.
 
-Fix: the multiply by overall morale is skipped. The per-guard rule stays, and
-with Staff Needs off nothing changes. Technical notes in
-`docs/armed-guard-warnings.md`.
+Fix: the missing part is added back to the end of the shooting code, doing what
+the 2018 version did. Technical notes in `docs/gunfire-surrender.md`.
 
 ### Muzzle flash, smoke and buckshot
 
@@ -331,7 +335,7 @@ what makes that rate faster than one shot every two seconds. Technical notes in
 These change game balance rather than fix bugs, so they are **off by default**.
 Tick the ones you want in the patcher before clicking Apply selection (or pass
 `--tweaks` on the command line to turn all of them on). Everything below is
-marked "[Optional]" in the list. Technical notes for all three are in
+marked "[Optional]" in the list. Technical notes for all of them are in
 `docs/tweaks.md`.
 
 ### No reoffending fine (Second Chances)
@@ -358,3 +362,14 @@ in-game day. The death count itself is left alone, so the "staff have died on
 duty" line in the staff morale panel still shows the real number. This tweak
 uses the same small code section as the scripted status effects fix.
 
+### Armed guard warnings ignore overall staff morale
+
+With Staff Needs on, the chance that an armed guard shouts a warning before it
+shoots is multiplied by the prison's overall staff morale, on top of the rule
+that a guard whose own needs are neglected does not warn at all. At low morale
+armed guards shoot first however content the guard itself is, and staff deaths
+pull morale down for the rest of the session. With this tweak the overall
+figure no longer matters; the per-guard rule stays, and with Staff Needs off
+nothing changes. This was a bug fix in the 1.10.0 test build. The 2018 version
+of the game turned out to work the same way, so it is a design choice and
+became a tweak.

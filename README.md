@@ -58,10 +58,10 @@ The short version. For what each bug looked like, why it happened and what the
 fix changes, in plain English, see [Fixes explained](docs/fixes-explained.md).
 Each entry also links to its technical notes.
 
-- **Armed guards warn again with Staff Needs on.** An armed guard's chance to
-  shout a warning before firing no longer scales with the prison's overall
-  staff morale. A guard whose own needs are neglected still fires without
-  warning. [Details](docs/armed-guard-warnings.md)
+- **Prisoners near gunfire surrender.** A guard's gunshot makes up to ten
+  prisoners within four squares react as if they were the target, and most of
+  them surrender, as in the 2018 version of the game. The final version had lost
+  that code. [Details](docs/gunfire-surrender.md)
 - **Muzzle flash, smoke and buckshot.** Assault rifles and SMGs show a muzzle
   flash and the shotgun fires a spread of buckshot with smoke again. Automatic
   rifles also stop playing a full burst sound for every round.
@@ -117,9 +117,11 @@ Each entry also links to its technical notes.
 - **Gang contraband hand-off (Gangs DLC).** Hand-offs no longer leave gang
   members pacing forever or crooked guards doing nothing.
   [Details](docs/gang-handoff.md)
-- **Ranged weapon fire rate.** Assault rifles and SMGs fire at the `RechargeTime`
-  in `materials.txt` instead of once every two seconds, with shell casings and
-  the shotgun pump sound intact. [Details](docs/weapon-firerate.md)
+- **Ranged weapon fire rate.** Every gun waited two seconds after each shot, so
+  assault rifles and SMGs never fired automatically. The waits of the 2018
+  version are back: next to nothing for automatic weapons, 0.7 s for other guns,
+  2 s for the Tazer, plus the weapon's `RechargeTime` from `materials.txt`.
+  [Details](docs/weapon-firerate.md)
 
 ## Optional tweaks
 
@@ -133,6 +135,11 @@ in the patcher, or pass `--tweaks` on the command line to turn all of them on.
   prisoners instead of bringing back reoffenders with all their old reputations.
 - **Staff death morale penalty fades.** The morale penalty for staff deaths
   shrinks by one death per in-game day; the death count itself is unchanged.
+- **Armed guard warnings ignore overall staff morale.** With Staff Needs on, an
+  armed guard's chance to shout a warning before firing no longer scales with
+  the prison's overall staff morale. A guard whose own needs are neglected still
+  fires without warning. The game has always worked this way, so this is a
+  tweak; it was listed as a fix in the 1.10.0 test build.
 
 ## Unsupported build
 
@@ -174,9 +181,8 @@ what happens instead.
 
 - **Ozoneraxi** (All-in-One patch, AIO): fixed the ranged weapon fire rate a
   year before this patch did, as part of their all-in-one patching work. Their
-  work on the reload timer established it as the cause of the bug and that the
-  pre-Sunset build had no such timer; the 0.01 variant of that script is what
-  showed the timer also drives the shell casings.
+  work on the reload timer established it as the cause of the bug; the 0.01
+  variant of that script is what showed the timer also drives the shell casings.
 - **BurpBurp**, main contributor, and **Ozoneraxi** (Less Lethal Expansion):
   their mod is the reference use of the Alpha 28 `StatusEffects` scripting, and
   their scripts are what the scripted status effects fix was built and checked

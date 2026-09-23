@@ -71,6 +71,7 @@ function Set-GameSelection {
     param(
         [string] $GameDir = $script:Defaults.GameDir,
         [ValidateSet('original', 'fixes', 'fixes+tweaks')] [string] $Selection = 'fixes',
+        [string[]] $Without = @(),
         [string] $Patcher = $script:Defaults.Patcher
     )
     $exe = Join-Path $GameDir 'Prison Architect64.exe'
@@ -80,8 +81,32 @@ function Set-GameSelection {
         $args = @('--apply'); if ($Selection -eq 'fixes+tweaks') { $args += '--tweaks' }; $args += ('"' + $exe + '"')
         $p = Start-Process -FilePath $Patcher -ArgumentList $args -Wait -PassThru -WindowStyle Hidden
         if ($p.ExitCode -ne 0) { throw "patcher --apply failed with exit code $($p.ExitCode)" }
+        foreach ($id in $Without) { Remove-PatchHooks -Exe $exe -Id $id }
     }
     return Get-Sha256 $exe
+}
+
+function Remove-PatchHooks {
+    <# Take one patch back out of an applied build: write the original bytes of each edit that is not a
+       code cave fill (expect all 0xCC). The stub stays in .tyrs but nothing jumps to it any more, so the
+       result is the selection without that patch and otherwise byte-identical. #>
+    param([string] $Exe, [string] $Id)
+    $json = Join-Path $PSScriptRoot "..\..\patches\$Id.patch.json"
+    if (-not (Test-Path -LiteralPath $json)) { throw "no patch file for '$Id'" }
+    $patch = Get-Content -LiteralPath $json -Raw | ConvertFrom-Json
+    $bytes = [IO.File]::ReadAllBytes($Exe)
+    $n = 0
+    foreach ($e in $patch.edits) {
+        if ($e.expect -match '^(CC)+$') { continue }
+        $orig = [byte[]] @($e.expect -split '(..)' | Where-Object { $_ } | ForEach-Object { [Convert]::ToByte($_, 16) })
+        $new = [byte[]] @($e.replace -split '(..)' | Where-Object { $_ } | ForEach-Object { [Convert]::ToByte($_, 16) })
+        for ($i = 0; $i -lt $new.Length; $i++) {
+            if ($bytes[$e.offset + $i] -ne $new[$i]) { throw "$Id edit at $($e.va) is not applied, cannot remove it" }
+        }
+        [Array]::Copy($orig, 0, $bytes, $e.offset, $orig.Length); $n++
+    }
+    [IO.File]::WriteAllBytes($Exe, $bytes)
+    Write-Host "removed $n hook(s) of $Id"
 }
 
 function Get-ModName([string] $ModDir) {
@@ -97,6 +122,8 @@ function Invoke-InGameRun {
     param(
         [Parameter(Mandatory)] [string] $Save,
         [ValidateSet('original', 'fixes', 'fixes+tweaks')] [string] $Selection = 'fixes',
+        [string[]] $Without = @(),
+        [switch] $NoFailureConditions,
         [string[]] $Mod = @(),
         [int] $Autosaves = 2,
         [double] $TimeWarp = 0,
@@ -114,7 +141,7 @@ function Invoke-InGameRun {
     $Save = (Resolve-Path -LiteralPath $Save).Path
 
     $GameDir = Initialize-ScratchGame -GameDir $GameDir
-    $exeSha = Set-GameSelection -GameDir $GameDir -Selection $Selection -Patcher $Patcher
+    $exeSha = Set-GameSelection -GameDir $GameDir -Selection $Selection -Without $Without -Patcher $Patcher
 
     $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
     $out = Join-Path $ResultsRoot "$Name-$stamp"
@@ -132,7 +159,7 @@ function Invoke-InGameRun {
     $debug = Join-Path $user 'debug.txt'
     $proc = $null
     $result = [ordered]@{
-        Name = $Name; Save = $Save; Selection = $Selection; ExeSha256 = $exeSha; Mods = @(); TimeWarp = $TimeWarp
+        Name = $Name; Save = $Save; Selection = $Selection; Without = $Without; ExeSha256 = $exeSha; Mods = @(); TimeWarp = $TimeWarp
         Started = $null; LoadedAt = $null; LoadedMap = $null; AutosavesSeen = 0; Ended = $null
         Autosave = $null; Debug = $null; ResultDir = $out; Ok = $false; Note = ''; Snapshots = 'autosave-<n>.prison in ResultDir'
     }
@@ -164,6 +191,7 @@ function Invoke-InGameRun {
         $p = $p -replace '(?m)^ScreenH\s+\d+', 'ScreenH              900'
         $p = $p -replace '(?m)^AutoSaveTimer\s+\d+', 'AutoSaveTimer        1'
         $p = $p -replace '(?m)^Mods\s+.*$', ('Mods                 ' + $modsLine + '  ')
+        if ($NoFailureConditions) { $p = $p -replace '(?m)^FailureConditions\s+\S+', 'FailureConditions    false' }
         [IO.File]::WriteAllText($prefs, $p, (New-Object Text.UTF8Encoding($false)))
 
         if (Test-Path -LiteralPath $autosave) { Remove-Item -LiteralPath $autosave -Force }

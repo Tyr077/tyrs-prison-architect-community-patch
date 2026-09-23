@@ -1,5 +1,5 @@
 <#
-  Armed guard warnings with Staff Needs (fix armed-guard-warnings).
+  Armed guard warnings with Staff Needs (optional tweak tweak-armed-guard-warnings).
 
   Save: RIOT(ROCKHARD).prison, a riot in progress with 28 rioting prisoners and six active armed
   guards, Staff Needs on. The test edits the save so staff morale is low: StaffPayModifier 0 (the pay
@@ -12,16 +12,17 @@
   "surrendered" status effect; the other ways to get that effect need Freefire or a soldier, neither
   present here. So the count of prisoners carrying "surrendered" is the save-visible signal.
 
-  The test runs the unpatched build and the fixed build on the same edited save and compares the
+  The test runs the fixes alone and the fixes plus tweaks on the same edited save (not the unpatched
+  build: the gunfire-surrender fix also makes prisoners surrender, so both runs must have it) and compares the
   highest number of prisoners with "surrendered" seen in any autosave. Expected: clearly more with
-  the fix. Thresholds: fixes >= MinFixed and fixes > original.
+  the tweak. Thresholds: tweaked >= MinFixed and tweaked > fixes alone.
 #>
 param(
     [string] $Save = (Join-Path $env:LOCALAPPDATA 'Introversion\Prison Architect\saves\RIOT(ROCKHARD).prison'),
     [int] $Autosaves = 4,
     [double] $TimeWarp = 1.25,
     [int] $MinFixed = 3,
-    [ValidateSet('both', 'original', 'fixes')] [string] $Selection = 'both',
+    [ValidateSet('both', 'fixes', 'fixes+tweaks')] [string] $Selection = 'both',
     [switch] $DryRun
 )
 $ErrorActionPreference = 'Stop'
@@ -54,7 +55,7 @@ Write-Host ("edited save: clock {0:n0} ({1:00}:{2:00}), {3} prisoners, {4} armed
 if ($DryRun) { Write-Host "dry run: $work"; exit 0 }
 
 $results = @{}
-$runs = if ($Selection -eq 'both') { @('original', 'fixes') } else { @($Selection) }
+$runs = if ($Selection -eq 'both') { @('fixes', 'fixes+tweaks') } else { @($Selection) }
 foreach ($sel in $runs) {
     $r = Invoke-InGameRun -Save $work -Selection $sel -Autosaves $Autosaves -TimeWarp $TimeWarp -Name "warnings-$sel"
     if (-not $r.Ok) { Write-Host "FAIL armed-guard-warnings ($sel): $($r.Note) (results in $($r.ResultDir))"; exit 1 }
@@ -70,7 +71,7 @@ foreach ($sel in $runs) {
     $results[$sel] = $peak
 }
 
-if ($results.ContainsKey('fixes') -and $results['fixes'] -lt $MinFixed) { Write-Host "FAIL armed-guard-warnings: only $($results['fixes']) surrendered with the fix (expected at least $MinFixed)"; exit 1 }
-if ($results.ContainsKey('original') -and $results.ContainsKey('fixes') -and $results['fixes'] -le $results['original']) { Write-Host "FAIL armed-guard-warnings: fixed build $($results['fixes']) is not above the original $($results['original'])"; exit 1 }
+if ($results.ContainsKey('fixes+tweaks') -and $results['fixes+tweaks'] -lt $MinFixed) { Write-Host "FAIL armed-guard-warnings: only $($results['fixes+tweaks']) surrendered with the tweak (expected at least $MinFixed)"; exit 1 }
+if ($results.ContainsKey('fixes') -and $results.ContainsKey('fixes+tweaks') -and $results['fixes+tweaks'] -le $results['fixes']) { Write-Host "FAIL armed-guard-warnings: with the tweak $($results['fixes+tweaks']) is not above the fixes alone $($results['fixes'])"; exit 1 }
 Write-Host ("PASS armed-guard-warnings ({0})" -f (($runs | ForEach-Object { "$_ peak $($results[$_])" }) -join ', '))
 exit 0

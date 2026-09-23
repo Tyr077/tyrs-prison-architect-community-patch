@@ -62,10 +62,19 @@ Objects are the entries of the `Objects` block; every scalar is a string
 use `ToDouble` for arithmetic. Compare by `Id.u`, which survives reloads.
 
 Run a test with `-Selection original` as well when the unpatched behaviour is
-part of the claim; the keycard test does this.
+part of the claim; the keycard test does this. `-Without <patch id>` applies
+the selection and then writes back the original bytes of that patch's hooks
+(its cave stays in `.tyrs`, unreachable), so a fix can be compared against
+the same build minus that one fix. `-NoFailureConditions` turns failure
+conditions off in preferences.txt for the run, so a riot cannot end the map.
 
-A Lua observer mod is the other assertion channel: `Game.DebugOut` lines land
-in `debug.txt`, which the run copies. Pass the mod folder with `-Mod`.
+A Lua observer mod is the other assertion channel. Pass the mod folder with
+`-Mod`; the test puts the mod's scripted object into the save. `Game.DebugOut`
+goes to the script debug window, not `debug.txt`, so the script keeps its
+results in its own fields (`this.X = value`), which the game saves in the
+object's `ScriptSystem` block (`$obj.ScriptSystem.X` after parsing).
+`tools\testmods\fire-rate-observer` is the example: it records the
+`ReloadTimer` each armed guard shot stores, by weapon.
 
 ## Tests
 
@@ -76,7 +85,8 @@ in `debug.txt`, which the run copies. Pass the mod folder with `-Mod`.
 | `visitor-booth-facing.ps1` | built from base3z.prison | booths facing up in a room split into a prisoner half and a VisitorOnly visitor half: a visit starts (fixes) or never does (original) |
 | `exercise-grading.ps1` | built from base3z.prison | the Yard retyped so nobody can jog for credit; bench users gain an Exercise counter (fixes) or nobody does (original); runs both builds. 2026-09-16: original 0 gains, fixes 9 (4 confirmed on a bench); the PASS line was masked by a scoring bug since fixed, rerun pending |
 | `shop-front.ps1` | built from base3z.prison | the shop zoned MinSecOnly with most prisoners recategorised Normal, so only MinSec shopkeepers may enter: non-MinSec shoppers and revenue appear (fixes) or not (original); runs both builds. Not yet run in this form (StaffOnly zoning starved the shop of its prisoner staff; shopping starts about 13:00) |
-| `armed-guard-warnings.ps1` | built from RIOT(ROCKHARD).prison | riot with low staff morale (pay factor 0, StaffMorale 10; the game holds it near 14%): peak count of prisoners with the surrendered effect, clearly higher with the fix; runs both builds. 2026-09-16: original peak 5; the fixed run had 10 surrendered and 2 rioting (vs 8) at its first autosave, then the game closed the map on its own about an hour later (orderly exit, code 18, no crash dump, cause unknown; failure conditions are on in preferences), so the run counts as unfinished |
+| `armed-guard-warnings.ps1` | built from RIOT(ROCKHARD).prison | riot with low staff morale (pay factor 0, StaffMorale 10; the game holds it near 14%): peak count of prisoners with the surrendered effect, clearly higher with the optional tweak `tweak-armed-guard-warnings` than with the fixes alone; runs `fixes` and `fixes+tweaks` (it was a fix until 1.11.0, and the runs below compared the original with the fixes). 2026-09-16: original peak 5; the fixed run had 10 surrendered and 2 rioting (vs 8) at its first autosave, then the game closed the map on its own about an hour later (orderly exit, code 18, no crash dump, cause unknown; failure conditions are on in preferences), so the run counts as unfinished |
+| `gunfire-surrender.ps1` | built from RIOT(ROCKHARD).prison + a Fire Rate Observer object | the warnings save (low morale) with `-Mod ..\..\testmods\fire-rate-observer`; `-Repeat` runs each of `fixes -Without gunfire-surrender` and `fixes` (`-Original` adds the unpatched game). Surrender: mean peak of prisoners with the surrendered effect is higher with the fix. Fire rate: the observer's shotgun histogram has shots at 0.7 s or less with the fixes and none unpatched (Tazer shots store 2.0 in every build and count under the main weapon). 2026-09-22, PASS: surrender peaks without 0/4, with 10/3; shots of 0.7 s or less: fixes 5 of 15, without-surrender build 4 of 17, original 0 of 7. The surrender numbers are noisy (one autosave a minute, and the effect fades), the fire rate result is clear |
 
 ## Building a scenario save
 
@@ -96,13 +106,14 @@ character class for CR and LF instead of `$` on these CRLF files.
 Every autosave of a run is kept as `autosave-<n>.prison` in the results
 folder, so a test can read the timeline, not only the end state.
 
-## Where things stand (2026-09-16 evening)
+## Where things stand (2026-09-22)
 
 Proven in the game by this harness: keycard released prisoners, visitor booths
-facing up, exercise grading (see the scoring note in the table). Pending: the
+facing up, exercise grading (see the scoring note in the table), the 2018 fire
+rate (weapon-firerate 2.0.0) and, less firmly, gunfire surrender. Pending: the
 shop test in its MinSec-only form has not been run; the warnings test needs
-its fixed run repeated (turn off failure conditions in preferences.txt for the
-run, or read the Events block of the last autosave to see what ended it); the
+its fixed run repeated with `-NoFailureConditions` (the 2026-09-22 "exit code
+18" was a manual close, so the 09-16 one may have been too); the
 intake test is not staged because the road stop's per-category toggles are
 not found in the save (the accepted set comes from a byte array at the stop
 record `+0x50`; no registered name seen). Not testable here: weapon effects,

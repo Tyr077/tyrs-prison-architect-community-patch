@@ -1,16 +1,17 @@
 # Ranged weapon fire-rate fix: technical notes
 
 Target: `Prison Architect64.exe`, Steam Sunset Update. Same build and conventions
-as `gang-handoff.md`.
+as `gang-handoff.md`. Since 2.0.0 the fix uses the `.tyrs` section
+(`code-section.md`).
 
 ## Symptom
 
 Assault rifles and submachine guns (RechargeTime 0.1) fire one shot every two
-seconds, the same as a sniper rifle. Every ranged weapon is capped at one shot
-per two seconds regardless of its `RechargeTime` in `materials.txt`. Community
-Lua mods work around it by forcing `ReloadTimer` to zero every tick on guards,
-which is expensive and cannot be applied to prisoners without breaking Escape
-Mode recruitment.
+seconds, the same as a sniper rifle. Every ranged weapon waits two seconds after
+each shot on top of its `RechargeTime` in `materials.txt`. Community Lua mods
+work around it by forcing `ReloadTimer` to zero every tick on guards, which is
+expensive and cannot be applied to prisoners without breaking Escape Mode
+recruitment.
 
 ## Cause
 
@@ -20,128 +21,131 @@ attack time (double, world time) at `+0x310`. Equipment definition:
 
 | function | role |
 |---|---|
-| `FUN_140537930` | FireRangedShot: spends escape-mode ammo, spawns the bullet, then stores `ReloadTimer = 2.0f` and `AttackTimer = RechargeTime` |
+| `FUN_140537930` | FireRangedShot: spends Escape Mode and Warden Mode ammo, spawns the bullet, then stores `ReloadTimer = 2.0f` and `AttackTimer = RechargeTime` |
 | `FUN_1405370f0` | NPC ranged attack behaviour: returns while `ReloadTimer > 0`, otherwise counts `AttackTimer` down and fires at zero |
 | `FUN_140537ef0` | NPC chase-and-shoot variant, same gate |
-| `FUN_140537d00` | counts `ReloadTimer` down, plays the `Reload_` sound at zero |
+| `FUN_140537d00` | counts `ReloadTimer` down; at zero plays the `Reload_` sound and ejects the casing |
 | `FUN_140557310` | Escape Mode player attack: returns while `ReloadTimer > 0`, then fires |
 | `FUN_140536cb0` | returns the entity's equipment definition |
 
 Because the NPC routine will not count `AttackTimer` while `ReloadTimer` is
-positive, every shot costs 2.0 s plus `RechargeTime`. The author of the
-Weapon Firerate Fix mod notes the old 2.7 build had no `ReloadTimer` field at
-all, so the pre-Double-Eleven cadence was `RechargeTime` alone.
+positive, every shot costs the reload time plus `RechargeTime`.
 
-## Fix
+### What the 2018 version did
 
-1. `0x140537CC5`: `mov dword [rbx+0x34C], 0x40000000` (2.0 s) becomes
-   `mov dword [rbx+0x34C], 0x3A83126F` (0.001 s). The reload timer now
-   expires on the next entity update, so the NPC routine starts counting
-   `AttackTimer` at once and the cadence is `RechargeTime` plus at most one
-   tick. Version 1.0.0 of this fix wrote 0.0 here; see "Casings" below for why
-   that was wrong and why 1.1.0 uses a small positive value instead.
-2. The Escape Mode player attack gated only on `ReloadTimer`, so it would now
-   fire without limit. The 16-byte gate at `0x140557372`
-   (`xorps xmm0,xmm0; comiss xmm0,[rbx+0x34C]; jc ret`) is replaced by a jump to
-   a stub that compares the time since the last shot with `RechargeTime`:
+The 2018 version of the game (the Steam beta branch
+`prisonarchitect_anniversary_2018_version`) has the same routines with the same
+gates. The one difference is the value `FireRangedShot` stores in `ReloadTimer`:
+
+| weapon | 2018 | final build |
+|---|---|---|
+| AssaultRifle, SubMachineGun | 0.02 s | 2.0 s |
+| Tazer | 2.0 s | 2.0 s |
+| every other weapon | 0.7 s | 2.0 s |
+
+The final build keeps only the Tazer's value and applies it to everything. (The
+three values also survive in the final build's unreachable older firing routine
+`FUN_1401AC610`, which is where they were first noticed.) `materials.txt` has
+the same `RechargeTime`, `AttackPower`, `Range` and `Ammo` for these weapons in
+both versions, so the difference is entirely this one store.
+
+## Fix (2.0.0)
+
+The ten-byte store at `0x140537CC5` (`mov dword [rbx+0x34C], 0x40000000`)
+becomes a jump to a stub at `.tyrs+0x920` that stores the 2018 value for the
+weapon. `r15` holds the weapon's definition there; its distance from the start
+of the definition array (`[0x140DECCC0]`, `0x90` bytes each) identifies it:
 
 ```
-mov rcx, rbx                      ; entity
-lea rdx, [rsp+0x40]               ; scratch out-param (caller home space)
-call FUN_140536cb0                ; rax = equipment definition
-cvtss2sd xmm1, dword [rax+0x50]   ; RechargeTime
-mov rax, [0x140D57900]
-mov rax, [rax+0x198]              ; World
-movsd xmm0, [rax+0x80]            ; world time
-subsd xmm0, [rbx+0x310]           ; minus last shot time
-comisd xmm0, xmm1
-jb   0x140557422                  ; too soon: return
-jmp  0x140557382                  ; continue the attack
+mov  rax, [0x140DECCC0]
+mov  rcx, r15
+sub  rcx, rax
+mov  eax, 0x40000000          ; 2.0   Tazer 0x25
+cmp  rcx, 0x14D0 / je store
+mov  eax, 0x3CA3D70A          ; 0.02  AssaultRifle 0x2D, SubMachineGun 0x2E,
+cmp  rcx, 0x1950 / je store   ;       ModifiedAssaultRifle 0x68
+cmp  rcx, 0x19E0 / je store
+cmp  rcx, 0x3A80 / je store
+mov  eax, 0x3F333333          ; 0.7   everything else
+store:
+mov  [rbx+0x34C], eax
+jmp  0x140537CCF
 ```
 
-The stub lives at `0x140A443C0`, the last 64 bytes of the `.text` slack after
-the hand-off fix. Later fixes use the `.tyrs` section instead.
+`rax` and `rcx` are free at that point: the instruction before the hook has just
+stored `rax`, and the one after loads `eax`. The ModifiedAssaultRifle is a DLC
+weapon the 2018 version does not have; it is an automatic rifle with the same
+`RechargeTime` as the AssaultRifle, so it gets the automatic value, as it does in
+`weapon-effects.md`.
+
+Nothing else is changed. The NPC routines and the Escape Mode player attack gate
+on `ReloadTimer` exactly as they did in 2018, so with the 2018 values they behave
+as they did then. Warden Mode gates on `AttackTimer` alone and was never affected.
 
 `scripts/Build-Firerate.ps1` assembles it; `patches/weapon-firerate.patch.json`
-is the result. The edit at `0x140537CC5` lists the 1.0.0 bytes as
-`superseded`, so a game file patched by 1.0.0 through 1.4.1 is recognised and
-rewritten on upgrade.
-
-## Casings and the reload sound (why 1.0.0 was wrong)
-
-The reload countdown `FUN_140537d00` is called from the entity update
-(`FUN_14053ed20`) only while `ReloadTimer > 0`. When the timer reaches zero it
-does two more things besides clearing it: it plays `Reload_<weapon>` (skipped
-for equipment index 1, the baton) and it spawns a particle with
-`FUN_1403f75b0` (skipped for equipment index 7): a small sprite thrown sideways
-from the entity's facing at 3 to 7 tiles per second with random spin and
-gravity of 600. That particle is the ejected shell casing. With `ReloadTimer`
-written as 0.0 the countdown never ran, so 1.0.0 lost every casing and the
-shotgun pump sound (`Reload_Shotgun`, the only `Reload_` event in
-`sounds.txt`). It was reported that the casings were missing; a Lua workaround
-that writes 0.01 instead of 0 brought them back, which is the same mechanism.
-
-With 0.001 the countdown runs on the very next update: the casing pops and the
-pump sound plays immediately after the shot rather than two seconds later.
-The countdown does not gate anything else, so the only cost is the one tick
-the NPC routine waits before it starts `AttackTimer`.
-
-## What the game actually does per shot (Sunset build)
-
-`FireRangedShot` (`FUN_140537930`), for any shooter:
-
-1. In Escape Mode only, and only for the player's gang: take one round from
-   the shooter's magazine for the current weapon; if it is empty, play
-   `OutOfAmmo` and do not fire. `Ammo` in `materials.txt` is that magazine
-   size. Nothing reads it for guards, snipers, soldiers or ordinary prisoners:
-   NPCs have unlimited ammunition and never stop to reload a magazine.
-2. Play `Attack_<weapon>`, spawn the bullet, record the shot time at
-   `Entity+0x310`.
-3. `ReloadTimer = 2.0`, `AttackTimer = RechargeTime`.
-
-The NPC attack routines (`FUN_1405370f0`, `FUN_140537ef0`) do nothing while
-`ReloadTimer > 0`, then count `AttackTimer` down and fire when it reaches
-zero. So the shipped cadence is `2.0 + RechargeTime` for everybody, with the
-casing appearing at the two-second mark. There is no burst or magazine logic
-that the timer could be waiting for; it is simply added to every shot.
+is the result.
 
 ## Weapon values
 
-From `materials.txt` / `materials_dlc.txt`. "Shipped" is the Sunset build as
-released; "fixed" is with this patch. Damage per second assumes every shot
+From `materials.txt` / `materials_dlc.txt`. Cadence is the reload value plus
+`RechargeTime`, for guards and prisoners. Damage per second assumes every shot
 hits.
 
-| weapon | RechargeTime | AttackPower | Ammo (Escape Mode) | shipped cadence | fixed cadence | shipped dmg/s | fixed dmg/s |
-|---|---|---|---|---|---|---|---|
-| Gun (revolver) | 0.5 | 15 | 6 | 2.5 s | 0.5 s | 6 | 30 |
-| Shotgun | 1.0 | 25 | 6 | 3.0 s | 1.0 s | 8 | 25 |
-| Rifle (sniper) | 2.0 | 50 | 10 | 4.0 s | 2.0 s | 12 | 25 |
-| AssaultRifle | 0.1 | 4 | 30 | 2.1 s | 0.1 s | 2 | 40 |
-| SubMachineGun | 0.1 | 2 | 30 | 2.1 s | 0.1 s | 1 | 20 |
-| Tazer | 2.0 | 1 | 1 | 4.0 s | 2.0 s | | |
-| ModifiedHandgun (DLC) | 0.35 | 20 | 6 | 2.35 s | 0.35 s | 9 | 57 |
-| ModifiedAssaultRifle (DLC) | 0.1 | 5 | 30 | 2.1 s | 0.1 s | 2 | 50 |
+| weapon | RechargeTime | AttackPower | unpatched cadence | fixed cadence (= 2018) | unpatched dmg/s | fixed dmg/s |
+|---|---|---|---|---|---|---|
+| Gun (revolver) | 0.5 | 15 | 2.5 s | 1.2 s | 6 | 12.5 |
+| Shotgun | 1.0 | 25 | 3.0 s | 1.7 s | 8 | 15 |
+| Rifle (sniper) | 2.0 | 50 | 4.0 s | 2.7 s | 12 | 18.5 |
+| AssaultRifle | 0.1 | 4 | 2.1 s | 0.12 s | 2 | 33 |
+| SubMachineGun | 0.1 | 2 | 2.1 s | 0.12 s | 1 | 17 |
+| Tazer | 2.0 | 1 | 4.0 s | 4.0 s | | |
+| ModifiedHandgun (DLC) | 0.35 | 20 | 2.35 s | 1.05 s | 9 | 19 |
+| ModifiedAssaultRifle (DLC) | 0.1 | 5 | 2.1 s | 0.12 s | 2 | 42 |
 
-The assault rifle and SMG are clearly designed as high-rate, low-damage
-weapons (4 and 2 damage per round against 15 for a revolver); at the shipped
-cadence they were the weakest guns in the game. One thing to be aware of when
-judging "too fast": `Attack_AssaultRifle` and `Attack_SubMachineGun` both play
-a multi-round burst sample (`gi_m16_burst_*`), so at ten shots per second the
-audio is ten overlapping bursts. That is a sound-design mismatch, not a rate
-problem; a mod can raise `RechargeTime` on those two weapons if the cadence is
-felt to be too high, and with this fix that value is honoured. The game's older
-firing code played the burst at most every 0.5 s for these rifles; the
-weapon-effects fix restores that (`weapon-effects.md`).
+In Escape Mode the player's gate is `ReloadTimer` alone, so a click fires as soon
+as the reload value has run out: 0.7 s for a revolver, every other frame for an
+automatic rifle while the button is held.
 
-The same older code (`FUN_1401AC610`, now unreachable) also set ReloadTimer per
-weapon instead of a flat 2.0: 0.02 s for the AssaultRifle and SubMachineGun,
-2.0 s for the Tazer and 0.7 s for every other gun. If that was the intended
-cadence, a revolver shot took 1.2 s and a shotgun 1.7 s, slower than
-`RechargeTime` alone. This fix does not adopt those values; it is noted here in
-case the non-automatic weapons are felt to be too fast.
+`Attack_AssaultRifle` and `Attack_SubMachineGun` are multi-round burst samples;
+the weapon-effects fix plays them at most every 0.5 s, as the 2018 version did
+(`weapon-effects.md`).
 
-## Not verified
+## Casings and the reload sound
 
-Whether the pre-Sunset build had a `ReloadTimer` at all could not be checked;
-that binary is not available here. The Weapon Firerate Fix author reports no
-such field in 2.7-era save files. What is verified is the shipped code above.
+The reload countdown `FUN_140537d00` is called from the entity update
+(`FUN_14053ed20`) only while `ReloadTimer > 0`. When the timer reaches zero it
+plays `Reload_<weapon>` (skipped for equipment index 1) and spawns a particle
+with `FUN_1403f75b0` (skipped for equipment index 7): the ejected shell casing.
+With the 2018 values the casing and the shotgun's pump sound come 0.7 s after
+the shot, where the unpatched game has them two seconds after it.
+
+## Earlier versions of this fix
+
+1.0.0 wrote `ReloadTimer = 0`. That skipped the countdown and with it every
+casing and the pump sound. 1.1.0 wrote 0.001 instead, which brought them back.
+Both removed the wait altogether, so the cadence was `RechargeTime` alone, and
+both replaced the Escape Mode gate at `0x140557372` with a stub in the `.text`
+cave (`0x140A443C0`) that compared the time since the last shot with
+`RechargeTime`, because a gate on a timer that is always zero limits nothing.
+
+With the 2018 version available for comparison it turned out that this made
+pistols, shotguns and rifles fire faster than the game ever had them (a revolver
+every 0.5 s against 1.2 s). 2.0.0 therefore restores the 2018 values instead,
+gives the Escape Mode gate its original bytes back and clears the old stub out
+of the cave.
+
+For upgrades, the patch file keeps edits for the two sites 2.0.0 no longer
+changes, with `replace` equal to the original bytes, and every edit lists the
+bytes 1.1.0 and 1.0.0 left at its site as `superseded`. The patcher then reads
+an exe patched by any earlier release as "installed (older version)" and
+rewrites it on Apply; Revert works from either layout. 1.0.0 predates the
+`.tyrs` section, so the patcher treats an edit inside a missing section as still
+holding its original bytes.
+
+## Verified
+
+Disassembly of a patched copy (`DumpAsmRange` of the hook, the stub and the
+restored gate). Patcher round trips on scratch copies: fresh install; upgrade
+from the 1.0.0, 1.5.0 and 1.10.0-test1 patchers, with and without tweaks, to the
+same hashes as a fresh install; revert from every one of those to the original
+hash. Not yet confirmed in a running prison.

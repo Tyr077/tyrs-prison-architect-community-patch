@@ -1,6 +1,6 @@
 <#
-  Build-ArmedGuardWarnings.ps1
-  Writes patches/armed-guard-warnings.patch.json.
+  Build-ArmedGuardWarnings.ps1  (optional tweak)
+  Writes patches/tweak-armed-guard-warnings.patch.json.
 
   Guards decide once per engagement whether to shout a warning or attack, in the combat step
   FUN_1405D7680. For an armed guard the warning chance starts at 0.7 (0.8 when it is the prisoner's own
@@ -12,7 +12,13 @@
   half as often as it should. That is the behaviour reported in issue #1: with Staff Needs on, armed
   guards fire without warning even when their own needs are met.
 
-  Fix: skip the global-morale multiply. The branch that tests the Staff Needs option before the multiply
+  The 2018 build has the same multiply in the same place, so this is how the game was designed and
+  not something a later update broke; the wiki documents it too ("Overall staff morale also affects
+  this behaviour"). It therefore ships as an optional tweak, not as a fix (it was a fix in the
+  1.10.0 test build, under the id armed-guard-warnings; same byte, so an exe patched by that build
+  shows the tweak as installed).
+
+  Tweak: skip the global-morale multiply. The branch that tests the Staff Needs option before the multiply
   becomes an unconditional jump to the code after it. The per-guard pissed-off test and everything else
   in the decision stay as they were, so a guard whose own needs are neglected still fires without
   warning, and Staff Needs off is unchanged.
@@ -26,7 +32,7 @@
 [CmdletBinding()]
 param(
     [string] $Exe = 'D:\SteamLibrary\steamapps\common\Prison Architect\Prison Architect64.exe',
-    [string] $Out = (Join-Path $PSScriptRoot '../patches/armed-guard-warnings.patch.json')
+    [string] $Out = (Join-Path $PSScriptRoot '../patches/tweak-armed-guard-warnings.patch.json')
 )
 $ErrorActionPreference = 'Stop'
 $src = $Exe; if (Test-Path -LiteralPath ($Exe + '.orig')) { $src = $Exe + '.orig' }
@@ -51,8 +57,9 @@ foreach ($e in $edits) { $va = [long]$e.va; if ($e.expect -ne $expectOrig[$va]) 
 $p = [byte[]]$b.Clone(); foreach ($e in $edits) { $nb = Bytes $e.replace; for ($i = 0; $i -lt $nb.Count; $i++) { $p[$e.offset + $i] = $nb[$i] } }
 $shaP = [BitConverter]::ToString([System.Security.Cryptography.SHA256]::Create().ComputeHash($p)).Replace('-','').ToLower()
 $doc = [ordered]@{
-    id = 'armed-guard-warnings'; name = 'Armed guard warnings with Staff Needs'; version = '1.0.0'
-    description = 'With Staff Needs on, an armed guard''s chance to shout a warning before opening fire was multiplied by the prison''s overall staff morale, so at low morale armed guards shot without warning whatever the state of the guard itself. The chance no longer depends on overall morale. A guard whose own needs are neglected still skips the warning, and with Staff Needs off nothing changes.'
+    id = 'tweak-armed-guard-warnings'; name = 'Armed guard warnings ignore overall staff morale'; version = '1.0.0'
+    optional = $true
+    description = 'With Staff Needs on, an armed guard''s chance to shout a warning before opening fire is multiplied by the prison''s overall staff morale, so at low morale armed guards shoot without warning whatever the state of the guard itself. With this tweak the chance no longer depends on overall morale. A guard whose own needs are neglected still skips the warning, and with Staff Needs off nothing changes. The game has worked this way since at least 2018, so this is a balance tweak, not a bug fix.'
     game_build = 'Prison Architect 64-bit, Sunset Update (final)'; sha256_original = $sha; sha256_patched = $shaP; edits = $edits
 }
 [System.IO.File]::WriteAllText($Out, ($doc | ConvertTo-Json -Depth 5) + [Environment]::NewLine, (New-Object System.Text.UTF8Encoding($false)))

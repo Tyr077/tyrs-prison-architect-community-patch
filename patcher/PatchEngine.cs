@@ -128,7 +128,16 @@ namespace PAPatcher
                     return FixState.NotApplicable;
                 }
                 // Edits inside a required base patch's section are out of range until that base is applied.
-                if (e.offset < 0 || e.offset + exp.Length > file.Length) return p.HasRequires ? FixState.Unpatched : FixState.NotApplicable;
+                // They count as still holding their original bytes, so a patch that gained the requirement in a
+                // later version is still recognised as Outdated from its other edits.
+                if (e.offset < 0 || e.offset + exp.Length > file.Length)
+                {
+                    if (!p.HasRequires) return FixState.NotApplicable;
+                    allNew = false;
+                    for (int k = 0; k < versions; k++)
+                        if (allOld[k] && !e.SupersededBytes(k).SequenceEqual(exp)) allOld[k] = false;
+                    continue;
+                }
                 for (int k = 0; k < versions; k++)
                 {
                     if (!allOld[k]) continue;
@@ -190,6 +199,8 @@ namespace PAPatcher
                         continue;
                     }
                     var src = apply ? e.ReplaceBytes : e.ExpectBytes;
+                    // Reverting an older layout that had nothing in the base patch's section, with the section absent.
+                    if (!apply && e.offset + src.Length > outb.Length) continue;
                     Array.Copy(src, 0, outb, e.offset, src.Length);
                 }
             }
