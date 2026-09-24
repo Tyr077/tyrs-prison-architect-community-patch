@@ -1,0 +1,33 @@
+{
+    "id":  "tweak-pc-shared-zones",
+    "name":  "Protective Custody prisoners work and attend programs in shared sectors",
+    "version":  "1.0.0",
+    "optional":  true,
+    "description":  "Protective Custody prisoners may spend free time in Shared sectors, and in Custom sectors that include Protective Custody, but the final version only gives them jobs and classes in Protective Custody Only sectors. With this tweak they work and attend programs anywhere their deployment lets them go, as in the 2018 version. Keeping them apart from general population is then down to your deployment and regimes.",
+    "game_build":  "Prison Architect 64-bit, Sunset Update (final)",
+    "sha256_original":  "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
+    "sha256_patched":  "3433ecc5d27bb0359c07860907735645eafef12abe71d2e1546d4e5ae6bf09fa",
+    "edits":  [
+                  {
+                      "va":  "0x14070E05B",
+                      "offset":  7394395,
+                      "expect":  "7519",
+                      "replace":  "EB19",
+                      "note":  "tile check: skip the \"Protective Custody only in ProtectedOnly sectors\" rule (jnz -\u003e jmp over it)"
+                  },
+                  {
+                      "va":  "0x14079784F",
+                      "offset":  7957583,
+                      "expect":  "750A",
+                      "replace":  "EB0A",
+                      "note":  "job finder: skip the same rule for the station sector (jnz -\u003e jmp over it)"
+                  },
+                  {
+                      "va":  "0x14054791A",
+                      "offset":  5532954,
+                      "expect":  "7552",
+                      "replace":  "EB52",
+                      "note":  "program and job step: skip the same rule for the sector the prisoner stands in (jnz -\u003e jmp over it)"
+                  }
+              ]
+}

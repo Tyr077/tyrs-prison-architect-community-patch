@@ -140,6 +140,11 @@ in the patcher, or pass `--tweaks` on the command line to turn all of them on.
   the prison's overall staff morale. A guard whose own needs are neglected still
   fires without warning. The game has always worked this way, so this is a
   tweak; it was listed as a fix in the 1.10.0 test build.
+- **Protective Custody prisoners work and attend programs in shared sectors.**
+  Protective Custody prisoners take jobs and go to classes in Shared sectors,
+  and in Custom sectors that include Protective Custody, as in the 2018 version.
+  The final version only gives them work and classes in Protective Custody Only
+  sectors, although they may spend free time in the others.
 
 ## Unsupported build
 

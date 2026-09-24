@@ -373,3 +373,20 @@ figure no longer matters; the per-guard rule stays, and with Staff Needs off
 nothing changes. This was a bug fix in the 1.10.0 test build. The 2018 version
 of the game turned out to work the same way, so it is a design choice and
 became a tweak.
+
+### Protective Custody prisoners work and attend programs in shared sectors
+
+Protective Custody prisoners may walk into Shared sectors, and into Custom
+sectors that include Protective Custody, and spend their free time there, but
+the final version only gives them jobs and classes in Protective Custody Only
+sectors. It checks this in three places: where a job is, where the prisoner's
+work station is, and where the prisoner stands when it takes part. A Custom
+sector never counts, even with Protective Custody ticked, because the rule looks
+at the sector's zone type and not at its ticked categories. So general
+population and Protective Custody cannot share a workshop, a kitchen or a
+classroom, even on regimes that keep them apart. The 2018 version had no such
+rule, and the game's own deployment help still says Protective Custody prisoners
+use Shared sector rooms. With this tweak the rule is skipped: they work and
+study wherever their deployment lets them go, which is where they could already
+spend their free time, and keeping the groups apart is down to your deployment
+and regimes. Reported as GitHub issue #3.

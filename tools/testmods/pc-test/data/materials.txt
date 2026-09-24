@@ -1,0 +1,18 @@
+BEGIN Object
+    Name                 PCTestController
+    Width                1
+    ConstructionTime     0.500000
+    Toughness            20.0000
+    Price                -10
+    Filter               Security
+    Group                StaticObject
+    BlockedBy            Wall
+    BlockedBy            StaticObject
+    BlockedBy            UtilityStation
+    MadeOf               Metal
+    Properties           StaticObject
+    Properties           Scripted
+
+    BEGIN Sprite x 0 y 0 h 1 w 1 RotateType 4 END
+    BEGIN ToolbarSprite x 0 y 0 h 1 w 1 RotateType 4 END
+END

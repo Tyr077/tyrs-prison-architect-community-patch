@@ -195,3 +195,145 @@ disassembly and the patcher round trip. In the in-game harness
 (`tools/ingame-test/tests/armed-guard-warnings.ps1`) a riot at about 14% morale
 had 10 prisoners surrendered at the first autosave with the tweak against a peak
 of 5 without; that run ended early, so it counts as an indication only.
+
+## Protective Custody prisoners work and attend programs in shared sectors (`tweak-pc-shared-zones`)
+
+Protective Custody prisoners may walk into Shared sectors, and into Custom
+sectors whose Protective Custody box is ticked, and spend free time there, but
+the final version never gives them a job or a class in those sectors. Only a
+sector deployed as Protective Custody Only does. So general population and
+Protective Custody cannot share a workshop, kitchen, laundry or classroom, even
+with regimes that keep the two groups apart. Switching a prisoner to or from
+Protective Custody is enough to stop or start their work and classes. Reported
+as GitHub issue #3.
+
+In the 2018 version of the game (the Steam beta branch) Protective Custody
+prisoners work and attend programs in Shared sectors, and the final version's
+own deployment help says they "will utilise Shared sector rooms" when their
+needs are not met in their own sector. The rule may still be meant as a safety
+measure, so this ships as a tweak: with it, keeping the groups apart is down to
+your deployment and regimes.
+
+Sector zone values, from the name table at `DAT_140DFA070`:
+
+| value | zone |
+|---|---|
+| 0 | Shared |
+| 1-3 | MinSecOnly, MedSecOnly, MaxSecOnly |
+| 4 | ProtectedOnly |
+| 5-7 | SuperMaxOnly, DeathRowOnly, InsaneSecOnly |
+| 8 | StaffOnly |
+| 9 | Unlocked |
+| 10 | Custom |
+| 11 | VisitorOnly |
+
+An entity's zone type comes from `FUN_140536960`: visitors 11, staff 8, and a
+prisoner's from its Category through `FUN_14070F370` (Protected → 4). The normal
+zone test, `FUN_14070E0D0`, accepts a tile in a Shared or Unlocked sector, in a
+Custom sector with the entity's category ticked (flags at sector `+0x1BD`), or in
+the "Only" sector matching the zone type. That is how every category is handled.
+
+The final version adds a Protective Custody rule on top, in three places:
+
+1. **Tile check** `FUN_14070E020(sectors, x, y, entity)`. Before the normal zone
+   test it refuses zone type 4 whenever the tile's sector is not ProtectedOnly:
+
+   ```
+   14070E050  call 0x140536960          ; zone type
+   14070E058  cmp eax,4
+   14070E05B  jnz 0x14070E076           ; not Protective Custody: normal test
+   14070E05D  ...                       ; sector at the tile
+   14070E06C  cmp [rax+0x64],r11d       ; ProtectedOnly?
+   14070E072  xor al,al                 ; no: refuse
+   ```
+
+   The job finder runs every job's tile through this, and so do station
+   registration (`FUN_14070E360`), `Entity::TryPassThroughDoor`
+   (`FUN_140533FF0`) and a few Escape Mode and prisoner job routines.
+
+2. **Job finder** `FUN_140796DD0` (the function that logs `AssignJob`), prisoner
+   block: the sector of the prisoner's work station (`Entity+0x328`, the `.i`
+   half of `Station.i`/`Station.u`) must be ProtectedOnly when the Category
+   (`+0xA34`) is Protected:
+
+   ```
+   140797847  cmp dword [r14+0xA34],4
+   14079784F  jnz 0x14079785B
+   140797851  cmp dword [rbx+0x64],4
+   140797855  jnz 0x140798555           ; refuse the job
+   ```
+
+3. **Program and job step** `FUN_140547810`, called by the prisoner's in-class
+   handler `FUN_140633350`, the job system (`FUN_140791480`) and `FUN_1405D46E0`.
+   A Protected prisoner standing in a sector that is not ProtectedOnly gets 0,
+   so a Protective Custody student never sits down in a class held in a Shared
+   sector:
+
+   ```
+   140547913  cmp dword [rdi+0xA34],4
+   14054791A  jnz 0x14054796E
+   14054791C  ...                       ; sector at the prisoner's tile
+   140547964  cmp dword [rbx+0x64],4
+   140547968  jnz 0x14054840E           ; return 0
+   ```
+
+The station picker `FUN_14070D5A0` has no such rule, so a Protective Custody
+prisoner is given a work station in a Shared sector and then refused every job
+there. The 2018 job finder (`FUN_14045FD90` in that build) has no such rule.
+
+Edits: three bytes, one per site, each `jnz` becoming `jmp` so the rule is
+skipped:
+
+```
+14070E05B  75 19   jnz 0x14070E076   ->   EB 19   jmp 0x14070E076
+14079784F  75 0A   jnz 0x14079785B   ->   EB 0A   jmp 0x14079785B
+14054791A  75 52   jnz 0x14054796E   ->   EB 52   jmp 0x14054796E
+```
+
+Protective Custody is then handled like every other category. The normal zone
+test and the sector permission check (`FUN_14070EFE0`) still decide, so a
+Protective Custody prisoner works and studies only where its deployment lets it
+go: Shared sectors, Custom sectors with Protective Custody ticked, and
+Protective Custody Only sectors. Because the tile check is shared, this also
+applies to Protective Custody prisoners opening doors themselves, the same way
+it already works for other categories.
+
+A separate, older rule affects the statistics but not attendance. During a
+Work Lockdown hour, the Experience tick (`FUN_1405889D0`) books a prisoner with
+no job and no work station as locked down (`FUN_1406A8C10`), even while it sits
+in class. So class time in those hours may show as "locked down" in the
+prisoner's record, for any category. The tweak leaves this alone.
+
+`scripts/Build-PCSharedZones.ps1` builds the patch and checks the instructions
+around each site. Verified by disassembly and the patcher round trip, and in the
+game with `tools/ingame-test/tests/pc-shared-zones.ps1` on the demo save attached
+to issue #3, in which every sector apart from staff areas is Shared. The test's
+`pc-test` mod switches prisoners to Protective Custody in the running game with
+`Object.SetProperty(prisoner, "Category", 4)`, the call security-level changer
+mods use; it can also spawn new prisoners, and it counts prisoners with a work
+station and a job by category. Each run compares the build with and without the
+tweak.
+
+Switched at load (the save's 228 SuperMax prisoners), two game hours of work and
+morning classes:
+
+| build | PC holding a job | PC Work minutes | PC in class (two autosaves) | PC Class minutes |
+|---|---|---|---|---|
+| without the tweak | 0 (with 45-54 holding a station) | 0 | 0 | 17 |
+| with the tweak | 47-52 | 3,291 (71 prisoners) | 102 | 1,083 (49 prisoners) |
+
+Without the third edit, the same 51 students of the 09:00 sessions sat in class
+50/51 while SuperMax and 0/51 once switched to Protective Custody.
+
+Switched mid-shift, reproducing the report (measured with the first two edits):
+60 working MinSec prisoners made Protective Custody at about 09:38, measured
+from 09:21 to 11:51:
+
+| build | toggled prisoners holding a job afterwards | their Work minutes |
+|---|---|---|
+| without the tweak | 1 / 1 / 1 | 372 (almost all before the switch) |
+| with the tweak | 12 / 10 / 14 | 1,877 |
+
+MinSec prisoners worked in every run. They took fewer jobs with the tweak because
+the two groups now share the same job slots. SuperMax prisoners in Shared
+sectors work in both builds, so the rule is specific to Protective Custody.
