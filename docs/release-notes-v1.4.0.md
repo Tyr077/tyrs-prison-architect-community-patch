@@ -2,7 +2,7 @@ Adds one bug fix. Existing users: download the new `TyrsPAPatch.exe`, run it, cl
 
 ## New in 1.4.0
 
-**Released prisoners stuck behind revoked keycard doors.** When a keycard door with prisoner access revoked was the only way out of a cell block, prisoners whose sentence ended got the RELEASED nameplate and then stood still forever; no guard was ever sent to let them out. The route planner treated a revoked keycard door as a solid wall for anyone without a staff key, instead of the usual "a guard has to open this" that every other locked door gets, so a released prisoner had no route to the exit at all. Released prisoners (and prisoners under escort, who the game already lets ignore deployment zones) now see a revoked keycard door as "needs a guard", the same as a jail door, and a guard opens it for them. Prisoners still serving time are refused as before, tracking belt or not. Confirmed on the reporter's save. Technical notes in `docs/keycard-door-released-prisoners.md`.
+**Released prisoners stuck behind revoked keycard doors.** When a keycard door with prisoner access revoked was the only way out of a cell block, prisoners whose sentence ended got the RELEASED nameplate and then stood still forever; no guard was ever sent to let them out. The route planner treated a revoked keycard door as a solid wall for anyone without a staff key, instead of the usual "a guard has to open this" that every other locked door gets, so a released prisoner had no route to the exit at all. Released prisoners (and prisoners under escort, who the game already lets ignore deployment zones) now see a revoked keycard door as "needs a guard", the same as a jail door, and a guard opens it for them. Prisoners still serving time are refused as before, tracking belt or not, except misbehaving ones, who now also wait for a guard (not tested). Confirmed on the reporter's save. Technical notes in `docs/keycard-door-released-prisoners.md`.
 
 ## Fixes included
 
@@ -31,7 +31,7 @@ If Steam verifies game files it restores the original executable. Run the patche
 ## Credits
 
 - The player on the community Discord who reported the released-prisoner behaviour and shared the test save that reproduces it.
-- **Ozoneraxi** (All-in-One patch, AIO): fixed the ranged weapon fire rate a year before this patch did, as part of their all-in-one patching work, and their notes on the reload timer are what this fix was built and checked against.
+- **Ozoneraxi** (All-in-One patch, AIO): worked around the ranged weapon fire rate for soldiers, Elite Ops and bounty hunters before this patch, as part of their all-in-one patching work, and their notes on the reload timer are what this fix was built and checked against.
 - **vojin154** (pa_fix_direction_serialization), **Ozoneraxi** and **Deskius** (Alert Icons Partial Fix), with wackypanda and Quin_BNK, for the earlier fixes.
 
 ## Checksums (SHA-256)

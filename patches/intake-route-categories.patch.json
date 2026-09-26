@@ -5,7 +5,7 @@
     "requires":  [
                      "code-section"
                  ],
-    "description":  "Fill to capacity and the other intake modes keep working when a road, helipad or boat dock accepts only some prisoner categories. When a vehicle was loaded for such a stop, the game drew prisoners from the intake queue in list order and threw away every queued prisoner of a category the stop did not accept until it found one it did. Those prisoners were still counted as on their way, and a prisoner on its way counts against capacity, so the count crept up day after day until the prison declared itself closed to new inmates with cells standing empty. A vehicle now takes the queued prisoners of the categories its stop accepts and leaves the rest queued for a route that does.",
+    "description":  "A road, helipad or boat dock that accepts only some prisoner categories no longer leaves the prison closed to new inmates while cells stand empty. Every category you take still needs at least one route that accepts it.",
     "game_build":  "Prison Architect 64-bit, Sunset Update (final)",
     "sha256_original":  "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
     "sha256_patched":  "8d9047a5bd2ac8fc96f50e0a64ba89366fe3fd72c0daebf12dba608ba93f9434",

@@ -2,15 +2,16 @@
   Build-ArmedGuardWarnings.ps1  (optional tweak)
   Writes patches/tweak-armed-guard-warnings.patch.json.
 
-  Guards decide once per engagement whether to shout a warning or attack, in the combat step
+  Guards decide whether to shout a warning or attack in the combat step
   FUN_1405D7680. For an armed guard the warning chance starts at 0.7 (0.8 when it is the prisoner's own
   attacker; 0.4 or 0 when another staff member is already fighting the prisoner close by), is cut to a
   fifth when the guard is more than half dead, and is zeroed when the prisoner is flagged to be fired on
   at sight or when the guard itself is pissed off (Staff+0xA88, recomputed every tick from its needs
   while Staff Needs is on). Then, only with Staff Needs on, the chance is multiplied by the global staff
   morale percentage (World+0x2064, the top-bar figure). At 0% morale no armed guard ever warns; at 50%
-  half as often as it should. That is the behaviour reported in issue #1: with Staff Needs on, armed
-  guards fire without warning even when their own needs are met.
+  half as often as at full morale. That is the behaviour reported in issue #1: with Staff Needs on,
+  armed guards attack without warning even when their own needs are met. (Outside Freefire a guard
+  that skips the warning attacks with its fists unless its weapon is drawn.)
 
   The 2018 build has the same multiply in the same place, so this is how the game was designed and
   not something a later update broke; the wiki documents it too ("Overall staff morale also affects
@@ -20,7 +21,7 @@
 
   Tweak: skip the global-morale multiply. The branch that tests the Staff Needs option before the multiply
   becomes an unconditional jump to the code after it. The per-guard pissed-off test and everything else
-  in the decision stay as they were, so a guard whose own needs are neglected still fires without
+  in the decision stay as they were, so a guard whose own needs are neglected still attacks without
   warning, and Staff Needs off is unchanged.
 
   Site 0x1405D7DED:  74 15   jz 0x1405D7E04    (taken when StaffNeeds is off)
@@ -59,7 +60,7 @@ $shaP = [BitConverter]::ToString([System.Security.Cryptography.SHA256]::Create()
 $doc = [ordered]@{
     id = 'tweak-armed-guard-warnings'; name = 'Armed guard warnings ignore overall staff morale'; version = '1.0.0'
     optional = $true
-    description = 'With Staff Needs on, an armed guard''s chance to shout a warning before opening fire is multiplied by the prison''s overall staff morale, so at low morale armed guards shoot without warning whatever the state of the guard itself. With this tweak the chance no longer depends on overall morale. A guard whose own needs are neglected still skips the warning, and with Staff Needs off nothing changes. The game has worked this way since at least 2018, so this is a balance tweak, not a bug fix.'
+    description = 'With Staff Needs on, an armed guard''s chance to shout a warning before attacking no longer scales with the prison''s overall staff morale. A guard whose own needs are neglected still attacks without warning.'
     game_build = 'Prison Architect 64-bit, Sunset Update (final)'; sha256_original = $sha; sha256_patched = $shaP; edits = $edits
 }
 [System.IO.File]::WriteAllText($Out, ($doc | ConvertTo-Json -Depth 5) + [Environment]::NewLine, (New-Object System.Text.UTF8Encoding($false)))

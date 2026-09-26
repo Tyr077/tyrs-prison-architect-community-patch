@@ -1,51 +1,10 @@
-# The `.tyrs` code section: technical notes
+# The code section
 
-Target: `Prison Architect64.exe`, Steam Sunset Update. Same build and conventions
-as `gang-handoff.md`.
-
-## Why
-
-The first fixes put their stubs in the slack at the end of `.text`
-(`0x140A44260..0x140A44400`). That cave is full. Patches that need new code or
-a few bytes of state now use a section appended to the executable.
-
-## What the base patch does
-
-`patches/code-section.patch.json` (hidden, `id: code-section`) makes four edits:
-
-| edit | offset | change |
-|---|---|---|
-| `NumberOfSections` | `0x14E` | 8 to 9 |
-| `SizeOfImage` | `0x198` | `0xE89000` to `0xE8A000` |
-| 9th section header | `0x390` (40 bytes, all zero in the original) | `.tyrs`, VirtualSize `0x1000`, VA `0xE89000`, RawSize `0x1000`, RawPointer `0xDC1C00`, characteristics `0xE0000020` (code, execute, read, write) |
-| append | `0xDC1C00` (original end of file) | `0x1000` bytes of `0xCC` |
-
-PE facts that make this safe on this build: `e_lfanew` is `0x148`, the section
-table starts at `0x250`, so the 9th header ends at `0x3B8`, inside the `0x400`
-bytes of headers; `.rsrc` is the last section (VA `0xE80000`), so the new VA
-`0xE89000` follows it without a gap; the file length `0xDC1C00` is already
-`FileAlignment` (0x200) aligned; there is no Authenticode signature and no
-Control Flow Guard (`DllCharacteristics` `0x8120`), and ASLR is off, so
-`0x140E89000` is the section's address at run time.
-
-Verified by mapping the patched image with `LoadLibraryEx(LOAD_LIBRARY_AS_IMAGE_RESOURCE)`
-and reading the stub bytes back at `image + 0xE89100`.
-
-## How the patcher handles it
-
-- An edit whose `expect` is empty is an append: applied only when the file
-  length equals its `offset`, reverted by truncating to that offset. Its state
-  is presence-only; the body is meant to be written by other patches.
-- A patch that uses the section declares `"requires": ["code-section"]`.
-  Applying it applies the base first. Its edits inside the section carry
-  `expect` bytes of `CC`, so the patcher can still tell applied from not.
-  While the base is absent those edits are out of range, which counts as
-  "not applied" for a patch with requirements.
-- Reverting: dependents are reverted before bases, and a hidden base is
-  reverted automatically once nothing applied requires it.
-- The whole-file hash check reverts everything (including truncation) before
-  comparing with the original hash, so a file with the section present is still
-  recognised as the supported build.
+Some fixes need new code. For those, the patcher appends a small code section
+named `.tyrs` to `Prison Architect64.exe`. It is added by the hidden base patch
+`patches/code-section.patch.json` (built by `scripts/Build-CodeSection.ps1`)
+when the first fix that needs it is applied, and removed on revert once no
+applied fix needs it.
 
 ## Allocation map
 
@@ -80,21 +39,8 @@ section must be listed here so ranges never overlap.
 | `+0x920..+0x96A` | `0x140E89920` | weapon-firerate (2.0.0) | ReloadTimer-by-weapon stub, 75 bytes |
 | `+0x970..+0xAA5` | `0x140E89970` | gunfire-surrender | area surrender stub, 310 bytes (4.0f constant at the end) |
 
-`scripts/Build-CodeSection.ps1` regenerates the base patch. Build scripts for
-dependents read `patches/code-section.patch.json`, apply it to the original
-image and take their `expect` bytes from that.
-
 ## Antivirus
 
-An appended read-write-execute section full of `int3` padding is the kind of
-thing heuristics look at, and Windows Defender's cloud model
-(`Trojan:Win32/Bearfoos.A!ml`) has quarantined one patched layout: the twelve
-fixes of 1.8.0 with the booth stub at `+0x4D0` and no tweaks. Moving that stub
-to `+0x500`, adding the tweaks, or removing either new fix made the same code
-pass, so the score is a knife edge on bytes, not a signature. Every release
-should be checked: apply the fixes-only and fixes-plus-tweaks selections to
-scratch copies and scan them (`Start-MpScan -ScanType CustomScan -ScanPath`).
-The build scripts take section offsets as parameters so a layout can be moved
-without editing them. The structural cure would be a read-execute section with
-the few bytes of writable data kept elsewhere, which changes the base patch's
-header bytes and so needs `superseded` entries for upgrades.
+Windows Defender once quarantined one patched combination (the 1.8.0 fixes
+without the tweaks) as `Trojan:Win32/Bearfoos.A!ml`. Moving one stub cleared
+it. Patched copies are scanned with Defender before each release.

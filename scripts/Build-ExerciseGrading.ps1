@@ -5,16 +5,17 @@
   A prisoner's Health grade on the Grading tab scores "% of stay exercising", one point per 5%. The
   time behind it is one of 28 counters in the prisoner's Experience object (Prisoner+0xE60, counter
   array at +0x10, names and timeline colours in DAT_140de0da0). Experience::Tick (FUN_1405889d0, run
-  from FUN_140588150 every 15 in-game seconds) credits exactly one counter per tick, chosen from the
+  from FUN_140588150 on a timer of 15, or 1 while TotalTime is under 1440) credits exactly one counter per tick, chosen from the
   prisoner's current ActionType at Prisoner+0xDE0: 0xB Work keeps slot 7, 0xE ReformProgram gives slot
   9 (Class), 8 Exercise gives slot 8 (Exercise), anything else gives slot 10 (Freetime) or 5 (Regime).
 
-  Only one need provider in the whole game has ActionType Exercise: the Yard room. Every piece of
-  exercise equipment - weights bench, treadmill, punch bag, gym mat, dumbbell rack, tyre apparatus,
-  training dummy, pull-up bar - declares "PrimaryNeed Exercise" with "ActionType Use" in needs.txt and
-  needs_dlc.txt. So a prisoner who works out on equipment satisfies the Exercise need but is credited
-  to Freetime or Regime, and an indoor gym can never score the Health grade's exercise criterion. Only
-  jogging laps in a yard counts. A poor Health grade adds up to +25% re-offending chance.
+  ActionType Exercise belongs to room providers only: the Yard in needs.txt, and the Gymnasium and
+  FightClubRoom in needs_dlc.txt. Every piece of exercise equipment - weights bench, treadmill, punch
+  bag, gym mat, dumbbell rack, tyre apparatus, training dummy, pull-up bar - declares "PrimaryNeed
+  Exercise" with "ActionType Use" in needs.txt and needs_dlc.txt. So a prisoner who works out on
+  equipment satisfies the Exercise need but is credited to Freetime or Regime, and a gym built from
+  equipment alone can never score the Health grade's exercise criterion; only time in one of those
+  rooms counts.
 
   Fix: the ActionType 8 test (9 bytes at 0x140588B23) jumps to a stub in .tyrs that keeps the original
   test and adds one more: ActionType 1 (Use) also counts as exercise when the provider the prisoner is
@@ -113,7 +114,7 @@ $shaP = [BitConverter]::ToString([System.Security.Cryptography.SHA256]::Create()
 $doc = [ordered]@{
     id = 'exercise-grading'; name = 'Exercise on equipment counts for grading'; version = '1.0.0'
     requires = @('code-section')
-    description = 'Time a prisoner spends on gym and yard equipment now counts towards the "% of stay exercising" line of their Health grade. The game only ever credited jogging laps around a yard, because that is the one activity tagged as the Exercise action; weights benches, treadmills, punch bags, gym mats and the rest are tagged as "use an object" and were credited to free time instead. A prison whose prisoners exercise indoors could not score that part of the Health grade at all, which also raised their re-offending chance.'
+    description = 'Time on gym equipment counts towards the exercise score of the Health grade, not just jogging laps around the yard.'
     game_build = 'Prison Architect 64-bit, Sunset Update (final)'; sha256_original = $sha; sha256_patched = $shaP; edits = $edits
 }
 [System.IO.File]::WriteAllText($Out, ($doc | ConvertTo-Json -Depth 5) + [Environment]::NewLine, (New-Object System.Text.UTF8Encoding($false)))

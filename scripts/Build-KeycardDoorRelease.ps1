@@ -7,12 +7,13 @@
   handled as a hard refusal: any entity without the staff key (movement flag bit 2) gets "cannot enter"
   instead of the usual "needs a guard" result that every other locked door produces. A released prisoner
   has no staff key, so when a revoked keycard door is the only way out the route planner finds no route
-  at all and the prisoner stands still forever, still wearing the RELEASED nameplate.
+  at all and the prisoner stands still, still wearing the RELEASED nameplate (the in-game test
+  keycard-released-prisoners.ps1 shows them stuck on the original build).
 
-  Released prisoners are the one kind of prisoner the game lets ignore deployment zones: the movement
-  flags (FUN_140540810) set bit 7 for a prisoner only when Prisoner::IsReleased (FUN_1406afa00) is true
-  or the prisoner is on one of the two escort lists that get the same treatment. Every non-prisoner has
-  bit 7 too, but also the staff key if it is staff.
+  The movement flags (FUN_140540810) set bit 7, "ignore deployment zones", for a prisoner only when
+  Prisoner::IsReleased (FUN_1406afa00) is true, when it is on the escort list (World+0x2CD8), or when
+  its record at World+0x2AC0 is in state 5..7 (escorted or misbehaving). Every non-prisoner has bit 7
+  too, but also the staff key if it is staff.
 
   Fix: the staff-key test at the revoked-door check also accepts bit 7. The refusal then only applies to
   prisoners bound by deployment zones, which is what the door option describes ("prisoner access can be
@@ -46,7 +47,7 @@ $p = [byte[]]$b.Clone(); foreach ($e in $edits) { $nb = Bytes $e.replace; for ($
 $shaP = [BitConverter]::ToString([System.Security.Cryptography.SHA256]::Create().ComputeHash($p)).Replace('-','').ToLower()
 $doc = [ordered]@{
     id = 'keycard-door-released-prisoners'; name = 'Released prisoners stuck behind revoked keycard doors'; version = '1.0.0'
-    description = 'A keycard door with prisoner access revoked was a hard wall for released prisoners, so when it was their only way out they never left. The route planner now treats such a door as "needs a guard" for released prisoners, the same as a jail door. Prisoners still serving time are refused as before.'
+    description = 'When a keycard door with prisoner access revoked is the only way out, released prisoners call a guard to let them out instead of standing still.'
     game_build = 'Prison Architect 64-bit, Sunset Update (final)'; sha256_original = $sha; sha256_patched = $shaP; edits = $edits
 }
 [System.IO.File]::WriteAllText($Out, ($doc | ConvertTo-Json -Depth 5) + [Environment]::NewLine, (New-Object System.Text.UTF8Encoding($false)))

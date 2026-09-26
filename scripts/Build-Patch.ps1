@@ -1,6 +1,6 @@
 ﻿<#
   Build-Patch.ps1
-  Assembles the hand-off fix and writes handoff.patch.json for Apply-ExePatch.ps1.
+  Assembles the hand-off fix and writes patches/gang-handoff.patch.json for Apply-ExePatch.ps1.
   Reads expected bytes from the user's own Prison Architect64.exe; ships no game code.
 
   Layout (Sunset Update build, SHA256 cc460fc4...):
@@ -166,7 +166,7 @@ $doc = [ordered]@{
     id              = 'gang-handoff'
     name            = 'Gang contraband hand-off fix'
     version         = '1.0.0'
-    description     = 'Prisoners stuck in the ContrabandHandOff state (pacing, unescortable, guards abandon search/return-to-cell jobs), the frozen crooked guard, and the hand-off system dying after the crooked guard is fired.'
+    description     = 'Gang contraband hand-offs no longer leave gang members pacing forever or crooked guards doing nothing.'
     game_build      = 'Prison Architect 64-bit, Sunset Update (final)'
     sha256_original = $sha
     sha256_patched  = $shaP

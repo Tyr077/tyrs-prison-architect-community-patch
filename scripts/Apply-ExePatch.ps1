@@ -2,8 +2,9 @@
   Apply-ExePatch.ps1
   Applies a byte-level patch to the user's own Prison Architect64.exe.
   Ships no game code: only offsets, the bytes expected at each offset, and
-  the replacement bytes. Refuses to write unless every expected byte matches,
-  so it cannot corrupt a binary it was not built for.
+  the replacement bytes. Refuses to write unless every expected byte matches;
+  a SHA256 mismatch only warns, so a different build that happens to have the
+  same bytes at every site would still be patched.
 
   Usage:
     .\Apply-ExePatch.ps1                 # verify + dry run

@@ -3,7 +3,7 @@
     "name":  "Protective Custody prisoners work and attend programs in shared sectors",
     "version":  "1.0.0",
     "optional":  true,
-    "description":  "Protective Custody prisoners may spend free time in Shared sectors, and in Custom sectors that include Protective Custody, but the final version only gives them jobs and classes in Protective Custody Only sectors. With this tweak they work and attend programs anywhere their deployment lets them go, as in the 2018 version. Keeping them apart from general population is then down to your deployment and regimes.",
+    "description":  "Protective Custody prisoners take jobs and go to classes in Shared sectors, and in Custom sectors that include Protective Custody, not only in Protective Custody Only sectors. Keeping them apart from general population is then up to your deployment and regimes.",
     "game_build":  "Prison Architect 64-bit, Sunset Update (final)",
     "sha256_original":  "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
     "sha256_patched":  "3433ecc5d27bb0359c07860907735645eafef12abe71d2e1546d4e5ae6bf09fa",

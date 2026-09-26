@@ -5,7 +5,7 @@
     "requires":  [
                      "code-section"
                  ],
-    "description":  "Prisoners can buy from a shop front without being able to walk into the shop. The game decides where someone stands to use an object from a marker in the object\u0027s artwork, and the shop front is the one such object that was never given one, so it fell back to the shop front itself: a wall. Prisoners were then required to reach, and be allowed inside, the room the counter serves from, which is why shops so often did nothing and why a shop serving two wings needed a door into each. A wall-mounted object can now be used from any tile beside it that the prisoner can reach and is allowed on. Objects standing on ordinary floor tiles are unaffected.",
+    "description":  "The shop front can face a hallway, and prisoners buy from it without being allowed into the shop. Who works in a shop and who shops there can be kept apart.",
     "game_build":  "Prison Architect 64-bit, Sunset Update (final)",
     "sha256_original":  "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
     "sha256_patched":  "a25a8471bc9af330ea560ca06a6a072e80a888c9d6d3398139c1188709f9f144",

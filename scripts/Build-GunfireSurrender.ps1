@@ -176,7 +176,7 @@ $shaP = [BitConverter]::ToString([System.Security.Cryptography.SHA256]::Create()
 $doc = [ordered]@{
     id = 'gunfire-surrender'; name = 'Prisoners near gunfire surrender'; version = '1.0.0'
     requires = @('code-section')
-    description = 'Gunfire frightens bystanders again. In the 2018 version of the game every shot from a guard''s gun made up to ten prisoners within four squares of the shot react as if they had been shot at themselves, and most of them surrendered. The final version lost that code, so only the prisoner who was hit reacted. The 2018 behaviour is restored. It does not apply to shots fired by prisoners or to the Tazer.'
+    description = 'Prisoners near a guard''s gunshot react as if they were the target, and may surrender.'
     game_build = 'Prison Architect 64-bit, Sunset Update (final)'; sha256_original = $sha; sha256_patched = $shaP; edits = $edits
 }
 [System.IO.File]::WriteAllText($Out, ($doc | ConvertTo-Json -Depth 5) + [Environment]::NewLine, (New-Object System.Text.UTF8Encoding($false)))

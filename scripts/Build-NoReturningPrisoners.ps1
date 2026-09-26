@@ -32,7 +32,7 @@ $p = [byte[]]$b.Clone(); foreach ($e in $edits) { $nb = Bytes $e.replace; for ($
 $shaP = [BitConverter]::ToString([System.Security.Cryptography.SHA256]::Create().ComputeHash($p)).Replace('-','').ToLower()
 $doc = [ordered]@{
     id = 'tweak-no-returning-prisoners'; name = 'No returning prisoners (Second Chances)'; version = '1.0.0'; optional = $true
-    description = 'Reoffended prisoners no longer come back through intake as the exact prisoner who left, traits and reputations included. Intake always generates prisoners by the normal category rules. Reoffending is still tracked and fined as before. Balance tweak, not a bug fix.'
+    description = 'Intake always generates new prisoners instead of bringing back reoffenders with all their old reputations.'
     game_build = 'Prison Architect 64-bit, Sunset Update (final)'; sha256_original = $sha; sha256_patched = $shaP; edits = $edits
 }
 [System.IO.File]::WriteAllText($Out, ($doc | ConvertTo-Json -Depth 5) + [Environment]::NewLine, (New-Object System.Text.UTF8Encoding($false)))

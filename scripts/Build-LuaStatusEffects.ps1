@@ -93,7 +93,7 @@ $shaP = [BitConverter]::ToString([System.Security.Cryptography.SHA256]::Create()
 $doc = [ordered]@{
     id = 'lua-status-effects'; name = 'Lua StatusEffects assignment'; version = '1.0.0'
     requires = @('code-section')
-    description = 'Restores the modding feature from Alpha 28 that lets a Lua script set a prisoner''s status effects ("prisoner.StatusEffects.tazed = 60"). A later update made the game track active effects in a separate flag set and forgot to update the Lua setter, so scripted effects were written but never took effect. The setter now activates (or, for 0, clears) the effect the same way the game does. Used by mods such as Less Lethal Expansion.'
+    description = 'Status effects that mods set on prisoners from Lua, such as tazed or sedated, take effect again.'
     game_build = 'Prison Architect 64-bit, Sunset Update (final)'; sha256_original = $sha; sha256_patched = $shaP; edits = $edits
 }
 [System.IO.File]::WriteAllText($Out, ($doc | ConvertTo-Json -Depth 5) + [Environment]::NewLine, (New-Object System.Text.UTF8Encoding($false)))

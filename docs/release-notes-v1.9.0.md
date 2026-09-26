@@ -4,7 +4,7 @@ Test build. Download the new `TyrsPAPatch.exe`, run it, click **Apply selection*
 
 - **Muzzle flash, smoke and buckshot.** Assault rifles and SMGs show a muzzle flash and the shotgun fires a spread of buckshot with smoke again. Automatic rifles also stop playing a full burst sound for every round.
 - **Armed guards reload in pavilions.** An armed guard manning a Guard Pavilion keeps firing instead of stopping after one shot.
-- **Disarmed armed guards can fight.** An armed guard who loses its shotgun fights with its fists instead of getting stuck while Freefire is on or it is badly hurt.
+- **Disarmed armed guards can fight.** An armed guard who loses its shotgun fights with its fists while Freefire is on or it is badly hurt, instead of with an empty hand that does no damage.
 - **Escape Mode Freefire with per-sector actions.** The warden's Freefire order after your gang kills someone now reaches the guards with "Search and Actions per sector" on.
 - **Hold to fire automatic weapons.** Holding the mouse button keeps assault rifles and SMGs firing in Warden Mode and Escape Mode.
 
@@ -47,15 +47,15 @@ The five new fixes, intake and booths are verified in the code but not yet in a 
 - **Effects:** watch an armed guard with a shotgun and one with an assault rifle fire. The shotgun should throw smoke and a spread of pellets, the rifle a muzzle flash, and the rifle's burst sound should no longer stack up.
 - **Pavilions:** an armed guard manning a Guard Pavilion during a fight should keep shooting.
 - **Disarmed armed guards:** Freefire on, let prisoners take an armed guard's shotgun. The guard should keep fighting with its fists.
-- **Escape Mode:** with per-sector actions on (the default), kill a guard or prisoner with your gang. Guards should switch to lethal force for three minutes.
+- **Escape Mode:** with per-sector actions on, kill a guard or prisoner with your gang. Guards should switch to lethal force for three minutes.
 - **Hold to fire:** in Warden Mode and Escape Mode, hold the button with an assault rifle or SMG. It should keep firing; a revolver or shotgun should still fire once per click.
 - **Intake** and **booths:** as in the 1.8.0 test build.
 
-How each fix works, in plain English, is in `docs/fixes-explained.md`.
+Each fix has a short page under `docs/`.
 
 ## Credits
 
-- **Ozoneraxi** (AIO bug tracker and All-in-One mod) for the findings behind the weapon-effects, pavilion, disarmed-guard, Escape Mode Freefire and full-auto fixes, and the pavilion workaround script that confirmed the reload cause; and for the intake, booth, shop and exercise findings.
+- **Ozoneraxi** (AIO bug tracker and All-in-One mod) for the findings behind the weapon-effects, pavilion, disarmed-guard, Escape Mode Freefire fixes, and the pavilion workaround script that confirmed the reload cause; and for the intake, booth, shop and exercise findings.
 - **BurpBurp** and **Ozoneraxi** (Less Lethal Expansion), **Ozoneraxi** (AIO, fire rate), **vojin154** (pa_fix_direction_serialization), **Deskius**, wackypanda and Quin_BNK (Alert Icons Partial Fix), for the earlier fixes.
 
 ## Checksums (SHA-256)

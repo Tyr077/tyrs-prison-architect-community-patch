@@ -2,14 +2,14 @@ Test build. Download the new `TyrsPAPatch.exe`, run it, click **Apply selection*
 
 ## New in 1.10.0
 
-- **Armed guards warn again with Staff Needs on.** An armed guard's chance to shout a warning before firing no longer scales with the prison's overall staff morale. A guard whose own needs are neglected still fires without warning.
+- **Armed guards warn more often with Staff Needs on.** An armed guard's chance to shout a warning before attacking no longer scales with the prison's overall staff morale. A guard whose own needs are neglected still attacks without warning.
 - **Hold to fire at zombies.** Holding the button in Warden Mode now keeps firing at zombies too, not only in attack mode (1.9.0 test build report).
 
 ## Also new since 1.5.0
 
 - **Muzzle flash, smoke and buckshot.** Assault rifles and SMGs show a muzzle flash and the shotgun fires a spread of buckshot with smoke again. Automatic rifles also stop playing a full burst sound for every round.
 - **Armed guards reload in pavilions.** An armed guard manning a Guard Pavilion keeps firing instead of stopping after one shot.
-- **Disarmed armed guards can fight.** An armed guard who loses its shotgun fights with its fists instead of getting stuck while Freefire is on or it is badly hurt.
+- **Disarmed armed guards can fight.** An armed guard who loses its shotgun fights with its fists while Freefire is on or it is badly hurt, instead of with an empty hand that does no damage.
 - **Escape Mode Freefire with per-sector actions.** The warden's Freefire order after your gang kills someone now reaches the guards with "Search and Actions per sector" on.
 - **Hold to fire automatic weapons.** Holding the mouse button keeps assault rifles and SMGs firing in Warden Mode and Escape Mode.
 - **Intake with route-restricted categories.** A helipad, boat dock or road that accepts only some prisoner categories no longer ends with *Your prison is closed to new inmates* while cells stand empty.
@@ -44,15 +44,15 @@ If Steam verifies game files, run the patcher again. **Revert to original** undo
 
 ## Please test
 
-- **Armed guard warnings:** Staff Needs on, staff morale low. An armed guard confronting a misbehaving prisoner should shout a warning about as often as with Staff Needs off. Guards with neglected needs may still fire straight away; that is the game's own rule and unchanged.
+- **Armed guard warnings:** Staff Needs on, staff morale low. An armed guard confronting a misbehaving prisoner should shout a warning about as often as with Staff Needs off. Guards with neglected needs may still attack straight away; that is the game's own rule and unchanged.
 - **Hold to fire at zombies:** in Warden Mode with an assault rifle or SMG, hold the button over zombies. It should keep firing.
 - The other 1.9.0 fixes as listed in the 1.9.0 test build notes.
 
-How each fix works, in plain English, is in `docs/fixes-explained.md`.
+Each fix has a short page under `docs/`.
 
 ## Credits
 
-- **Ozoneraxi** (AIO bug tracker and All-in-One mod) for the findings behind the weapon-effects, pavilion, disarmed-guard, Escape Mode Freefire and full-auto fixes, and for the intake, booth, shop and exercise findings.
+- **Ozoneraxi** (AIO bug tracker and All-in-One mod) for the findings behind the weapon-effects, pavilion, disarmed-guard, Escape Mode Freefire fixes, and for the intake, booth, shop and exercise findings.
 - **BurpBurp** and **Ozoneraxi** (Less Lethal Expansion), **Ozoneraxi** (AIO, fire rate), **vojin154** (pa_fix_direction_serialization), **Deskius**, wackypanda and Quin_BNK (Alert Icons Partial Fix), for the earlier fixes.
 
 ## Checksums (SHA-256)

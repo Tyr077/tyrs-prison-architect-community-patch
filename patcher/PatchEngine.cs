@@ -160,7 +160,7 @@ namespace PAPatcher
 
         /// <summary>
         /// True if this file is the build the patches were made for, in any patched/unpatched combination.
-        /// Every fix must be cleanly patched or unpatched, and reverting the patched ones must give back
+        /// Every fix must be cleanly patched (by this or an older release) or unpatched, and reverting the patched ones must give back
         /// a file whose whole-file hash is the known original. A different build that merely matches at
         /// the hook sites is rejected.
         /// </summary>

@@ -7,14 +7,14 @@
   World+0x4614 and WeaponsFreeTimer (EscapeMode+0x110) = 180. The EscapeMode update
   (FUN_140552F10) counts the timer down and clears World+0x4614 whenever it is below zero.
 
-  With "Search and Actions per sector" (the default), guards do not read World+0x4614. They read
+  With "Search and Actions per sector" on, guards do not read World+0x4614. They read
   the per-sector crisis table CrisisSectorData: World+0x44C8 + order*14 + sector, 11 orders x 14
   sectors, order 1 = WeaponsFree (so World+0x44D6..+0x44E3), gated by World+0x4715. The warden's
   order therefore changes nothing a guard looks at.
 
   Fix: both sites that touch World+0x4614 do the same to the WeaponsFree row of the crisis table
   when World+0x4715 (per-sector actions) is set: all 14 sectors on when the order is given, all
-  off while the timer is expired - the same behaviour the legacy flag has always had.
+  off while the timer is expired - the same behaviour the legacy flag has.
 
   Hooks: 0x14055634C (mov rax,[App] in the kill handler; the stub re-does it and the flag write,
   then resumes at 0x140556361) and 0x140553157 (mov [rcx+0x4614],bpl with bpl = 0 in the update;
@@ -117,7 +117,7 @@ $shaP = [BitConverter]::ToString([System.Security.Cryptography.SHA256]::Create()
 $doc = [ordered]@{
     id = 'escape-freefire-sectors'; name = 'Escape Mode Freefire with per-sector actions'; version = '1.0.0'
     requires = @('code-section')
-    description = 'In Escape Mode the warden orders Freefire for three minutes when your gang kills someone. The order only set the old prison-wide Freefire switch, which guards ignore when "Search and Actions per sector" is on, as it is by default, so the order did nothing. It now also sets Freefire in every sector, and clears it again when the three minutes are up, the same way the old switch is cleared.'
+    description = 'In Escape Mode, the warden''s Freefire order after your gang kills someone now reaches the guards when "Search and Actions per sector" is on.'
     game_build = 'Prison Architect 64-bit, Sunset Update (final)'; sha256_original = $sha; sha256_patched = $shaP; edits = $edits
 }
 [System.IO.File]::WriteAllText($Out, ($doc | ConvertTo-Json -Depth 5) + [Environment]::NewLine, (New-Object System.Text.UTF8Encoding($false)))

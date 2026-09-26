@@ -48,7 +48,7 @@ If Steam verifies game files it restores the original executable. Run the patche
 
 ## Credits
 
-- **Ozoneraxi** (All-in-One patch, AIO): fixed the ranged weapon fire rate a year before this patch did, as part of their all-in-one patching work, and their notes on the reload timer are what this fix was built and checked against.
+- **Ozoneraxi** (All-in-One patch, AIO): worked around the ranged weapon fire rate for soldiers, Elite Ops and bounty hunters before this patch, as part of their all-in-one patching work, and their notes on the reload timer are what this fix was built and checked against.
 - **vojin154** (pa_fix_direction_serialization), **Ozoneraxi** and **Deskius** (Alert Icons Partial Fix), with wackypanda and Quin_BNK, for the earlier fixes.
 
 ## Checksums (SHA-256)

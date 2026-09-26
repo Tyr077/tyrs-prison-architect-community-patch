@@ -6,8 +6,8 @@
   holding a door it decides whether the entity can open the door itself (from its movement flags) and,
   if not, marks the step "needs a guard" and multiplies the cost by 10. Every locked door type works
   that way, except keycard doors (KeycardDoor 0x247, KeycardDoorLarge 0x248): those ALSO add a flat
-  penalty of 1000 (DAT_140B1BE84, the same constant used for swimming across water) to everyone who is
-  not a prisoner holding a keycard, staff with the staff key included. A guard therefore sees a keycard
+  penalty of 1000 (DAT_140B1BE84, the same constant used for swimming across water) to every entity
+  without movement flag bit 39 (tracking belt), staff with the staff key included. A guard therefore sees a keycard
   door as roughly a thousand tiles of walking and detours around it whenever any other route exists.
 
   Fix: NOP the addition, so keycard doors cost the same as jail doors for the router: entities with the
@@ -41,7 +41,7 @@ $p = [byte[]]$b.Clone(); foreach ($e in $edits) { $nb = Bytes $e.replace; for ($
 $shaP = [BitConverter]::ToString([System.Security.Cryptography.SHA256]::Create().ComputeHash($p)).Replace('-','').ToLower()
 $doc = [ordered]@{
     id = 'keycard-door-path-cost'; name = 'Staff detour around keycard doors'; version = '1.0.0'
-    description = 'The route planner charged every keycard door a flat penalty of about a thousand tiles of walking, staff with keys included, so guards and staff took huge detours to avoid them. Keycard doors are now costed like jail doors: key holders pass at normal cost, everyone else needs a guard as before.'
+    description = 'Staff go through keycard doors instead of taking long detours around them.'
     game_build = 'Prison Architect 64-bit, Sunset Update (final)'; sha256_original = $sha; sha256_patched = $shaP; edits = $edits
 }
 [System.IO.File]::WriteAllText($Out, ($doc | ConvertTo-Json -Depth 5) + [Environment]::NewLine, (New-Object System.Text.UTF8Encoding($false)))

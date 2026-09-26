@@ -2,7 +2,7 @@ Adds a fourth fix. Existing users: download the new `TyrsPAPatch.exe`, run it, a
 
 ## New in 1.1.0
 
-**Prisoner and staff directions not saved.** Direction markings placed for prisoners or staff were lost every time a save was loaded. The save writer could not write single-byte fields, so the value was dropped. The game now writes those fields as plain numbers. This also restores visitor skin and clothing colours and a few other byte-sized fields that were silently lost the same way. First reported and fixed by **vojin154** (pa_fix_direction_serialization), who kindly agreed to its inclusion. Their DLL and this patch are compatible, but you only need one.
+**Prisoner and staff directions not saved.** Direction markings placed for prisoners or staff were lost every time a save was loaded. The save writer could not write single-byte fields, so the value was dropped. The game now writes those fields as plain numbers. First fixed by **vojin154** (pa_fix_direction_serialization), who kindly agreed to its inclusion. Their DLL and this patch are compatible, but you only need one.
 
 ## Fixes included
 
@@ -22,7 +22,7 @@ If Steam verifies game files it restores the original executable. Run the patche
 ## Credits
 
 - **vojin154** (pa_fix_direction_serialization): found and fixed the lost-directions bug first, and blessed its inclusion.
-- **Ozoneraxi** (All-in-One patch, AIO): fixed the ranged weapon fire rate a year before this patch did, as part of their all-in-one patching work, and their notes on the reload timer are what this fix was built and checked against.
+- **Ozoneraxi** (All-in-One patch, AIO): worked around the ranged weapon fire rate for soldiers, Elite Ops and bounty hunters before this patch, as part of their all-in-one patching work, and their notes on the reload timer are what this fix was built and checked against.
 - **Ozoneraxi** and **Deskius** (Alert Icons Partial Fix), with wackypanda and Quin_BNK: their offset formula pointed directly at the sprite-scale bug.
 
 ## Checksums (SHA-256)

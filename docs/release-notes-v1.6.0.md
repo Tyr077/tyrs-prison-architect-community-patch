@@ -6,14 +6,14 @@ users: download the new `TyrsPAPatch.exe`, run it, click **Apply selection**. Yo
 **Exercise on equipment counts for grading.** A prisoner's Health grade scores
 "% of stay exercising", but a prison whose prisoners work out on gym equipment
 scored nothing for it however many hours they put in. The game credits that time
-from the prisoner's current *action*, and the only activity in the whole game
-tagged as the Exercise action is jogging laps around a yard. Weights benches,
+from the prisoner's current *action*, and the only activities tagged as the
+Exercise action are the exercise in a yard and in the DLC gymnasium and fight
+club rooms. Weights benches,
 treadmills, punch bags, gym mats, dumbbell racks, tyre apparatus, training
 dummies and pull-up bars are all tagged "use an object", so their time went to
 free time instead, even though the game was discharging the prisoner's Exercise
-need the whole while. An indoor gym could not score that part of the Health
-grade at all, and a poor Health grade adds up to 25% to a prisoner's
-re-offending chance.
+need the whole while. A gym built from equipment could not score that part of
+the Health grade at all.
 
 Time on an object now counts as exercise whenever the thing being used is one
 that serves the Exercise need, which is how the game already describes every

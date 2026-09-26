@@ -2,7 +2,7 @@
     "id":  "keycard-door-released-prisoners",
     "name":  "Released prisoners stuck behind revoked keycard doors",
     "version":  "1.0.0",
-    "description":  "A keycard door with prisoner access revoked was a hard wall for released prisoners, so when it was their only way out they never left. The route planner now treats such a door as \"needs a guard\" for released prisoners, the same as a jail door. Prisoners still serving time are refused as before.",
+    "description":  "When a keycard door with prisoner access revoked is the only way out, released prisoners call a guard to let them out instead of standing still.",
     "game_build":  "Prison Architect 64-bit, Sunset Update (final)",
     "sha256_original":  "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
     "sha256_patched":  "e5410c43f357cf4ad2654d84ca1761b64732afb788fbd23ee62c7d42042c7354",

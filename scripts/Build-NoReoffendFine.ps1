@@ -33,7 +33,7 @@ $p = [byte[]]$b.Clone(); foreach ($e in $edits) { $nb = Bytes $e.replace; for ($
 $shaP = [BitConverter]::ToString([System.Security.Cryptography.SHA256]::Create().ComputeHash($p)).Replace('-','').ToLower()
 $doc = [ordered]@{
     id = 'tweak-no-reoffend-fine'; name = 'No reoffending fine (Second Chances)'; version = '1.0.0'; optional = $true
-    description = 'Removes the flat 5,000 "Prisoner Reoffending Fine" charged two days after any released prisoner reoffends. Reoffending is still tracked and reoffenders can still return; the reform reward for prisoners who stay clean is unchanged. Balance tweak, not a bug fix.'
+    description = 'Removes the flat $5,000 charge when a released prisoner reoffends.'
     game_build = 'Prison Architect 64-bit, Sunset Update (final)'; sha256_original = $sha; sha256_patched = $shaP; edits = $edits
 }
 [System.IO.File]::WriteAllText($Out, ($doc | ConvertTo-Json -Depth 5) + [Environment]::NewLine, (New-Object System.Text.UTF8Encoding($false)))

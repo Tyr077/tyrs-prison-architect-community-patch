@@ -1,14 +1,15 @@
 <#
   Install-HandoffMod.ps1
-  Builds a Prison Architect (PA1) data mod that stops the gang contraband
-  hand-off bug from recurring.
+  Builds a Prison Architect (PA1) data mod meant to stop the gang contraband
+  hand-off bug from recurring. Neither mode has been tested in the game.
 
   Ships NO Paradox content. It reads crookedguards_settings.txt out of YOUR
   OWN main.dat at install time, rewrites the values, and writes the result
   into your local mods folder.
 
   Modes:
-    Off    Crooked guards never spawn. Bug cannot trigger. Loses the feature.
+    Off    Settings meant to stop new crooked guards, and with them the bug.
+           Guards that are already crooked stay. Loses the feature. Unproven.
     Light  Keeps crooked guards, far fewer of them, and a 4h bribe window
            instead of 48h so a stalled pairing expires quickly. Unproven.
 
@@ -98,7 +99,7 @@ $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
 $manifest = @(
     ('Name          "No Crooked Hand-Off Bug ({0})"' -f $Mode),
     'Author        "local"',
-    'Description   "Stops the stalled gang contraband hand-off that leaves prisoners unescortable."',
+    'Description   "Crooked guard settings meant to prevent the stalled gang contraband hand-off that leaves prisoners unescortable. Untested."',
     'Version       "v1.0"',
     ('Date          "{0}"' -f (Get-Date -Format 'dd/MM/yyyy')),
     'isTranslation false'

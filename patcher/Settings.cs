@@ -56,7 +56,7 @@ namespace PAPatcher
                 if (!File.Exists(Path)) return new Settings();
                 var raw = File.ReadAllBytes(Path);
                 // Tolerate a UTF-8 byte-order mark; DataContractJsonSerializer does not. A hand-edited
-                // file, or one written by a text editor, usually has one.
+                // file, or one written by a text editor, may have one.
                 int start = (raw.Length >= 3 && raw[0] == 0xEF && raw[1] == 0xBB && raw[2] == 0xBF) ? 3 : 0;
                 using (var ms = new MemoryStream(raw, start, raw.Length - start))
                 {

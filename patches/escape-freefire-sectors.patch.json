@@ -5,7 +5,7 @@
     "requires":  [
                      "code-section"
                  ],
-    "description":  "In Escape Mode the warden orders Freefire for three minutes when your gang kills someone. The order only set the old prison-wide Freefire switch, which guards ignore when \"Search and Actions per sector\" is on, as it is by default, so the order did nothing. It now also sets Freefire in every sector, and clears it again when the three minutes are up, the same way the old switch is cleared.",
+    "description":  "In Escape Mode, the warden\u0027s Freefire order after your gang kills someone now reaches the guards when \"Search and Actions per sector\" is on.",
     "game_build":  "Prison Architect 64-bit, Sunset Update (final)",
     "sha256_original":  "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
     "sha256_patched":  "a5d175320c32d08a3433722fa64d2864ff2f1a490996e28d2ad329877c688928",

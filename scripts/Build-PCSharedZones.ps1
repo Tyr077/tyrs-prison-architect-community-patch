@@ -3,7 +3,8 @@
   Writes patches/tweak-pc-shared-zones.patch.json.
 
   GitHub issue #3: Protective Custody prisoners walk into Shared sectors (and Custom sectors that include
-  Protective Custody) but never take a job or attend a class there. In 2018 they did both in Shared sectors.
+  Protective Custody) but never take a job or attend a class there. The 2018 job finder (O:FUN_14045FD90)
+  has no such rule; the 2018 counterparts of the other two sites below were not compared.
 
   Sunset applies one rule in three places: an entity whose zone type is ProtectedOnly (4) may only use a
   tile, a station, or a spot to take part from, in a sector whose zone (+0x64) is ProtectedOnly. Zone names are the table at
@@ -24,7 +25,7 @@
      FUN_140791480 and FUN_1405D46E0): a Protected prisoner (+0xA34 == 4) standing in a sector that is
      not ProtectedOnly returns 0. This is what kept Protective Custody students out of classes: in the
      issue #3 save the same 51 students of the 09:00 sessions sat in class 50/51 while SuperMax and 0/51
-     once switched to Protective Custody, in either build.
+     once switched to Protective Custody, on the unpatched build and on the build with only sites 1 and 2.
 
   Shared and Custom sectors are refused in all three, so a Protective Custody prisoner gets a station in a
   Shared sector (the station picker FUN_14070D5A0 has no such rule) but never a job there. Measured on
@@ -32,7 +33,8 @@
   (O:FUN_14045FD90) has no such rule.
 
   Shipped as an optional tweak (Mike's decision), not a fix: the final version may have meant it as a safety
-  rule, even if the 2018 version and the deployment help text say otherwise.
+  rule, even though the 2018 job finder has no such rule and the deployment help text says Protective
+  Custody prisoners use Shared sector rooms when their needs are not met in their own sector.
 
   Tweak: skip the Protective Custody rule at all three sites, so Protective Custody is handled like every other
   category: FUN_14070E0D0 and the sector permission FUN_14070EFE0 still decide, so a Protective
@@ -90,7 +92,7 @@ $shaP = [BitConverter]::ToString([System.Security.Cryptography.SHA256]::Create()
 $doc = [ordered]@{
     id = 'tweak-pc-shared-zones'; name = 'Protective Custody prisoners work and attend programs in shared sectors'; version = '1.0.0'
     optional = $true
-    description = 'Protective Custody prisoners may spend free time in Shared sectors, and in Custom sectors that include Protective Custody, but the final version only gives them jobs and classes in Protective Custody Only sectors. With this tweak they work and attend programs anywhere their deployment lets them go, as in the 2018 version. Keeping them apart from general population is then down to your deployment and regimes.'
+    description = 'Protective Custody prisoners take jobs and go to classes in Shared sectors, and in Custom sectors that include Protective Custody, not only in Protective Custody Only sectors. Keeping them apart from general population is then up to your deployment and regimes.'
     game_build = 'Prison Architect 64-bit, Sunset Update (final)'; sha256_original = $sha; sha256_patched = $shaP; edits = $edits
 }
 [System.IO.File]::WriteAllText($Out, ($doc | ConvertTo-Json -Depth 5) + [Environment]::NewLine, (New-Object System.Text.UTF8Encoding($false)))

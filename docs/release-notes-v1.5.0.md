@@ -3,32 +3,8 @@ run it, click **Apply patch**. Your tweak choices are kept.
 
 ## New in 1.5.0
 
-**Scripted status effects work again.** Alpha 28 let a mod's Lua script give a
-prisoner a status effect directly (`prisoner.StatusEffects.tazed = 60`), and mods
-such as Less Lethal Expansion rely on it for tazer shotguns, sedative rounds and
-stun rods. A later update made the game track which effects are active in a
-separate flag set that the per-tick decay, the status icons, the AI checks and
-the save file all consult, and the Lua setter was never updated to touch it. The
-value was written into a slot nobody read, so scripted effects did nothing while
-reading them back from Lua still showed the number. The setter now activates the
-effect the way the game's own code does, and clears it again when set to 0.
-
-This fix needs a little new code, so the patcher now always adds the small extra
-section to the executable that was previously only used by the morale tweak. It
-is removed again on revert. Technical notes in `docs/lua-status-effects.md`; a
-small test mod is in `tools/testmods/lua-status-effects-test/`.
-
-**Fire-rate fix keeps shell casings and the shotgun pump sound.** The fix that
-restores `RechargeTime` as the rate of fire used to switch the per-shot reload
-timer off completely. It was reported that guards had stopped ejecting shell
-casings: the timer's expiry is also what spawns the casing and plays the
-shotgun pump sound. The timer is now set to a hair above zero instead, so it
-expires on the next tick and both come back, right after the shot instead of
-two seconds later. Rates are unchanged: revolver 0.5 s, shotgun 1 s, sniper
-rifle 2 s, assault rifle and SMG 0.1 s, as in `materials.txt`. The game has no
-magazine or burst logic for guards; `Ammo` only applies to the player's gang in
-Escape Mode. The notes in `docs/weapon-firerate.md` now list every weapon's
-values and the shipped-versus-fixed cadence.
+- **Scripted status effects work again.** Status effects that a mod's Lua script gives a prisoner, such as being tazed, take effect again.
+- **Fire-rate fix keeps shell casings and the shotgun pump sound.** Guards eject shell casings and the shotgun pump sound plays again after each shot; fire rates are unchanged.
 
 ## Fixes included
 
@@ -58,7 +34,7 @@ If Steam verifies game files it restores the original executable. Run the patche
 ## Credits
 
 - **BurpBurp**, main contributor, and **Ozoneraxi** (Less Lethal Expansion): their mod is the reference use of the Alpha 28 `StatusEffects` scripting, and their scripts and notes on it are what the fix was built and checked against.
-- **Ozoneraxi** (All-in-One patch, AIO): fixed the ranged weapon fire rate a year before this patch did, as part of their all-in-one patching work, and their notes on the reload timer, including the 0.01 variant that keeps the casings, are what this fix was built and checked against.
+- **Ozoneraxi** (All-in-One patch, AIO): worked around the ranged weapon fire rate for soldiers, Elite Ops and bounty hunters before this patch, as part of their all-in-one patching work, and their notes on the reload timer, including the 0.01 variant that keeps the casings, are what this fix was built and checked against.
 - **vojin154** (pa_fix_direction_serialization), **Ozoneraxi** and **Deskius** (Alert Icons Partial Fix), with wackypanda and Quin_BNK, for the earlier fixes.
 
 ## Checksums (SHA-256)

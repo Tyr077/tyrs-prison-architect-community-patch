@@ -293,7 +293,7 @@ namespace PAPatcher
                 var key = tree.SelectedNode == null ? null : tree.SelectedNode.Tag as string;
                 lblFixInfo.Text = key == GroupTweaks
                     ? "Optional tweaks change game balance rather than fixing a bug, so they are off unless you turn them on."
-                    : key == GroupFixes ? "Fixes for engine bugs that mods cannot reach. Leave them all on unless you have a reason not to." : "";
+                    : key == GroupFixes ? "Fixes for bugs in the game's code. Leave them all on unless you have a reason not to." : "";
                 return;
             }
             lblFixInfo.Text = (f.optional ? "Optional tweak, changes game balance: " : "") + f.description;

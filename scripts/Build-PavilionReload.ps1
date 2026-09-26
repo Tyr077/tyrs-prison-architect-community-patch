@@ -97,7 +97,7 @@ $shaP = [BitConverter]::ToString([System.Security.Cryptography.SHA256]::Create()
 $doc = [ordered]@{
     id = 'pavilion-reload'; name = 'Armed guards reload in pavilions'; version = '1.0.0'
     requires = @('code-section')
-    description = 'Armed guards manning a Guard Pavilion fire more than once. A guard on a pavilion counts as carried by it, and the game skipped the whole update for carried people, including the reload timer that runs after every shot. A stationed armed guard fired once and then waited for a reload that never finished. The reload timer now keeps running while a guard is stationed.'
+    description = 'Armed guards manning a Guard Pavilion keep firing instead of stopping after one shot.'
     game_build = 'Prison Architect 64-bit, Sunset Update (final)'; sha256_original = $sha; sha256_patched = $shaP; edits = $edits
 }
 [System.IO.File]::WriteAllText($Out, ($doc | ConvertTo-Json -Depth 5) + [Environment]::NewLine, (New-Object System.Text.UTF8Encoding($false)))

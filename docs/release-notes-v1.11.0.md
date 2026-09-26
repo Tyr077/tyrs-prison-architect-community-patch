@@ -4,15 +4,15 @@ This build was made after comparing the game with its 2018 version (the Steam be
 
 ## New in 1.11.0
 
-- **Prisoners near gunfire surrender.** A guard's gunshot makes up to ten prisoners within four squares react as if they were the target, and most of them surrender. The 2018 version did this; the final version had lost the code.
-- **Fire rate now matches the 2018 version.** Automatic weapons fire as fast as before. Pistols, shotguns and rifles wait 0.7 s between shots again (the Tazer 2 s), on top of their recharge time: a revolver fires every 1.2 s, a shotgun every 1.7 s. Earlier versions of this fix removed the wait altogether, which was faster than the game ever was.
+- **Prisoners near gunfire surrender.** A guard's gunshot makes up to ten prisoners within four squares react as if they were the target. The 2018 version did this; the final version had lost the code.
+- **Fire rate now matches the 2018 version.** Automatic weapons fire as fast as before. Pistols, shotguns and rifles wait 0.7 s between shots again (the Tazer 2 s), on top of their recharge time: a revolver fires every 1.2 s, a shotgun every 1.7 s. Earlier versions of this fix removed the wait altogether, which was faster than the 2018 version.
 - **Armed guard warnings is now an optional tweak.** The 2018 version scales an armed guard's warning chance with overall staff morale in exactly the same way, so that is how the game was designed, not a bug. If you had it from the 1.10.0 test build it shows as installed under **Optional tweaks**; untick it to get the game's own behaviour back.
 
 ## Also new since 1.5.0
 
 - **Muzzle flash, smoke and buckshot.** Assault rifles and SMGs show a muzzle flash and the shotgun fires a spread of buckshot with smoke again. Automatic rifles also stop playing a full burst sound for every round.
 - **Armed guards reload in pavilions.** An armed guard manning a Guard Pavilion keeps firing instead of stopping after one shot.
-- **Disarmed armed guards can fight.** An armed guard who loses its shotgun fights with its fists instead of getting stuck while Freefire is on or it is badly hurt.
+- **Disarmed armed guards can fight.** An armed guard who loses its shotgun fights with its fists while Freefire is on or it is badly hurt, instead of with an empty hand that does no damage.
 - **Escape Mode Freefire with per-sector actions.** The warden's Freefire order after your gang kills someone now reaches the guards with "Search and Actions per sector" on.
 - **Hold to fire automatic weapons.** Holding the mouse button keeps assault rifles and SMGs firing in Warden Mode and Escape Mode, at zombies too.
 - **Intake with route-restricted categories.** A helipad, boat dock or road that accepts only some prisoner categories no longer ends with *Your prison is closed to new inmates* while cells stand empty.
@@ -51,11 +51,11 @@ If Steam verifies game files, run the patcher again. **Revert to original** undo
 - **Fire rate:** armed guards with shotguns should fire about every two seconds, snipers about every three, and assault rifles and SMGs in a steady stream. In Escape Mode a pistol fires a little more often than once a second.
 - The 1.9.0 and 1.10.0 fixes as listed in those test build notes.
 
-How each fix works, in plain English, is in `docs/fixes-explained.md`.
+Each fix has a short page under `docs/`.
 
 ## Credits
 
-- **Ozoneraxi** (AIO bug tracker and All-in-One mod) for the findings behind the weapon-effects, pavilion, disarmed-guard, Escape Mode Freefire and full-auto fixes, for recording that armed guards had stopped causing surrenders around them, and for the intake, booth, shop and exercise findings.
+- **Ozoneraxi** (AIO bug tracker and All-in-One mod) for the findings behind the weapon-effects, pavilion, disarmed-guard, Escape Mode Freefire fixes, for recording that armed guards caused fewer surrenders around them, and for the intake, booth, shop and exercise findings.
 - **BurpBurp** and **Ozoneraxi** (Less Lethal Expansion), **Ozoneraxi** (AIO, fire rate), **vojin154** (pa_fix_direction_serialization), **Deskius**, wackypanda and Quin_BNK (Alert Icons Partial Fix), for the earlier fixes.
 
 ## Checksums (SHA-256)

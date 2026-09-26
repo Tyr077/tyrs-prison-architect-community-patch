@@ -3,7 +3,7 @@
   Writes patches/weapon-effects.patch.json.
 
   The game still contains a complete weapon-fire routine (FUN_1401AC610, reached only through
-  script command 0x3B, which nothing queues any more). Besides the bullet tracer it spawns:
+  script command 0x3B, for which no queuer was found). Besides the bullet tracer it spawns:
     - for the Shotgun: five smoke puffs (FUN_1403F6C70) and fifteen tracers spread over a disc
       of radius distance*0.1 around the aim point - the buckshot;
     - for the AssaultRifle and SubMachineGun: a muzzle flash (FUN_1403F7130) at the barrel, and
@@ -224,7 +224,7 @@ $shaP = [BitConverter]::ToString([System.Security.Cryptography.SHA256]::Create()
 $doc = [ordered]@{
     id = 'weapon-effects'; name = 'Muzzle flash, smoke and buckshot'; version = '1.0.0'
     requires = @('code-section')
-    description = 'Guns show their effects again. The game still has the old firing code that draws a muzzle flash for assault rifles and SMGs and smoke plus a spread of buckshot for the shotgun, but every shot now goes through a newer routine that only draws a single tracer. The effects are added back to that routine. Automatic rifles also play their burst sound at most twice a second again, as the old code did, instead of one full burst per round.'
+    description = 'Assault rifles and SMGs show a muzzle flash, and the shotgun fires a spread of buckshot with smoke again.'
     game_build = 'Prison Architect 64-bit, Sunset Update (final)'; sha256_original = $sha; sha256_patched = $shaP; edits = $edits
 }
 [System.IO.File]::WriteAllText($Out, ($doc | ConvertTo-Json -Depth 5) + [Environment]::NewLine, (New-Object System.Text.UTF8Encoding($false)))

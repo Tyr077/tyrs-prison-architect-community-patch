@@ -105,7 +105,7 @@ $shaP = [BitConverter]::ToString([System.Security.Cryptography.SHA256]::Create()
 $doc = [ordered]@{
     id = 'tweak-staff-death-morale-decay'; name = 'Staff death morale penalty fades'; version = '1.1.0'; optional = $true
     requires = @('code-section')
-    description = 'The staff morale penalty for staff who died on duty normally lasts for the whole session, one point per death. With this tweak it fades by one death per in-game day. The death count itself is untouched, so the "staff have died on duty" line in the staff morale panel still shows the real number. Balance tweak, not a bug fix.'
+    description = 'The morale penalty for staff deaths shrinks by one death per in-game day; the death count itself is unchanged.'
     game_build = 'Prison Architect 64-bit, Sunset Update (final)'; sha256_original = $sha; sha256_patched = $shaP; edits = $edits
 }
 [System.IO.File]::WriteAllText($Out, ($doc | ConvertTo-Json -Depth 5) + [Environment]::NewLine, (New-Object System.Text.UTF8Encoding($false)))

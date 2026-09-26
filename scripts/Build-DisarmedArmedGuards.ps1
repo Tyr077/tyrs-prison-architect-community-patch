@@ -3,13 +3,16 @@
   Writes patches/disarmed-armed-guards.patch.json.
 
   GetEquipmentDef (FUN_140536CB0) decides which weapon an entity fights with. For an ArmedGuard
-  (type 0x6B) it asks "is the weapon drawn" (FUN_1405D6A80: WeaponDrawn timer +0xBFC > 0, which
-  the armed guard's update sets while Freefire is on or when it is badly hurt). If drawn, it
-  returns the definition of the carried item (+0x2F8); if not, Fists (definition 1).
+  (type 0x6B) it asks "is the weapon drawn" (FUN_1405D6A80: WeaponDrawn timer +0xBFC > 0; the
+  armed guard's update FUN_1404882B0 sets it to 5 s while Freefire applies and the guard has a
+  target, and its damage handler FUN_140488500 sets it when it is attacked at 60% damage or more).
+  If drawn, it returns the definition of the carried item (+0x2F8); if not, Fists (definition 1).
 
   It never checks that the guard still carries anything. A disarmed armed guard has item 0 (None),
-  whose definition has no attack power and is not a ranged weapon, so with Freefire on or above
-  70% damage the guard walks up to prisoners and swings nothing, for ever.
+  which has no Equipment entry and is not a ranged weapon, so while WeaponDrawn runs the guard
+  attacks with an empty hand. (At 70% damage a guard is incapacitated, FUN_1405434D0, so the damage
+  window is 60-70%.) Out of combat a disarmed armed guard goes to the nearest Armoury for its
+  Shotgun (FUN_1405DCA00); this fix only covers the fighting in between.
 
   Fix: at that one call site, "weapon drawn" is only true when the guard carries an item; a
   disarmed armed guard gets Fists, the same as with the weapon holstered. The predicate itself and
@@ -70,7 +73,7 @@ $shaP = [BitConverter]::ToString([System.Security.Cryptography.SHA256]::Create()
 $doc = [ordered]@{
     id = 'disarmed-armed-guards'; name = 'Disarmed armed guards can fight'; version = '1.0.0'
     requires = @('code-section')
-    description = 'Armed guards who lose their shotgun fight with their fists. While Freefire is on, or once an armed guard is badly hurt, the game has it fight with the weapon it carries, without checking that it still carries one. A disarmed armed guard fought with an empty hand that does no damage and stayed stuck in the fight. It now uses its fists, as it already does with the weapon holstered.'
+    description = 'Armed guards who lose their shotgun fight with their fists while Freefire is on or when badly hurt, instead of not fighting back.'
     game_build = 'Prison Architect 64-bit, Sunset Update (final)'; sha256_original = $sha; sha256_patched = $shaP; edits = $edits
 }
 [System.IO.File]::WriteAllText($Out, ($doc | ConvertTo-Json -Depth 5) + [Environment]::NewLine, (New-Object System.Text.UTF8Encoding($false)))

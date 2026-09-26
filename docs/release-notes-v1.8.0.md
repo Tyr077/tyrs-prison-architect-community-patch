@@ -39,7 +39,7 @@ Intake and booths are verified in the code but not yet in a running prison. Repo
 - **Intake:** one route for some categories (a helipad for Max Sec), another for the rest, Fill Capacity, a few days at speed. Both kinds should keep arriving.
 - **Booths:** prisoners' sector above the booths, booths rotated to face up. Visits should take place. Other facings and visitor tables should be unchanged.
 
-The long explanation of every fix is in `docs/fixes-explained.md`.
+Each fix has a short page under `docs/`.
 
 ## Credits
 

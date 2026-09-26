@@ -107,7 +107,7 @@ $shaP = [BitConverter]::ToString([System.Security.Cryptography.SHA256]::Create()
 $doc = [ordered]@{
     id = 'visitor-booth-facing'; name = 'Visitor booths facing up'; version = '1.0.0'
     requires = @('code-section')
-    description = 'Visitor booths work in every orientation. A booth has a prisoner side and a visitor side, and which is which follows the way the booth faces; prisoners and visitors already walk to the right sides. But the check that pairs a prisoner with a visitor always looked at the side a booth facing down would give the prisoner, so for a booth facing up it demanded that the prisoner could reach, and was allowed on, the visitor side. Unless prisoners could walk into the visitor half of the room no visit was ever arranged there, and opening that half to them defeats the booth. The pairing check now looks at the side the prisoner will actually use.'
+    description = 'Visitor booths work with the prisoners'' side at the top, not just the bottom. Rotate the booth to face your prisoners while placing it.'
     game_build = 'Prison Architect 64-bit, Sunset Update (final)'; sha256_original = $sha; sha256_patched = $shaP; edits = $edits
 }
 [System.IO.File]::WriteAllText($Out, ($doc | ConvertTo-Json -Depth 5) + [Environment]::NewLine, (New-Object System.Text.UTF8Encoding($false)))

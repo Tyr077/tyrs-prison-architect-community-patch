@@ -12,13 +12,13 @@ front on a wall zoned as part of the shop and cut a door into the shop from
 every wing meant to use it, which rather defeats the point of a serving hatch.
 
 The game decides where someone stands to use an object from a marker in the
-object's artwork. The shop front is the one such object that was never given
+object's artwork. The shop front was never given
 one, so the game fell back to the only spot it had: the shop front itself,
 which is a wall. It then asked whether the prisoner could walk to that spot and
 was allowed there — in other words, whether they could get inside the shop and
 were permitted in it. A shop built the sensible way, staff behind the counter
 and prisoners queueing outside, fails both questions, and the prisoner decides
-the shop is unusable and wanders off.
+the shop is unusable.
 
 An object built into a wall can now be used from any tile beside it that the
 prisoner can reach and is allowed to stand on. Objects standing on ordinary
@@ -30,13 +30,13 @@ a shop that works today. Technical notes in `docs/shop-front.md`.
 
 **Exercise on equipment counts for grading.** A prisoner's Health grade scores
 "% of stay exercising", but a prison whose prisoners work out on gym equipment
-scored nothing for it however many hours they put in. The only activity in the
-game tagged as the Exercise action is jogging laps around a yard; weights
+scored nothing for it however many hours they put in. The only activities
+tagged as the Exercise action are the exercise in a yard and in the DLC
+gymnasium and fight club rooms; weights
 benches, treadmills, punch bags, gym mats, dumbbell racks, tyre apparatus,
 training dummies and pull-up bars are all tagged "use an object", so their time
-went to free time instead. An indoor gym could not score that part of the Health
-grade at all, and a poor Health grade adds up to 25% to a prisoner's
-re-offending chance. Time on an object now counts as exercise whenever the thing
+went to free time instead. A gym built from equipment could not score that part of
+the Health grade at all. Time on an object now counts as exercise whenever the thing
 being used is one that serves the Exercise need. DLC and modded equipment are
 covered without naming anything, and the animations are untouched. Technical
 notes in `docs/exercise-grading.md`.

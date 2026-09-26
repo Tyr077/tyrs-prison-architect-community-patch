@@ -2,9 +2,9 @@ Adds two bug fixes, both about doors. Existing users: download the new `TyrsPAPa
 
 ## New in 1.3.0
 
-**Staff detour around keycard doors.** Guards and other staff walked huge detours instead of going through a keycard door, even holding the key with the door right in front of them. The route planner charged every keycard door a flat penalty of about a thousand tiles of walking, the same it uses for swimming across water, and charged it to key holders too, so any other route looked cheaper. Keycard doors are now costed like jail doors: key holders pass at normal cost, everyone else needs a guard as before. Technical notes in `docs/keycard-door-path-cost.md`.
+**Staff detour around keycard doors.** Guards and other staff walked huge detours instead of going through a keycard door, even holding the key with the door right in front of them. The route planner charged every keycard door a flat penalty of about a thousand tiles of walking, the same it uses for swimming across water, and charged it to key holders too, so almost any other route looked cheaper. Keycard doors are now costed like jail doors: key holders pass at normal cost, everyone else needs a guard as before. Technical notes in `docs/keycard-door-path-cost.md`.
 
-**Visitors and civilians stuck at visitor doors.** Reformed prisoners (Second Chances mentors), animal therapists, fire safety teachers, delivery men and some other event-spawned NPCs would stop at a visitor door or visitor gate and never get through, and no guard was sent to open it. The door's own "who may open me" list was never extended for the later DLC entities, while the movement code already assumed every non-prisoner could open visitor doors and so never asked for a guard. The door now uses the same rule: anyone who is not a prisoner can open a visitor door. Prisoners are still refused. Technical notes in `docs/visitor-door-access.md`.
+**Visitors and civilians stuck at visitor doors.** Reformed prisoners (Second Chances mentors), animal therapists, fire safety teachers and some other event-spawned NPCs would stop at a visitor door or visitor gate and never get through, and no guard was sent to open it. The door's own "who may open me" list left these NPCs out, while the movement code already assumed every non-prisoner could open visitor doors and so never asked for a guard. The door now uses the same rule: anyone who is not a prisoner can open a visitor door. Prisoners are still refused. Technical notes in `docs/visitor-door-access.md`.
 
 ## Fixes included
 
@@ -32,7 +32,7 @@ If Steam verifies game files it restores the original executable. Run the patche
 ## Credits
 
 - The players on the community Discord who reported the visitor-door behaviour, narrowed it down to specific NPC types and door types, and shared their save-side workaround.
-- **Ozoneraxi** (All-in-One patch, AIO): fixed the ranged weapon fire rate a year before this patch did, as part of their all-in-one patching work, and their notes on the reload timer are what this fix was built and checked against.
+- **Ozoneraxi** (All-in-One patch, AIO): worked around the ranged weapon fire rate for soldiers, Elite Ops and bounty hunters before this patch, as part of their all-in-one patching work, and their notes on the reload timer are what this fix was built and checked against.
 - **vojin154** (pa_fix_direction_serialization), **Ozoneraxi** and **Deskius** (Alert Icons Partial Fix), with wackypanda and Quin_BNK, for the earlier fixes.
 
 ## Checksums (SHA-256)

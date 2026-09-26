@@ -1,11 +1,11 @@
 # Tyr's Prison Architect Community Patch
 
-Bug fixes for Prison Architect 1 that cannot be done with mods, delivered as a
-small patcher that edits your own copy of the game.
+Fixes for bugs in Prison Architect 1's own code, delivered as a small
+patcher that edits your own copy of the game.
 
-This project does not contain or distribute the game. The patcher only changes
-a few hundred bytes inside the `Prison Architect64.exe` you already own, keeps a
-backup, and can put everything back.
+This project does not contain or distribute the game. The patcher only edits the
+`Prison Architect64.exe` you already own, keeps a backup, and can put everything
+back.
 
 Works with the Steam "Sunset Update" build, which is the final version of the
 game. Other builds (GOG, Epic, older versions) are detected and refused; see
@@ -15,10 +15,10 @@ game. Other builds (GOG, Epic, older versions) are detected and refused; see
 
 Two kinds of release, the way mod sites do it:
 
-- **Stable** — the normal release, marked *Latest*. Confirmed in a real prison.
+- **Stable** — the normal release, marked *Latest*.
   This is the one to take unless you have a reason not to.
 - **Test build** — a pre-release, tagged `-testN`. Has the newest fixes in it,
-  but they have not been confirmed in-game yet. Take one of these if you want to
+  but not all of them have been confirmed in-game yet. Take one of these if you want to
   help test, or if it fixes something that is bothering you now.
 
 Both are a single `TyrsPAPatch.exe` on the
@@ -54,24 +54,21 @@ ticked.
 
 ## Fixes included
 
-The short version. For what each bug looked like, why it happened and what the
-fix changes, in plain English, see [Fixes explained](docs/fixes-explained.md).
-Each entry also links to its technical notes.
+Each entry links to a short page on the fix and whether it has been tested in
+game.
 
 - **Prisoners near gunfire surrender.** A guard's gunshot makes up to ten
-  prisoners within four squares react as if they were the target, and most of
-  them surrender, as in the 2018 version of the game. The final version had lost
-  that code. [Details](docs/gunfire-surrender.md)
+  prisoners within four squares react as if they were the target.
+  [Details](docs/gunfire-surrender.md)
 - **Muzzle flash, smoke and buckshot.** Assault rifles and SMGs show a muzzle
-  flash and the shotgun fires a spread of buckshot with smoke again. Automatic
-  rifles also stop playing a full burst sound for every round.
+  flash and the shotgun fires a spread of buckshot with smoke again.
   [Details](docs/weapon-effects.md)
 - **Armed guards reload in pavilions.** An armed guard manning a Guard Pavilion
   keeps firing instead of stopping after one shot.
   [Details](docs/pavilion-reload.md)
 - **Disarmed armed guards can fight.** An armed guard who loses its shotgun
-  fights with its fists instead of getting stuck swinging nothing while Freefire
-  is on or it is badly hurt. [Details](docs/disarmed-armed-guards.md)
+  fights with its fists while Freefire is on or it is badly hurt, instead of not
+  fighting back. [Details](docs/disarmed-armed-guards.md)
 - **Escape Mode Freefire with per-sector actions.** The warden's Freefire order
   after your gang kills someone now reaches the guards when "Search and Actions
   per sector" is on. [Details](docs/escape-freefire-sectors.md)
@@ -84,8 +81,8 @@ Each entry also links to its technical notes.
   needs at least one route that accepts it.
   [Details](docs/intake-route-categories.md)
 - **Visitor booths facing up.** Booths work with the prisoners' side at the top,
-  not just the bottom. The game draws both facings the same, so rotate the booth
-  to face your prisoners while placing it.
+  not just the bottom. Rotate the booth to face your prisoners while placing
+  it.
   [Details](docs/visitor-booth-facing.md)
 - **Shops without prisoners inside.** The shop front can face a hallway and
   prisoners buy from it without being allowed into the shop, so who works in a
@@ -104,11 +101,11 @@ Each entry also links to its technical notes.
 - **Prisoner and staff directions saved.** Direction markings survive a save and
   load. First fixed by vojin154, included with their permission.
   [Details](docs/direction-save.md)
-- **Visitors and civilians stuck at visitor doors.** Mentors, therapists,
-  delivery men and other visitors no longer wait forever at a single visitor
+- **Visitors and civilians stuck at visitor doors.** Mentors, therapists
+  and other visitors no longer wait forever at a single visitor
   door or gate. [Details](docs/visitor-door-access.md)
 - **Released prisoners behind revoked keycard doors.** When a keycard door with
-  belt access revoked is the only way out, released prisoners call a guard to
+  prisoner access revoked is the only way out, released prisoners call a guard to
   let them out instead of standing still forever.
   [Details](docs/keycard-door-released-prisoners.md)
 - **Alert icons with custom sprite-sheet mods.** Alert icons and the bakery oven
@@ -117,10 +114,9 @@ Each entry also links to its technical notes.
 - **Gang contraband hand-off (Gangs DLC).** Hand-offs no longer leave gang
   members pacing forever or crooked guards doing nothing.
   [Details](docs/gang-handoff.md)
-- **Ranged weapon fire rate.** Every gun waited two seconds after each shot, so
-  assault rifles and SMGs never fired automatically. The waits of the 2018
-  version are back: next to nothing for automatic weapons, 0.7 s for other guns,
-  2 s for the Tazer, plus the weapon's `RechargeTime` from `materials.txt`.
+- **Ranged weapon fire rate.** Assault rifles and SMGs fire automatically
+  instead of once every two seconds, and other guns wait 0.7 s between shots
+  instead of two seconds, plus the weapon's `RechargeTime` from `materials.txt`.
   [Details](docs/weapon-firerate.md)
 
 ## Optional tweaks
@@ -136,15 +132,13 @@ in the patcher, or pass `--tweaks` on the command line to turn all of them on.
 - **Staff death morale penalty fades.** The morale penalty for staff deaths
   shrinks by one death per in-game day; the death count itself is unchanged.
 - **Armed guard warnings ignore overall staff morale.** With Staff Needs on, an
-  armed guard's chance to shout a warning before firing no longer scales with
+  armed guard's chance to shout a warning before attacking no longer scales with
   the prison's overall staff morale. A guard whose own needs are neglected still
-  fires without warning. The game has always worked this way, so this is a
-  tweak; it was listed as a fix in the 1.10.0 test build.
+  attacks without warning. Listed as a fix in the 1.10.0 test build.
 - **Protective Custody prisoners work and attend programs in shared sectors.**
-  Protective Custody prisoners take jobs and go to classes in Shared sectors,
-  and in Custom sectors that include Protective Custody, as in the 2018 version.
-  The final version only gives them work and classes in Protective Custody Only
-  sectors, although they may spend free time in the others.
+  Protective Custody prisoners take jobs and go to classes in Shared sectors and
+  in Custom sectors that include Protective Custody, not only in Protective
+  Custody Only sectors.
 
 ## Unsupported build
 
@@ -155,8 +149,7 @@ people have that build it can be supported.
 
 ## Reporting other bugs
 
-Fixes are considered for reproducible engine bugs that mods cannot reach.
-Please include a save file that shows the bug, what you expected to happen, and
+Fixes are considered for reproducible bugs in the game's code. Please include a save file that shows the bug, what you expected to happen, and
 what happens instead.
 
 ## For the technically inclined
@@ -171,42 +164,23 @@ what happens instead.
   the optional tweaks) and `--revert`. It is a
   windowed program, so a console does not wait for it; scripts should use
   `Start-Process -Wait` or the PowerShell script above.
-- `scripts/Build-*.ps1` regenerate each patch from the addresses in the
-  script, and `tools/ghidra-scripts/` are the Ghidra scripts used to find them.
-  Each fix has technical notes under `docs/`. Patches that need new code use a
+- `scripts/Build-*.ps1` regenerate each patch. Patches that need new code use a
   small section appended to the executable; see `docs/code-section.md`.
 - Build the patcher with `dotnet build -c Release` in `patcher/`. It targets
   .NET Framework 4.8, which is already part of Windows 10 and 11.
-- `docs/modding-framework-design.md` is a proposal (not yet built) for adding
-  new Lua modding capabilities through the patcher, with stable and
-  experimental tiers. First candidate: status effects on staff and other
-  non-prisoner entities.
 
 ## Credits
 
-- **Ozoneraxi** (All-in-One patch, AIO): fixed the ranged weapon fire rate a
-  year before this patch did, as part of their all-in-one patching work. Their
-  work on the reload timer established it as the cause of the bug; the 0.01
-  variant of that script is what showed the timer also drives the shell casings.
-- **BurpBurp**, main contributor, and **Ozoneraxi** (Less Lethal Expansion):
-  their mod is the reference use of the Alpha 28 `StatusEffects` scripting, and
-  their scripts are what the scripted status effects fix was built and checked
-  against.
+- **Ozoneraxi** (All-in-One patch and its bug tracker): the findings behind the
+  fire rate, pavilion, shop, exercise, intake, visitor booth and several weapon
+  fixes.
+- **BurpBurp** and **Ozoneraxi** (Less Lethal Expansion): the scripts the
+  scripted status effects fix was built and checked against.
 - **Ozoneraxi** and **Deskius** (Alert Icons Partial Fix), with wackypanda and
-  Quin_BNK: their offset formula pointed directly at the sprite-scale bug.
-- **Ozoneraxi** (AIO bug tracker) established that shops need the customers to be
-  able to path inside, and published the layouts that work around it, which is
-  what sent this fix straight to the standing position the game picks.
-- **Ozoneraxi** (AIO bug tracker) worked out why exercise on equipment never
-  counted towards the Health grade, down to the action tag responsible, and
-  noted that no mod could fix it without losing the animations. That is exactly
-  what this patch avoids by fixing the grading side instead.
-- **Ozoneraxi** (AIO bug tracker) established that any transport route accepting
-  only some categories breaks Fill Capacity, and recorded the booth layout that
-  fails and the workaround that pointed at the pairing check.
-- **vojin154** (pa_fix_direction_serialization) found and fixed the lost
-  directions first, and gave their blessing for the fix to be included here.
-  Their DLL and this patch are compatible, but you only need one.
+  Quin_BNK: their work pointed at the alert icon bug.
+- **vojin154** (pa_fix_direction_serialization) fixed the lost directions
+  first and gave their blessing for the fix to be included here. Their DLL and
+  this patch are compatible, but you only need one.
 
 ## Licence
 

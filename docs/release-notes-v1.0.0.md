@@ -4,7 +4,7 @@ First public release. Three engine-level fixes for Prison Architect 1 (Steam Sun
 
 **Gang contraband hand-off (Gangs DLC).** Prisoners no longer get stuck in the contraband hand-off state, pacing at speed while guards pick up and abandon search and return-to-cell jobs. Also fixes the crooked guard who stops working entirely, and hand-offs never happening again after you fire a crooked guard.
 
-**Ranged weapon fire rate.** Every ranged weapon was capped at one shot per two seconds regardless of its `RechargeTime`, so assault rifles and SMGs never fired automatically. Guards and prisoners now fire at the rate set in `materials.txt`, including in Escape Mode, without any Lua workaround.
+**Ranged weapon fire rate.** Every ranged weapon waited two seconds after each shot on top of its `RechargeTime`, so assault rifles and SMGs never fired automatically. Guards and prisoners now fire at the rate set in `materials.txt`, including in Escape Mode, without any Lua workaround.
 
 **Alert icons with custom sprite-sheet mods.** Notification icons that live in the `objects_d11_2` sheet (gang alerts, contraband, overheating, tropical fever, fallen trees, chewed fences, CCTV misconduct, tracking belts, plumbers and repairmen on site) drew from the wrong part of the sheet whenever a mod added its own `sprites.png`. The bakery oven glow had the same bug. All are fixed at the engine level. If you use the "Alert Icons Partial Fix" mod, disable it after applying this.
 
@@ -18,7 +18,7 @@ If Steam verifies game files it restores the original executable. Run the patche
 
 ## Credits
 
-- **Ozoneraxi** (All-in-One patch, AIO): fixed the ranged weapon fire rate a year before this patch did, as part of their all-in-one patching work, and their notes on the reload timer are what this fix was built and checked against.
+- **Ozoneraxi** (All-in-One patch, AIO): worked around the ranged weapon fire rate for soldiers, Elite Ops and bounty hunters before this patch, as part of their all-in-one patching work, and their notes on the reload timer are what this fix was built and checked against.
 - **Ozoneraxi** and **Deskius** (Alert Icons Partial Fix), with wackypanda and Quin_BNK: their offset formula pointed directly at the sprite-scale bug.
 - **vojin154** (pa_fix_direction_serialization): an independent, compatible fix that showed what binary patching of this game can do.
 

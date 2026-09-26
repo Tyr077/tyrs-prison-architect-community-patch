@@ -166,7 +166,7 @@ $shaP = [BitConverter]::ToString([System.Security.Cryptography.SHA256]::Create()
 $doc = [ordered]@{
     id = 'full-auto-hold'; name = 'Hold to fire automatic weapons'; version = '1.1.0'
     requires = @('code-section')
-    description = 'Assault rifles and SMGs fire while the mouse button is held, in Warden Mode and Escape Mode, against anything a click would attack, zombies included. Warden Mode fired one shot per click whatever the weapon, and Escape Mode only let the assault rifle keep firing, not the SMG or the modified assault rifle. The rate of fire still comes from each weapon; in Escape Mode it needs the ranged weapon fire-rate fix to be faster than one shot every two seconds.'
+    description = 'Holding the mouse button keeps assault rifles and SMGs firing in Warden Mode and Escape Mode, at zombies too.'
     game_build = 'Prison Architect 64-bit, Sunset Update (final)'; sha256_original = $sha; sha256_patched = $shaP; edits = $edits
 }
 [System.IO.File]::WriteAllText($Out, ($doc | ConvertTo-Json -Depth 5) + [Environment]::NewLine, (New-Object System.Text.UTF8Encoding($false)))

@@ -248,7 +248,7 @@ $shaP = [BitConverter]::ToString([System.Security.Cryptography.SHA256]::Create()
 $doc = [ordered]@{
     id = 'shop-front'; name = 'Shops usable from outside the shop'; version = '1.0.0'
     requires = @('code-section')
-    description = 'Prisoners can buy from a shop front without being able to walk into the shop. The game decides where someone stands to use an object from a marker in the object''s artwork, and the shop front is the one such object that was never given one, so it fell back to the shop front itself: a wall. Prisoners were then required to reach, and be allowed inside, the room the counter serves from, which is why shops so often did nothing and why a shop serving two wings needed a door into each. A wall-mounted object can now be used from any tile beside it that the prisoner can reach and is allowed on. Objects standing on ordinary floor tiles are unaffected.'
+    description = 'The shop front can face a hallway, and prisoners buy from it without being allowed into the shop. Who works in a shop and who shops there can be kept apart.'
     game_build = 'Prison Architect 64-bit, Sunset Update (final)'; sha256_original = $sha; sha256_patched = $shaP; edits = $edits
 }
 [System.IO.File]::WriteAllText($Out, ($doc | ConvertTo-Json -Depth 5) + [Environment]::NewLine, (New-Object System.Text.UTF8Encoding($false)))

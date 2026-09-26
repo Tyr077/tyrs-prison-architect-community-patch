@@ -177,7 +177,7 @@ $shaP = [BitConverter]::ToString([System.Security.Cryptography.SHA256]::Create()
 $doc = [ordered]@{
     id = 'intake-route-categories'; name = 'Intake routes that accept only some categories'; version = '1.0.0'
     requires = @('code-section')
-    description = 'Fill to capacity and the other intake modes keep working when a road, helipad or boat dock accepts only some prisoner categories. When a vehicle was loaded for such a stop, the game drew prisoners from the intake queue in list order and threw away every queued prisoner of a category the stop did not accept until it found one it did. Those prisoners were still counted as on their way, and a prisoner on its way counts against capacity, so the count crept up day after day until the prison declared itself closed to new inmates with cells standing empty. A vehicle now takes the queued prisoners of the categories its stop accepts and leaves the rest queued for a route that does.'
+    description = 'A road, helipad or boat dock that accepts only some prisoner categories no longer leaves the prison closed to new inmates while cells stand empty. Every category you take still needs at least one route that accepts it.'
     game_build = 'Prison Architect 64-bit, Sunset Update (final)'; sha256_original = $sha; sha256_patched = $shaP; edits = $edits
 }
 [System.IO.File]::WriteAllText($Out, ($doc | ConvertTo-Json -Depth 5) + [Environment]::NewLine, (New-Object System.Text.UTF8Encoding($false)))

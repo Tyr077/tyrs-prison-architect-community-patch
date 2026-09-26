@@ -2,27 +2,27 @@ Test build. Download the new `TyrsPAPatch.exe`, run it, click **Apply selection*
 
 ## New in 1.12.0
 
-- **New optional tweak: Protective Custody prisoners work and attend programs in shared sectors.** Protective Custody prisoners take jobs and go to classes in Shared sectors, and in Custom sectors that include Protective Custody, as in the 2018 version. The final version only gives them work and classes in Protective Custody Only sectors, although they may spend free time in the others. Off by default; tick it under **Optional tweaks**. Keeping them apart from general population is then down to your deployment and regimes.
+- **New optional tweak: Protective Custody prisoners work and attend programs in shared sectors.** They take jobs and go to classes in Shared sectors and in Custom sectors that include Protective Custody; keeping them apart from general population is then down to your deployment and regimes. Off by default.
 
 ## Also new since 1.5.0
 
-- **Prisoners near gunfire surrender.** A guard's gunshot makes up to ten prisoners within four squares react as if they were the target, and most of them surrender. The 2018 version did this; the final version had lost the code.
-- **Fire rate matches the 2018 version.** Automatic weapons fire in a steady stream. Pistols, shotguns and rifles wait 0.7 s between shots (the Tazer 2 s), on top of their recharge time: a revolver fires every 1.2 s, a shotgun every 1.7 s.
-- **Muzzle flash, smoke and buckshot.** Assault rifles and SMGs show a muzzle flash and the shotgun fires a spread of buckshot with smoke again. Automatic rifles also stop playing a full burst sound for every round.
+- **Prisoners near gunfire surrender.** A guard's gunshot makes up to ten prisoners within four squares react as if they were the target.
+- **Fire rate revised.** Automatic weapons fire in a steady stream, while a revolver fires every 1.2 s and a shotgun every 1.7 s.
+- **Muzzle flash, smoke and buckshot.** Assault rifles and SMGs show a muzzle flash and the shotgun fires a spread of buckshot with smoke again.
 - **Armed guards reload in pavilions.** An armed guard manning a Guard Pavilion keeps firing instead of stopping after one shot.
-- **Disarmed armed guards can fight.** An armed guard who loses its shotgun fights with its fists instead of getting stuck while Freefire is on or it is badly hurt.
+- **Disarmed armed guards can fight.** An armed guard who loses its shotgun fights with its fists while Freefire is on or it is badly hurt, instead of not fighting back.
 - **Escape Mode Freefire with per-sector actions.** The warden's Freefire order after your gang kills someone now reaches the guards with "Search and Actions per sector" on.
 - **Hold to fire automatic weapons.** Holding the mouse button keeps assault rifles and SMGs firing in Warden Mode and Escape Mode, at zombies too.
 - **Intake with route-restricted categories.** A helipad, boat dock or road that accepts only some prisoner categories no longer ends with *Your prison is closed to new inmates* while cells stand empty.
 - **Visitor booths facing up.** Booths work with the prisoners' side at the top. Rotate the booth to face your prisoners while placing it.
 - **Shops without prisoners inside.** The shop front can face a hallway and prisoners buy from it without being allowed into the shop.
 - **Exercise equipment counts for grading.** Time on gym equipment counts towards the Health grade's exercise score.
-- **Armed guard warnings is an optional tweak.** The 2018 version scales an armed guard's warning chance with overall staff morale in the same way, so it is how the game was designed. It was a fix in the 1.10.0 test build.
+- **Armed guard warnings is an optional tweak.** It was a fix in the 1.10.0 test build.
 - **Patcher window rebuilt.** Fixes and tweaks are grouped, your selections are remembered, and **Apply selection** also removes anything you untick.
 
 ## Also included
 
-- Mods that set status effects from Lua, such as Less Lethal Expansion, work again.
+- Status effects set by a mod's Lua script work again.
 - Staff go through keycard doors instead of taking long detours around them.
 - Prisoner and staff directions are saved (first fixed by vojin154, included with their permission).
 - Visitors and civilians no longer get stuck at single visitor doors.
@@ -47,14 +47,14 @@ If Steam verifies game files, run the patcher again. **Revert to original** undo
 
 ## Please test
 
-- **Protective Custody in shared sectors:** tick the new tweak, then put Protective Custody prisoners in a prison whose workshops, kitchen or classrooms are in Shared sectors (or Custom sectors with Protective Custody ticked). They should take jobs there and turn up to programs they are enrolled in. Without the tweak they do neither.
+- **Protective Custody in shared sectors:** with the tweak on, Protective Custody prisoners should work and attend programs in Shared sectors.
 - The 1.9.0 to 1.11.0 changes as listed in those test build notes.
 
-How each fix and tweak works, in plain English, is in `docs/fixes-explained.md`.
+Each fix has a short page under `docs/`.
 
 ## Credits
 
-- **Ozoneraxi** (AIO bug tracker and All-in-One mod) for the findings behind the weapon-effects, pavilion, disarmed-guard, Escape Mode Freefire and full-auto fixes, for recording that armed guards had stopped causing surrenders around them, and for the intake, booth, shop and exercise findings.
+- **Ozoneraxi** (AIO bug tracker and All-in-One mod) for the findings behind many of these fixes.
 - **BurpBurp** and **Ozoneraxi** (Less Lethal Expansion), **Ozoneraxi** (AIO, fire rate), **vojin154** (pa_fix_direction_serialization), **Deskius**, wackypanda and Quin_BNK (Alert Icons Partial Fix), for the earlier fixes.
 
 ## Checksums (SHA-256)
