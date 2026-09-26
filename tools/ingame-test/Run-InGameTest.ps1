@@ -13,7 +13,9 @@
     4. stages the save as saves\<StagedName>.prison, points continue_game.json at it, optionally installs
        a mod folder and enables it, forces windowed mode and a one-minute autosave;
     5. launches "Prison Architect64.exe --continuelastsave", watches debug.txt for the "Loading map from"
-       line and then for Autosaves autosaves ("Save completed"), or gives up after MaxMinutes;
+       line, optionally sends the Speed key, then counts Autosaves autosaves by the write time of
+       saves\autosave.prison (the log's "Save completed" lines are only a floor), or gives up after
+       MaxMinutes;
     6. kills the game, copies autosave.prison and debug.txt into a results folder, restores
        preferences.txt and continue_game.json (also on failure), and returns a result object.
 
@@ -117,6 +119,26 @@ function Get-ModName([string] $ModDir) {
     return ($line -replace '^\s*Name\s+', '').Trim().Trim('"')
 }
 
+function Send-GameKey {
+    <# Posts WM_KEYDOWN/WM_CHAR/WM_KEYUP for one key (a digit or letter) to the game's main window. #>
+    param([Parameter(Mandatory)] $Process, [Parameter(Mandatory)] [string] $Key)
+    if (-not ('Harness.HarnessUser32' -as [type])) {
+        Add-Type -Name 'HarnessUser32' -Namespace 'Harness' -MemberDefinition @'
+[System.Runtime.InteropServices.DllImport("user32.dll")] public static extern bool PostMessage(System.IntPtr hWnd, uint msg, System.IntPtr w, System.IntPtr l);
+[System.Runtime.InteropServices.DllImport("user32.dll")] public static extern uint MapVirtualKey(uint code, uint type);
+'@
+    }
+    $Process.Refresh()
+    $hwnd = $Process.MainWindowHandle
+    if ($hwnd -eq [IntPtr]::Zero) { Write-Warning 'game window handle not found; key not sent'; return }
+    $vk = [uint32][char]$Key.ToUpperInvariant()
+    $scan = [int64][Harness.HarnessUser32]::MapVirtualKey($vk, 0)
+    $down = [IntPtr](1L -bor ($scan -shl 16)); $up = [IntPtr](1L -bor ($scan -shl 16) -bor (3L -shl 30))
+    [void][Harness.HarnessUser32]::PostMessage($hwnd, 0x100, [IntPtr][int64]$vk, $down)
+    [void][Harness.HarnessUser32]::PostMessage($hwnd, 0x102, [IntPtr][int64][int][char]$Key, $down)
+    [void][Harness.HarnessUser32]::PostMessage($hwnd, 0x101, [IntPtr][int64]$vk, $up)
+}
+
 function Invoke-InGameRun {
     [CmdletBinding()]
     param(
@@ -132,9 +154,16 @@ function Invoke-InGameRun {
         [string] $GameDir = $script:Defaults.GameDir,
         [string] $Patcher = $script:Defaults.Patcher,
         [string] $ResultsRoot = $script:Defaults.Results,
+        # in-game speed selector, pressed once the map has loaded: 1 normal, 2 = x2, 3 = x5, 4 = x10 (keys 1-4;
+        # measured by tests\speed-calibration.ps1: 60 / 119 / 298 / 596 game minutes per real minute at
+        # TimeWarpFactor 1.0). 0 leaves the game at normal speed. Autosaves stay one per real minute.
+        [ValidateRange(0, 4)] [int] $Speed = 0,
+        # any other single key to send after the load (posted with PostMessage, no focus needed)
+        [string] $SpeedKey = '',
         [switch] $KeepRunning
     )
     $ErrorActionPreference = 'Stop'
+    if ($Speed -gt 0 -and -not $SpeedKey) { $SpeedKey = [string]$Speed }
     $user = $script:Defaults.UserDir
     $procName = $script:Defaults.ProcName
     if (Get-Process $procName -ErrorAction SilentlyContinue) { throw 'Prison Architect is already running; close it first' }
@@ -159,7 +188,7 @@ function Invoke-InGameRun {
     $debug = Join-Path $user 'debug.txt'
     $proc = $null
     $result = [ordered]@{
-        Name = $Name; Save = $Save; Selection = $Selection; Without = $Without; ExeSha256 = $exeSha; Mods = @(); TimeWarp = $TimeWarp
+        Name = $Name; Save = $Save; Selection = $Selection; Without = $Without; ExeSha256 = $exeSha; Mods = @(); TimeWarp = $TimeWarp; Speed = $Speed
         Started = $null; LoadedAt = $null; LoadedMap = $null; AutosavesSeen = 0; Ended = $null
         Autosave = $null; Debug = $null; ResultDir = $out; Ok = $false; Note = ''; Snapshots = 'autosave-<n>.prison in ResultDir'
     }
@@ -207,7 +236,10 @@ function Invoke-InGameRun {
             try { $lines = [IO.File]::ReadAllLines($debug) } catch { continue }
             if (-not $result.LoadedMap) {
                 $l = $lines | Where-Object { $_ -match "Loading map from '.*$loadRx'" } | Select-Object -First 1
-                if ($l) { $result.LoadedMap = $l; $result.LoadedAt = Get-Date; Write-Host "loaded: $l" }
+                if ($l) {
+                    $result.LoadedMap = $l; $result.LoadedAt = Get-Date; Write-Host "loaded: $l"
+                    if ($SpeedKey) { Start-Sleep -Seconds 5; Send-GameKey -Process $proc -Key $SpeedKey; Write-Host "sent key '$SpeedKey'" }
+                }
                 elseif ($lines | Where-Object { $_ -match 'Failed to launch game through Steam' }) { $result.Note = 'Steam relaunch refused (steam_appid.txt missing?)'; break }
                 continue
             }

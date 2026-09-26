@@ -2,12 +2,12 @@
   Protective Custody prisoners work and attend programs in shared sectors (tweak tweak-pc-shared-zones, GitHub issue #3).
 
   Save: the reporter's "Sunset PC work demo.prison" (analysis/issue-3). Every sector is Shared apart from
-  staff areas, so there is no ProtectedOnly sector anywhere. The prisoners the reporter meant to be
-  Protective Custody are stored as SuperMax.
+  staff areas, so there is no ProtectedOnly sector anywhere. The prisoners outside MinSec are
+  stored as SuperMax; the test converts them to Protective Custody.
 
   -Mode ingame (default): the save is left as it is apart from one PC Test Controller object
   (tools/testmods/pc-test). In the running game the controller switches the SuperMax prisoners to
-  Protective Custody with Object.SetProperty, as the security-level mod the reporter used does; can
+  Protective Custody with Object.SetProperty(prisoner, "Category", 4); can
   spawn -Spawn new prisoners and make them Protective Custody; and can switch -Toggle MinSec prisoners to
   Protective Custody once Game.Time() has advanced by -ToggleAfter. It also records, per category, how
   many prisoners hold a work station and a job, with a timeline.
@@ -27,7 +27,9 @@ param(
     [int] $Toggle = 0,
     [double] $ToggleAfter = 0,
     [int] $Autosaves = 2,
-    [double] $TimeWarp = 1.25,
+    [double] $TimeWarp = 1.0,
+    # in-game speed selector after the load: 1 normal, 2 = x2, 3 = x5, 4 = x10 (0 = leave at normal)
+    [ValidateRange(0, 4)] [int] $Speed = 1,
     [ValidateSet('both', 'without', 'tweak')] [string] $Selection = 'both',
     [switch] $DryRun
 )
@@ -140,7 +142,7 @@ if ($DryRun) { Write-Host "dry run: $work"; exit 0 }
 $results = @{}
 $runs = if ($Selection -eq 'both') { @('without', 'tweak') } else { @($Selection) }
 foreach ($sel in $runs) {
-    $runArgs = @{ Save = $work; Selection = 'fixes+tweaks'; Autosaves = $Autosaves; TimeWarp = $TimeWarp; Name = "pc-zones-$Mode-$sel"; NoFailureConditions = $true }
+    $runArgs = @{ Save = $work; Selection = 'fixes+tweaks'; Autosaves = $Autosaves; TimeWarp = $TimeWarp; Speed = $Speed; Name = "pc-zones-$Mode-$sel"; NoFailureConditions = $true }
     if ($sel -eq 'without') { $runArgs.Without = @('tweak-pc-shared-zones') }
     if ($mod) { $runArgs.Mod = @($mod) }
     $r = Invoke-InGameRun @runArgs

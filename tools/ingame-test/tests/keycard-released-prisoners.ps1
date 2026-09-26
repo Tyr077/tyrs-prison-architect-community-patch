@@ -1,7 +1,7 @@
 <#
   Released prisoners behind a revoked keycard door (fix keycard-door-released-prisoners).
   Save: keycardtest3local.prison holds two prisoners whose sentence is fully served (Served >= SentenceF)
-  and who, unpatched, stand behind a revoked keycard door for ever. With the fix they call a guard,
+  and who, unpatched, stay behind a revoked keycard door for the whole run. With the fix they call a guard,
   walk out and are removed from the prison.
 
   Assertion: after the run, every prisoner that had served its sentence at the start is either gone
@@ -14,7 +14,9 @@ param(
     [ValidateSet('original', 'fixes', 'fixes+tweaks')] [string] $Selection = 'fixes',
     [int] $Autosaves = 4,
     [double] $MinMove = 3.0,
-    [double] $TimeWarp = 1.25
+    [double] $TimeWarp = 1.0,
+    # in-game speed selector after the load: 1 normal, 2 = x2, 3 = x5, 4 = x10 (0 = leave at normal)
+    [ValidateRange(0, 4)] [int] $Speed = 3
 )
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot '..\Run-InGameTest.ps1')
@@ -32,7 +34,7 @@ $served = @(Get-ServedPrisoners $before)
 if ($served.Count -eq 0) { Write-Host 'FAIL keycard-released-prisoners: the save has no prisoner with a served sentence'; exit 1 }
 Write-Host ("start: {0} served prisoner(s): {1}" -f $served.Count, (($served | ForEach-Object { "$($_['Id.i']) $($_.Bio.Forname) $($_.Bio.Surname) @ $($_['Pos.x']),$($_['Pos.y'])" }) -join '; '))
 
-$r = Invoke-InGameRun -Save $Save -Selection $Selection -Autosaves $Autosaves -TimeWarp $TimeWarp -Name 'keycard-released'
+$r = Invoke-InGameRun -Save $Save -Selection $Selection -Autosaves $Autosaves -TimeWarp $TimeWarp -Speed $Speed -Name 'keycard-released'
 if (-not $r.Ok) { Write-Host "FAIL keycard-released-prisoners: $($r.Note) (results in $($r.ResultDir))"; exit 1 }
 $after = ConvertFrom-PrisonSave $r.Autosave
 $afterById = @{}

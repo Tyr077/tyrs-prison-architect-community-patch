@@ -1,0 +1,6 @@
+Name                 "Door Test Controller (patch test)"
+Author               Tyr
+Description          "Test mod for Tyr's Prison Architect Community Patch. A Door Test Controller object spawns NPCs of chosen types on one side of a door, keeps sending them to a tile on the other side (Object.NavigateTo) and records who gets through. Used by the in-game test harness for the visitor-door-access fix."
+Date                 23/09/2026
+IsTranslation        false
+Version              1.0

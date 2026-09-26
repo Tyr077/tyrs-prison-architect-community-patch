@@ -6,14 +6,16 @@ param(
     [string] $Save = (Join-Path $PSScriptRoot '..\..\..\keycardtest3local.prison'),
     [ValidateSet('original', 'fixes', 'fixes+tweaks')] [string] $Selection = 'fixes',
     [int] $Autosaves = 1,
-    [double] $TimeWarp = 1.25
+    [double] $TimeWarp = 1.0,
+    # in-game speed selector after the load: 1 normal, 2 = x2, 3 = x5, 4 = x10 (0 = leave at normal)
+    [ValidateRange(0, 4)] [int] $Speed = 4
 )
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot '..\Run-InGameTest.ps1')
 . (Join-Path $PSScriptRoot '..\Parse-PrisonSave.ps1')
 
 $before = ConvertFrom-PrisonSave $Save
-$r = Invoke-InGameRun -Save $Save -Selection $Selection -Autosaves $Autosaves -TimeWarp $TimeWarp -Name 'load-smoke'
+$r = Invoke-InGameRun -Save $Save -Selection $Selection -Autosaves $Autosaves -TimeWarp $TimeWarp -Speed $Speed -Name 'load-smoke'
 if (-not $r.Ok) { Write-Host "FAIL load-smoke: $($r.Note) (results in $($r.ResultDir))"; exit 1 }
 $after = ConvertFrom-PrisonSave $r.Autosave
 $t0 = ToDouble $before.TimeIndex; $t1 = ToDouble $after.TimeIndex

@@ -1,5 +1,5 @@
--- PC Test Controller: puts Protective Custody prisoners into a running prison the way a player or a
--- security-level mod does (Object.SetProperty(prisoner, "Category", 4)), and watches who gets work.
+-- PC Test Controller: puts Protective Custody prisoners into a running prison with
+-- Object.SetProperty(prisoner, "Category", 4), and watches who gets work.
 --
 -- The in-game test (tools/ingame-test/tests/pc-shared-zones.ps1) writes a copy of this file with
 -- the settings below filled in. Everything the script finds is kept in this object's own fields, which

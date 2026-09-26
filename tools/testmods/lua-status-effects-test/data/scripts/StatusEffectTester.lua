@@ -1,10 +1,10 @@
--- Status Effect Tester: every few game seconds, give every prisoner within five tiles the "tazed"
+-- Status Effect Tester: every four game minutes, give every prisoner within five tiles the "tazed"
 -- status effect through the Lua StatusEffects table, the Alpha 28 feature that the community patch
 -- restores. The getter always reads the value back, patched or not; the visible test is whether the
 -- prisoner actually drops and shows the tazed icon.
 
 local Time  = Game.Time
-local Delay = 4            -- game seconds between pulses
+local Delay = 4            -- Game.Time() units (game minutes) between pulses
 local Ready = Time()
 
 function Update()

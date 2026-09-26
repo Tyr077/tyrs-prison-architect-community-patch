@@ -21,7 +21,8 @@
   The save-visible signal is the prisoner's LastVisitors stamp, written when a visit starts
   (VisitCount only counts finished visits and visitors arrive slowly). Assertion: at least one
   prisoner has LastVisitors inside the run (fixes), none has (original). The stage 2 save starts a
-  few game minutes after 06:46; at -TimeWarp 1.25 visiting hours (08:00) begin after about a minute.
+  few game minutes after 06:46; at the defaults (-TimeWarp 1.0, -Speed 3, about 300 game minutes per
+  real minute) visiting hours (08:00) begin well within the first real minute after the speed key.
 
   -DryRun builds stage 1 (and prints the stage 2 save if it exists) without launching the game.
   -Rebuild discards the cached stage 2 save.
@@ -30,7 +31,9 @@ param(
     [string] $Save = (Join-Path $env:LOCALAPPDATA 'Introversion\Prison Architect\saves\base3z.prison'),
     [ValidateSet('original', 'fixes', 'fixes+tweaks')] [string] $Selection = 'fixes',
     [int] $Autosaves = 6,
-    [double] $TimeWarp = 1.25,
+    [double] $TimeWarp = 1.0,
+    # in-game speed selector after the load: 1 normal, 2 = x2, 3 = x5, 4 = x10 (0 = leave at normal)
+    [ValidateRange(0, 4)] [int] $Speed = 3,
     [string] $VisitorZone = 'VisitorOnly',
     [switch] $DryRun,
     [switch] $Rebuild,
@@ -140,7 +143,7 @@ $t0 = ToDouble $before.TimeIndex
 $booths = @(Get-PrisonObjects $before -Type VisitorTableSecure)
 Write-Host ("test save: clock {0:n0} ({1:00}:{2:00}), booths {3}, visitor half {4}, already-visited stamps since start: {5}" -f $t0, [math]::Floor(($t0 % 1440) / 60), [math]::Floor($t0 % 60), $booths.Count, (Get-SectorZone $before $rect[0] $rect[1] $rect[2] $rect[3]), @(Get-VisitedPrisoners $before $t0).Count)
 
-$r = Invoke-InGameRun -Save $stage2 -Selection $Selection -Autosaves $Autosaves -TimeWarp $TimeWarp -Name 'visitor-booth'
+$r = Invoke-InGameRun -Save $stage2 -Selection $Selection -Autosaves $Autosaves -TimeWarp $TimeWarp -Speed $Speed -Name 'visitor-booth'
 if (-not $r.Ok) { Write-Host "FAIL visitor-booth-facing: $($r.Note) (results in $($r.ResultDir))"; exit 1 }
 $after = ConvertFrom-PrisonSave $r.Autosave
 $boothsAfter = @(Get-PrisonObjects $after -Type VisitorTableSecure)

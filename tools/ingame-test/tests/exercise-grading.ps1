@@ -1,8 +1,8 @@
 <#
   Exercise on equipment counts for grading (fix exercise-grading).
 
-  Save: base3z.prison has twelve weights benches in its Yard. Jogging in a Yard room is the one
-  activity the unpatched game credits as Exercise, so the test retypes that room to CommonRoom in the
+  Save: base3z.prison has twelve weights benches in its Yard. The Yard is the only room in this save
+  that the unpatched game credits as Exercise (the Gymnasium and FightClubRoom from DLC also would), so the test retypes that room to CommonRoom in the
   edited save (the room keeps its cells and objects; its indoor requirement fails, which is harmless).
   Then nobody can jog for credit, but the benches still work: their provider is an object provider
   with a slot and no room requirement. Unpatched, time on a bench is filed under Freetime or Regime;
@@ -16,8 +16,10 @@
 #>
 param(
     [string] $Save = (Join-Path $env:LOCALAPPDATA 'Introversion\Prison Architect\saves\base3z.prison'),
-    [int] $Autosaves = 6,
-    [double] $TimeWarp = 1.25,
+    [int] $Autosaves = 2,
+    [double] $TimeWarp = 1.0,
+    # in-game speed selector after the load: 1 normal, 2 = x2, 3 = x5, 4 = x10 (0 = leave at normal)
+    [ValidateRange(0, 4)] [int] $Speed = 3,
     [ValidateSet('both', 'original', 'fixes')] [string] $Selection = 'both',
     [switch] $DryRun
 )
@@ -69,7 +71,7 @@ if ($DryRun) { Write-Host "dry run: $work"; exit 0 }
 $results = @{}
 $runs = if ($Selection -eq 'both') { @('original', 'fixes') } else { @($Selection) }
 foreach ($sel in $runs) {
-    $r = Invoke-InGameRun -Save $work -Selection $sel -Autosaves $Autosaves -TimeWarp $TimeWarp -Name "exercise-$sel"
+    $r = Invoke-InGameRun -Save $work -Selection $sel -Autosaves $Autosaves -TimeWarp $TimeWarp -Speed $Speed -Name "exercise-$sel"
     if (-not $r.Ok) { Write-Host "FAIL exercise-grading ($sel): $($r.Note) (results in $($r.ResultDir))"; exit 1 }
     $after = ConvertFrom-PrisonSave $r.Autosave
     $c1 = Get-ExerciseCounters $after
@@ -92,5 +94,5 @@ if ($results.ContainsKey('fixes')) {
     elseif ($results['fixes'].GainedUsers -eq 0) { Write-Host 'FAIL exercise-grading: prisoners used benches but none gained Exercise credit with the fix'; $fail = $true }
 }
 if ($fail) { exit 1 }
-Write-Host ("PASS exercise-grading ({0})" -f (($runs | ForEach-Object { "$_ gained $($results[$_].Gained) of $($results[$_].Users) bench users" }) -join ', '))
+Write-Host ("PASS exercise-grading ({0})" -f (($runs | ForEach-Object { "${_}: $($results[$_].Gained) prisoner(s) gained Exercise, $($results[$_].Users) bench user(s) seen" }) -join ', '))
 exit 0

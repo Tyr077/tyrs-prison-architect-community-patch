@@ -1,6 +1,6 @@
 Name                 "Status Effect Tester (patch test)"
 Author               Tyr
-Description          "Test mod for Tyr's Prison Architect Community Patch. Adds a placeable Status Effect Tester object (Objects menu, Security filter) whose script sets StatusEffects.tazed = 60 on every prisoner within five tiles every few seconds. Unpatched, nothing happens; with the scripted status effects fix applied, prisoners near it drop as if tazed."
+Description          "Test mod for Tyr's Prison Architect Community Patch. Adds a placeable Status Effect Tester object (Objects menu, Security filter) whose script sets StatusEffects.tazed = 60 on every prisoner within five tiles every few seconds. Unpatched, the effect never becomes active; with the scripted status effects fix applied, it does, and prisoners near it should drop as if tazed."
 Date                 11/09/2026
 IsTranslation        false
 Version              1.0

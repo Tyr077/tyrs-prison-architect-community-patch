@@ -21,8 +21,10 @@
 #>
 param(
     [string] $Save = (Join-Path $env:LOCALAPPDATA 'Introversion\Prison Architect\saves\RIOT(ROCKHARD).prison'),
-    [int] $Autosaves = 4,
-    [double] $TimeWarp = 1.25,
+    [int] $Autosaves = 3,
+    [double] $TimeWarp = 1.0,
+    # in-game speed selector after the load: 1 normal, 2 = x2, 3 = x5, 4 = x10 (0 = leave at normal)
+    [ValidateRange(0, 4)] [int] $Speed = 2,
     [int] $MinSurrendered = 3,
     [int] $Repeat = 2,
     [switch] $Original,
@@ -87,7 +89,7 @@ for ($i = 1; $i -le $Repeat; $i++) {
 if ($Original) { $runs += @{ Key = 'original'; Selection = 'original'; Without = @(); N = 1 } }
 $peaks = @{}; $short = @{}; $long = @{}
 foreach ($run in $runs) {
-    $r = Invoke-InGameRun -Save $work -Selection $run.Selection -Without $run.Without -Mod $ModDir -NoFailureConditions -Autosaves $Autosaves -TimeWarp $TimeWarp -Name "gunfire-$($run.Key)"
+    $r = Invoke-InGameRun -Save $work -Selection $run.Selection -Without $run.Without -Mod $ModDir -NoFailureConditions -Autosaves $Autosaves -TimeWarp $TimeWarp -Speed $Speed -Name "gunfire-$($run.Key)"
     if (-not $r.Ok) { Write-Host "FAIL gunfire-surrender ($($run.Key) #$($run.N)): $($r.Note) (results in $($r.ResultDir))"; exit 1 }
     $p = 0; $lines = @()
     foreach ($snap in (Get-ChildItem (Join-Path $r.ResultDir 'autosave-*.prison') | Sort-Object Name)) {

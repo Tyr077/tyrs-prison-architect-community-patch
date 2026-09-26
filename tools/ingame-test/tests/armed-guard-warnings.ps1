@@ -4,24 +4,33 @@
   Save: RIOT(ROCKHARD).prison, a riot in progress with 28 rioting prisoners and six active armed
   guards, Staff Needs on. The test edits the save so staff morale is low: StaffPayModifier 0 (the pay
   factor in the staff morale formula) and StaffMorale 10 in the Thermometer block, which the game then
-  keeps around 25-30% because desired morale is computed from pay, happy, unhappy and injured staff.
+  holds near 10-15% (measured 2026-09-23) because desired morale is computed from pay, happy, unhappy
+  and injured staff.
 
   Mechanism under test: a guard's warning chance is multiplied by StaffMorale/100 when Staff Needs is
-  on (unpatched), so at ~27% morale an armed guard warns about a fifth as often as it should. A
-  warning from an armed guard almost always ends in surrender and gives the prisoner the
-  "surrendered" status effect; the other ways to get that effect need Freefire or a soldier, neither
-  present here. So the count of prisoners carrying "surrendered" is the save-visible signal.
+  on (without the tweak), so at ~14% morale an armed guard warns about a seventh as often as at full
+  morale. A warning from an armed guard almost always ends in surrender and gives the prisoner the
+  "surrendered" status effect, so the count of prisoners carrying "surrendered" is the save-visible
+  signal. Being attacked by an armed guard with its weapon drawn, a sniper with a rifle or a soldier
+  (OnAttackedBy) also gives it, and gunfire-surrender applies that to bystanders of every armed
+  guard's shot; both runs carry that fix, so it is a shared background, not the difference.
 
-  The test runs the fixes alone and the fixes plus tweaks on the same edited save (not the unpatched
+  The test runs fixes+tweaks with tweak-armed-guard-warnings written back to the original bytes, and
+  fixes+tweaks, each -Repeat times with failure conditions off (-FailureConditions keeps them), on the
+  same edited save (not the unpatched
   build: the gunfire-surrender fix also makes prisoners surrender, so both runs must have it) and compares the
   highest number of prisoners with "surrendered" seen in any autosave. Expected: clearly more with
   the tweak. Thresholds: tweaked >= MinFixed and tweaked > fixes alone.
 #>
 param(
     [string] $Save = (Join-Path $env:LOCALAPPDATA 'Introversion\Prison Architect\saves\RIOT(ROCKHARD).prison'),
-    [int] $Autosaves = 4,
-    [double] $TimeWarp = 1.25,
+    [int] $Autosaves = 3,
+    [double] $TimeWarp = 1.0,
+    # in-game speed selector after the load: 1 normal, 2 = x2, 3 = x5, 4 = x10 (0 = leave at normal)
+    [ValidateRange(0, 4)] [int] $Speed = 2,
     [int] $MinFixed = 3,
+    [int] $Repeat = 2,
+    [switch] $FailureConditions,
     [ValidateSet('both', 'fixes', 'fixes+tweaks')] [string] $Selection = 'both',
     [switch] $DryRun
 )
@@ -57,21 +66,31 @@ if ($DryRun) { Write-Host "dry run: $work"; exit 0 }
 $results = @{}
 $runs = if ($Selection -eq 'both') { @('fixes', 'fixes+tweaks') } else { @($Selection) }
 foreach ($sel in $runs) {
-    $r = Invoke-InGameRun -Save $work -Selection $sel -Autosaves $Autosaves -TimeWarp $TimeWarp -Name "warnings-$sel"
-    if (-not $r.Ok) { Write-Host "FAIL armed-guard-warnings ($sel): $($r.Note) (results in $($r.ResultDir))"; exit 1 }
-    $peak = 0; $line = @()
-    foreach ($snap in (Get-ChildItem (Join-Path $r.ResultDir 'autosave-*.prison') | Sort-Object Name)) {
-        $s = ConvertFrom-PrisonSave $snap.FullName
-        $n = Count-Surrendered $s
-        $line += ("{0}: {1} surrendered, morale {2}, rioting {3}" -f $snap.BaseName, $n, $s.Thermometer['StaffMorale'], $s.Thermometer['RiotingPrisoners'])
-        if ($n -gt $peak) { $peak = $n }
+    $peaks = @()
+    for ($k = 1; $k -le $Repeat; $k++) {
+        # both runs carry every tweak, so the staff-death morale tweak cannot differ between them; the baseline
+        # only has tweak-armed-guard-warnings written back to the original bytes
+        $runArgs = @{ Save = $work; Selection = 'fixes+tweaks'; Autosaves = $Autosaves; TimeWarp = $TimeWarp; Speed = $Speed; Name = "warnings-$sel-$k" }
+        if ($sel -eq 'fixes') { $runArgs.Without = @('tweak-armed-guard-warnings') }
+        if (-not $FailureConditions) { $runArgs.NoFailureConditions = $true }
+        $r = Invoke-InGameRun @runArgs
+        if (-not $r.Ok) { Write-Host "FAIL armed-guard-warnings ($sel run $k): $($r.Note) (results in $($r.ResultDir))"; exit 1 }
+        $peak = 0; $line = @()
+        foreach ($snap in (Get-ChildItem (Join-Path $r.ResultDir 'autosave-*.prison') | Sort-Object Name)) {
+            $s = ConvertFrom-PrisonSave $snap.FullName
+            $n = Count-Surrendered $s
+            $line += ("{0}: {1} surrendered, morale {2}, rioting {3}" -f $snap.BaseName, $n, $s.Thermometer['StaffMorale'], $s.Thermometer['RiotingPrisoners'])
+            if ($n -gt $peak) { $peak = $n }
+        }
+        Write-Host ("{0} run {1}: peak {2} prisoner(s) with the surrendered effect; exe {3}; {4}" -f $sel, $k, $peak, $r.ExeSha256.Substring(0, 8), $r.ResultDir)
+        $line | ForEach-Object { Write-Host "  $_" }
+        $peaks += $peak
     }
-    Write-Host ("{0}: peak {1} prisoner(s) with the surrendered effect; exe {2}; {3}" -f $sel, $peak, $r.ExeSha256.Substring(0, 8), $r.ResultDir)
-    $line | ForEach-Object { Write-Host "  $_" }
-    $results[$sel] = $peak
+    $results[$sel] = ($peaks | Measure-Object -Average).Average
+    Write-Host ("{0}: peaks {1}, mean {2:n1}" -f $sel, ($peaks -join ' / '), $results[$sel])
 }
 
-if ($results.ContainsKey('fixes+tweaks') -and $results['fixes+tweaks'] -lt $MinFixed) { Write-Host "FAIL armed-guard-warnings: only $($results['fixes+tweaks']) surrendered with the tweak (expected at least $MinFixed)"; exit 1 }
-if ($results.ContainsKey('fixes') -and $results.ContainsKey('fixes+tweaks') -and $results['fixes+tweaks'] -le $results['fixes']) { Write-Host "FAIL armed-guard-warnings: with the tweak $($results['fixes+tweaks']) is not above the fixes alone $($results['fixes'])"; exit 1 }
-Write-Host ("PASS armed-guard-warnings ({0})" -f (($runs | ForEach-Object { "$_ peak $($results[$_])" }) -join ', '))
+if ($results.ContainsKey('fixes+tweaks') -and $results['fixes+tweaks'] -lt $MinFixed) { Write-Host ("FAIL armed-guard-warnings: mean peak {0:n1} surrendered with the tweak (expected at least {1})" -f $results['fixes+tweaks'], $MinFixed); exit 1 }
+if ($results.ContainsKey('fixes') -and $results.ContainsKey('fixes+tweaks') -and $results['fixes+tweaks'] -le $results['fixes']) { Write-Host ("FAIL armed-guard-warnings: with the tweak mean peak {0:n1} is not above {1:n1} without it" -f $results['fixes+tweaks'], $results['fixes']); exit 1 }
+Write-Host ("PASS armed-guard-warnings ({0})" -f (($runs | ForEach-Object { "{0} mean peak {1:n1}" -f $_, $results[$_] }) -join ', '))
 exit 0

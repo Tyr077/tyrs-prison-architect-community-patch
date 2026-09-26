@@ -1,6 +1,6 @@
 Name                 "PC Test Controller (patch test)"
 Author               Tyr
-Description          "Test mod for Tyr's Prison Architect Community Patch. A PC Test Controller object switches prisoners to Protective Custody in the running game (Object.SetProperty, as security-level changer mods do), can spawn new Protective Custody prisoners, and counts prisoners with a work station and a job by category. Used by the in-game test harness."
+Description          "Test mod for Tyr's Prison Architect Community Patch. A PC Test Controller object switches prisoners to Protective Custody in the running game (Object.SetProperty), can spawn new Protective Custody prisoners, and counts prisoners with a work station and a job by category. Used by the in-game test harness."
 Date                 23/09/2026
 IsTranslation        false
 Version              1.0

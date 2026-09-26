@@ -2,35 +2,41 @@
   Shops usable from outside the shop (fix shop-front).
 
   Save: base3z.prison has a Shop room (x 231..240, y 155..159) whose shop front sits in the bottom
-  wall and faces a hallway; the only door is on the top wall. The room's sector is Shared, so today
-  every prisoner can walk in and the shop trades. The shop is staffed by prisoners of the prison's own
-  labour allocation (MinSec prisoners stand behind the counter from about 13:00), so the shop cannot
-  simply be zoned StaffOnly: that starves it of shopkeepers and nothing sells on any build (first
-  attempt). Instead the test builds the layout the bug reports describe: a shop zoned for one
-  category that serves other categories through the hatch.
+  wall and faces a hallway; the only door is on the top wall. The room's sector is Shared, so every
+  prisoner may walk in (whether the shop trades in the unedited save has not been checked). A shop is
+  staffed by prisoners, so zoning it StaffOnly was assumed to starve it of shopkeepers; nothing sold
+  on either build in that first attempt. Instead the test builds the layout the bug reports describe:
+  a shop zoned for one category that serves other categories through the hatch.
 
   Edits: the shop's sector gets Zone MinSecOnly, and every MinSec prisoner except KeepMinSec of them
   is recategorised Normal (no sector in this prison is category-restricted apart from the shop, so
-  they lose nothing). The remaining MinSec prisoners staff the shop and may buy; the Normal majority
-  can only buy over the counter, which unpatched fails: the Shopping provider's standing position is
-  the shop front's own wall tile inside the Shop room, and a Normal prisoner is not allowed in there.
+  they lose nothing). The remaining MinSec prisoners are meant to staff the shop and may buy; the
+  Normal majority can only buy over the counter, which by the code fails unpatched: the Shopping
+  provider's standing position is the shop front's own wall tile inside the Shop room, and a Normal
+  prisoner is not allowed in there.
+
+  2026-09-23: NOT WORKING as a scenario. Nothing sold on either build; with 5 MinSec kept nobody
+  entered the shop all day and there were no ShopGoods jobs (the MinSec prisoners worked in other
+  sectors). Who staffs this shop is still open.
 
   Signals, compared between the unpatched and the fixed build on the same edited save over a full
   day: the Finance block's DailyShopRevenue, the shelves' Stock, and Shopping actions in the Needs
   blocks of the autosave snapshots, by category. Expected: the original never shows a non-MinSec
-  shopper; the fixed build does, and its revenue is above the original's. Shopping in this prison
-  starts around 13:00, so the run covers twelve autosaves from 06:46.
+  shopper; the fixed build does, and its revenue is above the original's. The run covers twelve
+  autosaves from 06:46.
 #>
 param(
     [string] $Save = (Join-Path $env:LOCALAPPDATA 'Introversion\Prison Architect\saves\base3z.prison'),
-    [int] $Autosaves = 12,
-    [double] $TimeWarp = 1.25,
+    [int] $Autosaves = 4,
+    [double] $TimeWarp = 1.0,
+    # in-game speed selector after the load: 1 normal, 2 = x2, 3 = x5, 4 = x10 (0 = leave at normal)
+    [ValidateRange(0, 4)] [int] $Speed = 3,
     [ValidateSet('both', 'original', 'fixes')] [string] $Selection = 'both',
     [switch] $DryRun,
     # the shop's sector rectangle in the Sectors block (base3z), the zone, and how many MinSec to keep
     [int[]] $Rect = @(230, 155, 240, 159),
     [string] $ShopZone = 'MinSecOnly',
-    [int] $KeepMinSec = 5
+    [int] $KeepMinSec = 21
 )
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot '..\Run-InGameTest.ps1')
@@ -90,7 +96,7 @@ if ($DryRun) { Write-Host "dry run: $work"; exit 0 }
 $results = @{}
 $runs = if ($Selection -eq 'both') { @('original', 'fixes') } else { @($Selection) }
 foreach ($sel in $runs) {
-    $r = Invoke-InGameRun -Save $work -Selection $sel -Autosaves $Autosaves -TimeWarp $TimeWarp -Name "shop-$sel"
+    $r = Invoke-InGameRun -Save $work -Selection $sel -Autosaves $Autosaves -TimeWarp $TimeWarp -Speed $Speed -Name "shop-$sel"
     if (-not $r.Ok) { Write-Host "FAIL shop-front ($sel): $($r.Note) (results in $($r.ResultDir))"; exit 1 }
     $after = ConvertFrom-PrisonSave $r.Autosave
     $s1 = Get-ShopState $after
