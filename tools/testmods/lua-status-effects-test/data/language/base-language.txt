@@ -1,2 +1,0 @@
-object_StatusEffectTester   Status Effect Tester
-buildtoolbar_popup_object_StatusEffectTester   Patch test object: prisoners within five tiles are given the tazed status effect from a Lua script every few seconds.

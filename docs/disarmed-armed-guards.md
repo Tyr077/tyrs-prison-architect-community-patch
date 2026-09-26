@@ -1,7 +1,6 @@
 # Disarmed armed guards can fight
 
-Patch: `patches/disarmed-armed-guards.patch.json` (built by
-`scripts/Build-DisarmedArmedGuards.ps1`). Uses the code section
+Patch: `patches/disarmed-armed-guards.patch.json`. Uses the code section
 (`code-section.md`).
 
 ## What you'll notice

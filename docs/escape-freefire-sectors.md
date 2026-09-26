@@ -1,7 +1,6 @@
 # Escape Mode Freefire with per-sector actions
 
-Patch: `patches/escape-freefire-sectors.patch.json` (built by
-`scripts/Build-EscapeFreefireSectors.ps1`). Uses the code section
+Patch: `patches/escape-freefire-sectors.patch.json`. Uses the code section
 (`code-section.md`).
 
 ## What you'll notice

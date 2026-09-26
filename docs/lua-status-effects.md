@@ -1,7 +1,6 @@
 # Scripted status effects (mods)
 
-Patch: `patches/lua-status-effects.patch.json` (built by
-`scripts/Build-LuaStatusEffects.ps1`). Uses the code section
+Patch: `patches/lua-status-effects.patch.json`. Uses the code section
 (`code-section.md`).
 
 ## What you'll notice

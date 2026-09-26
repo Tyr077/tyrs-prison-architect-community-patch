@@ -1,7 +1,6 @@
 # Muzzle flash, smoke and buckshot
 
-Patch: `patches/weapon-effects.patch.json` (built by
-`scripts/Build-WeaponEffects.ps1`). Uses the code section
+Patch: `patches/weapon-effects.patch.json`. Uses the code section
 (`code-section.md`).
 
 ## What you'll notice

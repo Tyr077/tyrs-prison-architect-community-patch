@@ -1,7 +1,6 @@
 # Staff detour around keycard doors
 
-Patch: `patches/keycard-door-path-cost.patch.json` (built by
-`scripts/Build-KeycardDoorCost.ps1`).
+Patch: `patches/keycard-door-path-cost.patch.json`.
 
 ## What you'll notice
 

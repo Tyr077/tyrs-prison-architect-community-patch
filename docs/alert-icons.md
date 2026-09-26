@@ -1,7 +1,6 @@
 # Alert icons with custom sprite-sheet mods
 
-Patch: `patches/alert-icons.patch.json` (built by
-`scripts/Build-AlertIcons.ps1`).
+Patch: `patches/alert-icons.patch.json`.
 
 ## What you'll notice
 

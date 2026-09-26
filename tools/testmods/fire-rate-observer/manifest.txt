@@ -1,6 +1,0 @@
-Name                 "Fire Rate Observer (patch test)"
-Author               Tyr
-Description          "Test mod for Tyr's Prison Architect Community Patch. A Fire Rate Observer object records the ReloadTimer every armed guard's shot sets, by weapon, for the weapon-firerate fix. Used by the in-game test harness."
-Date                 22/09/2026
-IsTranslation        false
-Version              1.0

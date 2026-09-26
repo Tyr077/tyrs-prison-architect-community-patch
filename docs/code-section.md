@@ -2,9 +2,8 @@
 
 Some fixes need new code. For those, the patcher appends a small code section
 named `.tyrs` to `Prison Architect64.exe`. It is added by the hidden base patch
-`patches/code-section.patch.json` (built by `scripts/Build-CodeSection.ps1`)
-when the first fix that needs it is applied, and removed on revert once no
-applied fix needs it.
+`patches/code-section.patch.json` when the first fix that needs it is applied,
+and removed on revert once no applied fix needs it.
 
 ## Allocation map
 

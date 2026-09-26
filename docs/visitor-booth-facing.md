@@ -1,7 +1,6 @@
 # Visitor booths facing up
 
-Patch: `patches/visitor-booth-facing.patch.json` (built by
-`scripts/Build-VisitorBoothFacing.ps1`). Uses the code section
+Patch: `patches/visitor-booth-facing.patch.json`. Uses the code section
 (`code-section.md`).
 
 ## What you'll notice

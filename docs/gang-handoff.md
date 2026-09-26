@@ -1,6 +1,6 @@
 # Gang contraband hand-off (Gangs DLC)
 
-Patch: `patches/gang-handoff.patch.json` (built by `scripts/Build-Patch.ps1`).
+Patch: `patches/gang-handoff.patch.json`.
 
 ## What you'll notice
 

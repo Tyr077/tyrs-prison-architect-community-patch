@@ -1,7 +1,6 @@
 # Visitors and civilians stuck at visitor doors
 
-Patch: `patches/visitor-door-access.patch.json` (built by
-`scripts/Build-VisitorDoor.ps1`).
+Patch: `patches/visitor-door-access.patch.json`.
 
 ## What you'll notice
 

@@ -1,7 +1,7 @@
 # Ranged weapon fire rate
 
-Patch: `patches/weapon-firerate.patch.json` (built by
-`scripts/Build-Firerate.ps1`). Uses the code section (`code-section.md`).
+Patch: `patches/weapon-firerate.patch.json`. Uses the code section
+(`code-section.md`).
 
 ## What you'll notice
 

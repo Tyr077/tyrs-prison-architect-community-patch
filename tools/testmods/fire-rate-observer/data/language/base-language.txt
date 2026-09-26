@@ -1,2 +1,0 @@
-object_FireRateObserver   Fire Rate Observer
-buildtoolbar_popup_object_FireRateObserver   Patch test object: records the reload time each armed guard shot sets, by weapon.

@@ -1,7 +1,7 @@
 # Shops without prisoners inside
 
-Patch: `patches/shop-front.patch.json` (built by `scripts/Build-ShopFront.ps1`).
-Uses the code section (`code-section.md`).
+Patch: `patches/shop-front.patch.json`. Uses the code section
+(`code-section.md`).
 
 ## What you'll notice
 

@@ -1,7 +1,6 @@
 # Hold to fire automatic weapons
 
-Patch: `patches/full-auto-hold.patch.json` (built by
-`scripts/Build-FullAutoHold.ps1`). Uses the code section
+Patch: `patches/full-auto-hold.patch.json`. Uses the code section
 (`code-section.md`).
 
 ## What you'll notice

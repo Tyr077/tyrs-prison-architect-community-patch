@@ -1,7 +1,6 @@
 # Armed guards reload in pavilions
 
-Patch: `patches/pavilion-reload.patch.json` (built by
-`scripts/Build-PavilionReload.ps1`). Uses the code section
+Patch: `patches/pavilion-reload.patch.json`. Uses the code section
 (`code-section.md`).
 
 ## What you'll notice

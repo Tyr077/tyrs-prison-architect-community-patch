@@ -1,7 +1,6 @@
 # Intake with route-restricted categories
 
-Patch: `patches/intake-route-categories.patch.json` (built by
-`scripts/Build-IntakeRouteCategories.ps1`). Uses the code section
+Patch: `patches/intake-route-categories.patch.json`. Uses the code section
 (`code-section.md`).
 
 ## What you'll notice

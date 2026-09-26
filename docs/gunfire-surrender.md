@@ -1,7 +1,6 @@
 # Prisoners near gunfire surrender
 
-Patch: `patches/gunfire-surrender.patch.json` (built by
-`scripts/Build-GunfireSurrender.ps1`). Uses the code section
+Patch: `patches/gunfire-surrender.patch.json`. Uses the code section
 (`code-section.md`).
 
 ## What you'll notice

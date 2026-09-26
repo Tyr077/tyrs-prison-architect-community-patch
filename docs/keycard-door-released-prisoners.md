@@ -1,7 +1,6 @@
 # Released prisoners behind revoked keycard doors
 
-Patch: `patches/keycard-door-released-prisoners.patch.json` (built by
-`scripts/Build-KeycardDoorRelease.ps1`).
+Patch: `patches/keycard-door-released-prisoners.patch.json`.
 
 ## What you'll notice
 

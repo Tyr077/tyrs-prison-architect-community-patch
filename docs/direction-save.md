@@ -1,7 +1,6 @@
 # Prisoner and staff directions saved
 
-Patch: `patches/direction-save.patch.json` (built by
-`scripts/Build-Directions.ps1`).
+Patch: `patches/direction-save.patch.json`.
 
 ## What you'll notice
 

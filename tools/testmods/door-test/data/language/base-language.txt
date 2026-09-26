@@ -1,2 +1,0 @@
-object_DoorTestController   Door Test Controller
-buildtoolbar_popup_object_DoorTestController   Patch test object: spawns NPCs on one side of a door and sends them to the other side.

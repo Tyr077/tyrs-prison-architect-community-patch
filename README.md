@@ -159,13 +159,11 @@ what happens instead.
   may also carry `superseded`, the bytes earlier releases wrote at that site, so
   a game file patched by an older version is recognised and rewritten instead of
   being rejected as an unknown build.
-- `scripts/Apply-ExePatch.ps1` applies a patch file from PowerShell without the
-  GUI. `TyrsPAPatch.exe` also accepts `--status`, `--apply` (add `--tweaks` for
-  the optional tweaks) and `--revert`. It is a
-  windowed program, so a console does not wait for it; scripts should use
-  `Start-Process -Wait` or the PowerShell script above.
-- `scripts/Build-*.ps1` regenerate each patch. Patches that need new code use a
-  small section appended to the executable; see `docs/code-section.md`.
+- `TyrsPAPatch.exe` also accepts `--status`, `--apply` (add `--tweaks` for the
+  optional tweaks) and `--revert`. It is a windowed program, so a console does
+  not wait for it; scripts should use `Start-Process -Wait`.
+- Patches that need new code use a small section appended to the executable;
+  see `docs/code-section.md`.
 - Build the patcher with `dotnet build -c Release` in `patcher/`. It targets
   .NET Framework 4.8, which is already part of Windows 10 and 11.
 

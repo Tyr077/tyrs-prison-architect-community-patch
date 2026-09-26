@@ -1,7 +1,6 @@
 # Exercise equipment counts for grading
 
-Patch: `patches/exercise-grading.patch.json` (built by
-`scripts/Build-ExerciseGrading.ps1`). Uses the code section
+Patch: `patches/exercise-grading.patch.json`. Uses the code section
 (`code-section.md`).
 
 ## What you'll notice
