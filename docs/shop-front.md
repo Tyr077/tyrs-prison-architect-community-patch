@@ -3,10 +3,12 @@
 Patch: `patches/shop-front.patch.json`. Uses the code section
 (`code-section.md`).
 
+An enhancement: on by default, and can be unticked in the patcher.
+
 ## What you'll notice
 
 Prisoners could only buy from a shop front if they could walk into the shop and
-were allowed in it. With the fix they buy from the other side of the counter,
+were allowed in it. With the patch they buy from the other side of the counter,
 so the shop front can face a hallway and the shop can stay off limits to
 customers.
 

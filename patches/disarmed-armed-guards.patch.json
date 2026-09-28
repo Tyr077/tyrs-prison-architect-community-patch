@@ -1,14 +1,15 @@
 {
     "id":  "disarmed-armed-guards",
     "name":  "Disarmed armed guards can fight",
-    "version":  "1.0.0",
+    "version":  "1.1.0",
+    "category":  "enhancement",
     "requires":  [
                      "code-section"
                  ],
-    "description":  "Armed guards who lose their shotgun fight with their fists while Freefire is on or when badly hurt, instead of not fighting back.",
+    "description":  "Armed guards who lose their shotgun fight with their fists while Freefire is on or when badly hurt, instead of not fighting back. Their fists show while they have no weapon.",
     "game_build":  "Prison Architect 64-bit, Sunset Update (final)",
     "sha256_original":  "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
-    "sha256_patched":  "a8a42d21715725481e392613c0b9a75f9f067be49a9e87048500b323aad49c20",
+    "sha256_patched":  "55ca51070a8ba232fd0134e654369ac875b04d373a61e388c06d7e241f7ebeca",
     "edits":  [
                   {
                       "va":  "0x140E897D0",
@@ -23,6 +24,26 @@
                       "expect":  "488BCFE885FC0900",
                       "replace":  "E8D8299500909090",
                       "note":  "GetEquipmentDef: weapon-drawn check for armed guards routed through the stub"
+                  },
+                  {
+                      "va":  "0x140E89AB0",
+                      "offset":  14427824,
+                      "expect":  "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+                      "replace":  "837E406B752783BEF802000000751E83BE000300000075154584E4751041BF0100000041BC01000000448965C8448B9EE8090000C3",
+                      "note":  "Entity draw: an armed guard with nothing in hand is drawn holding Fists",
+                      "superseded":  [
+                                         "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
+                                     ]
+                  },
+                  {
+                      "va":  "0x140421DE7",
+                      "offset":  4329959,
+                      "expect":  "448B9EE8090000",
+                      "replace":  "E8C47CA6009090",
+                      "note":  "Entity draw: held-item choice routed through the stub",
+                      "superseded":  [
+                                         "448B9EE8090000"
+                                     ]
                   }
               ]
 }

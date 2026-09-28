@@ -3,11 +3,13 @@
 Patch: `patches/full-auto-hold.patch.json`. Uses the code section
 (`code-section.md`).
 
+An enhancement: on by default, and can be unticked in the patcher.
+
 ## What you'll notice
 
 When you controlled a character, holding the mouse button did not keep
 automatic weapons firing: in Warden Mode every shot needed a click, and in
-Escape Mode only the assault rifle kept firing. With the fix, holding the
+Escape Mode only the assault rifle kept firing. With the patch, holding the
 button keeps assault rifles, SMGs and the DLC modified assault rifle firing in
 both modes, at zombies too.
 

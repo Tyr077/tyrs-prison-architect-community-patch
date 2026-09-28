@@ -9,9 +9,6 @@ namespace PAPatcher
 {
     public class MainForm : Form
     {
-        const string GroupFixes = "fixes";
-        const string GroupTweaks = "tweaks";
-
         readonly TextBox txtPath = new TextBox { ReadOnly = true, TabStop = false, Anchor = AnchorStyles.Left | AnchorStyles.Right };
         readonly Button btnBrowse = new Button { Text = "Browse…", AutoSize = true };
         readonly Label lblStatus = new Label { AutoSize = true, Font = new Font(SystemFonts.MessageBoxFont.FontFamily, 11f, FontStyle.Bold) };
@@ -90,7 +87,7 @@ namespace PAPatcher
             {
                 try { all = PatchEngine.LoadEmbedded(); fixes = all.Where(f => !f.hidden).ToList(); }
                 catch (Exception ex) { MessageBox.Show(this, "The embedded patch data is corrupt:\n" + ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error); Close(); return; }
-                fixes = fixes.OrderBy(f => f.optional ? 1 : 0).ThenBy(f => f.name, StringComparer.CurrentCultureIgnoreCase).ToList();
+                fixes = fixes.OrderBy(f => f.Kind).ThenBy(f => f.name, StringComparer.CurrentCultureIgnoreCase).ToList();
                 settings = Settings.Load();
                 settings.Prune(fixes.Select(f => f.id));
                 BuildTree();
@@ -106,16 +103,15 @@ namespace PAPatcher
             loadingTree = true;
             tree.BeginUpdate();
             tree.Nodes.Clear(); nodeOf.Clear();
-            AddGroup(GroupFixes, "Bug fixes", fixes.Where(f => !f.optional).ToList());
-            AddGroup(GroupTweaks, "Optional tweaks", fixes.Where(f => f.optional).ToList());
+            foreach (var c in Categories.All) AddGroup(c, fixes.Where(f => f.Kind == c).ToList());
             tree.EndUpdate();
             loadingTree = false;
         }
 
-        void AddGroup(string key, string title, List<PatchDoc> members)
+        void AddGroup(Category kind, List<PatchDoc> members)
         {
             if (members.Count == 0) return;
-            var group = new TreeNode(title) { Tag = key, NodeFont = new Font(tree.Font, FontStyle.Bold) };
+            var group = new TreeNode(Categories.Title(kind)) { Tag = kind, NodeFont = new Font(tree.Font, FontStyle.Bold) };
             foreach (var f in members)
             {
                 var n = new TreeNode(f.DisplayName) { Tag = f };
@@ -123,14 +119,13 @@ namespace PAPatcher
                 group.Nodes.Add(n);
             }
             tree.Nodes.Add(group);
-            if (!settings.IsCollapsed(key)) group.Expand();
+            if (!settings.IsCollapsed(Categories.Key(kind))) group.Expand();
         }
 
         void RememberExpansion(TreeNode node)
         {
-            var key = node.Tag as string;
-            if (loadingTree || key == null) return;
-            settings.SetCollapsed(key, !node.IsExpanded);
+            if (loadingTree || !(node.Tag is Category)) return;
+            settings.SetCollapsed(Categories.Key((Category)node.Tag), !node.IsExpanded);
         }
 
         /// <summary>Ticking a group ticks everything in it; ticking a member re-derives the group box.</summary>
@@ -140,7 +135,7 @@ namespace PAPatcher
             loadingTree = true;
             try
             {
-                if (node.Tag is string)
+                if (node.Tag is Category)
                 {
                     foreach (TreeNode child in node.Nodes)
                     {
@@ -167,7 +162,7 @@ namespace PAPatcher
         }
 
         /// <summary>
-        /// Fill in the tick boxes: a remembered choice wins, otherwise a fix is on and a tweak is on only
+        /// Fill in the tick boxes: a remembered choice wins, otherwise everything but tweaks is on and a tweak is on only
         /// when it is already in the game file, so someone upgrading from an older release keeps what they had.
         /// </summary>
         void ResolveChoices()
@@ -178,7 +173,7 @@ namespace PAPatcher
                 foreach (var f in fixes)
                 {
                     var saved = settings.Choice(f.id);
-                    bool value = saved ?? (!f.optional || (fileBytes != null && PatchEngine.GetState(fileBytes, f).IsApplied()));
+                    bool value = saved ?? (f.OnByDefault || (fileBytes != null && PatchEngine.GetState(fileBytes, f).IsApplied()));
                     if (value) chosen.Add(f.id); else chosen.Remove(f.id);
                     TreeNode n;
                     if (nodeOf.TryGetValue(f.id, out n)) n.Checked = value;
@@ -203,7 +198,7 @@ namespace PAPatcher
                     n.Text = f.DisplayName + (fileBytes == null ? "" : "  —  " + StateWord(st));
                     n.ForeColor = fileBytes == null ? SystemColors.ControlText : StateColour(st);
                 }
-                string title = (string)group.Tag == GroupTweaks ? "Optional tweaks" : "Bug fixes";
+                string title = Categories.Title((Category)group.Tag);
                 int ticked = group.Nodes.Cast<TreeNode>().Count(n => n.Checked);
                 group.Text = fileBytes == null
                     ? title + "  (" + group.Nodes.Count + ")"
@@ -268,13 +263,13 @@ namespace PAPatcher
             }
 
             ResolveChoices();
-            var required = fixes.Where(f => !f.optional).ToList();
+            var required = fixes.Where(f => f.Kind == Category.Fix).ToList();
             int patched = required.Count(f => PatchEngine.GetState(fileBytes, f).IsApplied());
-            int tweaks = fixes.Count(f => f.optional && PatchEngine.GetState(fileBytes, f).IsApplied());
-            string tweakNote = tweaks == 0 ? "" : " " + tweaks + " optional tweak(s) are on.";
-            if (patched == required.Count) SetStatus("Patched", Color.DarkGreen, "All " + required.Count + " fix(es) are installed." + tweakNote + " If Steam ever verifies game files it will undo this; just come back and click Apply again.");
-            else if (patched == 0 && tweaks == 0) SetStatus("Not patched", Color.DarkOrange, "Original game file. Tick what you want and click Apply selection. A backup is kept next to the game file.");
-            else SetStatus("Partially patched", Color.DarkOrange, patched + " of " + required.Count + " fixes installed." + tweakNote);
+            int others = Installed().Count - patched;
+            string note = CountNote(Category.Enhancement, "enhancement(s)") + CountNote(Category.ModApi, "modding extension(s)") + CountNote(Category.Tweak, "optional tweak(s)");
+            if (patched == required.Count) SetStatus("Patched", Color.DarkGreen, "All " + required.Count + " fix(es) are installed." + note + " If Steam ever verifies game files it will undo this; just come back and click Apply again.");
+            else if (patched == 0 && others == 0) SetStatus("Not patched", Color.DarkOrange, "Original game file. Tick what you want and click Apply selection. A backup is kept next to the game file.");
+            else SetStatus("Partially patched", Color.DarkOrange, patched + " of " + required.Count + " fixes installed." + note);
             UpdateLabels();
             UpdateButtons();
             ShowFixInfo();
@@ -285,18 +280,46 @@ namespace PAPatcher
             lblStatus.Text = headline; lblStatus.ForeColor = color; lblDetail.Text = detail;
         }
 
+        /// <summary>" 2 of 3 enhancement(s) are on." for a category that has installed items, else "".</summary>
+        string CountNote(Category kind, string noun)
+        {
+            var members = fixes.Where(f => f.Kind == kind).ToList();
+            int on = members.Count(f => PatchEngine.GetState(fileBytes, f).IsApplied());
+            return on == 0 ? "" : " " + on + " of " + members.Count + " " + noun + " are on.";
+        }
+
         void ShowFixInfo()
         {
-            var f = tree.SelectedNode == null ? null : tree.SelectedNode.Tag as PatchDoc;
+            var node = tree.SelectedNode;
+            var f = node == null ? null : node.Tag as PatchDoc;
             if (f == null)
             {
-                var key = tree.SelectedNode == null ? null : tree.SelectedNode.Tag as string;
-                lblFixInfo.Text = key == GroupTweaks
-                    ? "Optional tweaks change game balance rather than fixing a bug, so they are off unless you turn them on."
-                    : key == GroupFixes ? "Fixes for bugs in the game's code. Leave them all on unless you have a reason not to." : "";
+                lblFixInfo.Text = node != null && node.Tag is Category ? GroupInfo((Category)node.Tag) : "";
                 return;
             }
-            lblFixInfo.Text = (f.optional ? "Optional tweak, changes game balance: " : "") + f.description;
+            lblFixInfo.Text = ItemPrefix(f.Kind) + f.description;
+        }
+
+        static string GroupInfo(Category c)
+        {
+            switch (c)
+            {
+                case Category.Enhancement: return "Enhancements add behaviour the game was missing rather than fixing a bug. They are on by default; untick any you don't want.";
+                case Category.ModApi: return "Modding extensions give mods more to work with. They are on by default; untick any you don't want.";
+                case Category.Tweak: return "Optional tweaks change game balance rather than fixing a bug, so they are off unless you turn them on.";
+                default: return "Fixes for bugs in the game's code. Leave them all on unless you have a reason not to.";
+            }
+        }
+
+        static string ItemPrefix(Category c)
+        {
+            switch (c)
+            {
+                case Category.Enhancement: return "Enhancement: ";
+                case Category.ModApi: return "Modding extension: ";
+                case Category.Tweak: return "Optional tweak, changes game balance: ";
+                default: return "";
+            }
         }
 
         // ---- applying ------------------------------------------------------

@@ -43,6 +43,8 @@ namespace PAPatcher
         [DataMember] public List<PatchEdit> edits;
         // Optional tweak: changes game balance rather than fixing a bug. Off by default in the UI and in --apply.
         [DataMember] public bool optional;
+        // "fix" (default), "enhancement" or "modapi"; optional == true means "tweak" whatever this says.
+        [DataMember] public string category;
         // Hidden base patch (e.g. the appended code section): never listed, applied when a patch requires it.
         [DataMember] public bool hidden;
         // Ids of patches that must be applied first (their edits may live inside a base patch's section).
@@ -50,7 +52,67 @@ namespace PAPatcher
         public bool HasRequires => requires != null && requires.Count > 0;
 
         public string DisplayName => string.IsNullOrEmpty(version) ? name : name + " v" + version;
-        public string ListLabel => (optional ? "[Optional] " : "") + DisplayName;
+        public string ListLabel => (Kind == Category.Fix ? "" : "[" + Categories.Tag(Kind) + "] ") + DisplayName;
+
+        public Category Kind
+        {
+            get
+            {
+                if (optional) return Category.Tweak;
+                switch ((category ?? "").ToLowerInvariant())
+                {
+                    case "enhancement": return Category.Enhancement;
+                    case "modapi": return Category.ModApi;
+                    case "tweak": return Category.Tweak;
+                    default: return Category.Fix;
+                }
+            }
+        }
+
+        /// <summary>Ticked by default and installed by a plain --apply; only tweaks are opt-in.</summary>
+        public bool OnByDefault => Kind != Category.Tweak;
+    }
+
+    /// <summary>List order in the patcher: fixes first, tweaks last.</summary>
+    public enum Category { Fix, Enhancement, ModApi, Tweak }
+
+    public static class Categories
+    {
+        public static readonly Category[] All = { Category.Fix, Category.Enhancement, Category.ModApi, Category.Tweak };
+
+        public static string Title(Category c)
+        {
+            switch (c)
+            {
+                case Category.Enhancement: return "Enhancements";
+                case Category.ModApi: return "Modding extensions";
+                case Category.Tweak: return "Optional tweaks";
+                default: return "Bug fixes";
+            }
+        }
+
+        public static string Tag(Category c)
+        {
+            switch (c)
+            {
+                case Category.Enhancement: return "Enhancement";
+                case Category.ModApi: return "Modding";
+                case Category.Tweak: return "Optional";
+                default: return "Fix";
+            }
+        }
+
+        // Settings keys for the remembered collapsed state; "fixes" and "tweaks" match earlier releases.
+        public static string Key(Category c)
+        {
+            switch (c)
+            {
+                case Category.Enhancement: return "enhancements";
+                case Category.ModApi: return "modapi";
+                case Category.Tweak: return "tweaks";
+                default: return "fixes";
+            }
+        }
     }
 
     public enum FixState { Unpatched, Patched, Outdated, Mixed, NotApplicable }

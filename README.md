@@ -43,9 +43,10 @@ SHA256 of the download so you can check it.
 If Steam ever runs "Verify integrity of game files", it restores the original
 executable. Just run the patcher again and click Apply.
 
-The patcher groups everything into **Bug fixes** and **Optional tweaks**. Both
-groups are ticked or unticked as a whole, or expanded to pick individual items,
-and each line says whether it is currently installed in your game. Your choices
+The patcher groups everything into **Bug fixes**, **Enhancements** and
+**Optional tweaks**. Fixes and enhancements are on by default, tweaks are off.
+Each group is ticked or unticked as a whole, or expanded to pick individual
+items, and each line says whether it is currently installed in your game. Your choices
 are remembered for next time, and **Apply selection** makes the game match them:
 it installs what you ticked and removes what you unticked.
 
@@ -66,15 +67,9 @@ game.
 - **Armed guards reload in pavilions.** An armed guard manning a Guard Pavilion
   keeps firing instead of stopping after one shot.
   [Details](docs/pavilion-reload.md)
-- **Disarmed armed guards can fight.** An armed guard who loses its shotgun
-  fights with its fists while Freefire is on or it is badly hurt, instead of not
-  fighting back. [Details](docs/disarmed-armed-guards.md)
 - **Escape Mode Freefire with per-sector actions.** The warden's Freefire order
   after your gang kills someone now reaches the guards when "Search and Actions
   per sector" is on. [Details](docs/escape-freefire-sectors.md)
-- **Hold to fire automatic weapons.** Holding the mouse button keeps assault
-  rifles and SMGs firing in Warden Mode and Escape Mode, at zombies too.
-  [Details](docs/full-auto-hold.md)
 - **Intake with route-restricted categories.** A helipad, boat dock or road that
   accepts only some prisoner categories no longer ends with *Your prison is
   closed to new inmates* while cells stand empty. Every category you take still
@@ -84,10 +79,6 @@ game.
   not just the bottom. Rotate the booth to face your prisoners while placing
   it.
   [Details](docs/visitor-booth-facing.md)
-- **Shops without prisoners inside.** The shop front can face a hallway and
-  prisoners buy from it without being allowed into the shop, so who works in a
-  shop and who shops there can be kept apart.
-  [Details](docs/shop-front.md)
 - **Exercise equipment counts for grading.** Time on gym equipment counts towards
   the Health grade's exercise score, not just jogging laps around the yard.
   [Details](docs/exercise-grading.md)
@@ -118,6 +109,24 @@ game.
   instead of once every two seconds, and other guns wait 0.7 s between shots
   instead of two seconds, plus the weapon's `RechargeTime` from `materials.txt`.
   [Details](docs/weapon-firerate.md)
+
+## Enhancements
+
+Changes the game was missing rather than bug fixes. They are **on by default**;
+untick any you don't want in the patcher, or pass `--fixes-only` on the command
+line to leave all of them out.
+
+- **Shops without prisoners inside.** The shop front can face a hallway and
+  prisoners buy from it without being allowed into the shop, so who works in a
+  shop and who shops there can be kept apart.
+  [Details](docs/shop-front.md)
+- **Disarmed armed guards can fight.** An armed guard who loses its shotgun
+  fights with its fists while Freefire is on or it is badly hurt, instead of not
+  fighting back. Its fists show while it has no weapon (untested).
+  [Details](docs/disarmed-armed-guards.md)
+- **Hold to fire automatic weapons.** Holding the mouse button keeps assault
+  rifles and SMGs firing in Warden Mode and Escape Mode, at zombies too.
+  [Details](docs/full-auto-hold.md)
 
 ## Optional tweaks
 
@@ -159,8 +168,9 @@ what happens instead.
   may also carry `superseded`, the bytes earlier releases wrote at that site, so
   a game file patched by an older version is recognised and rewritten instead of
   being rejected as an unknown build.
-- `TyrsPAPatch.exe` also accepts `--status`, `--apply` (add `--tweaks` for the
-  optional tweaks) and `--revert`. It is a windowed program, so a console does
+- `TyrsPAPatch.exe` also accepts `--status`, `--apply` (installs the fixes and
+  enhancements; add `--fixes-only` to leave the enhancements out, `--tweaks` to
+  add the optional tweaks) and `--revert`. It is a windowed program, so a console does
   not wait for it; scripts should use `Start-Process -Wait`.
 - Patches that need new code use a small section appended to the executable;
   see `docs/code-section.md`.

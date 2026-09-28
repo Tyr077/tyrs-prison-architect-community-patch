@@ -22,8 +22,9 @@ namespace PAPatcher
         }
 
         // Hidden command-line mode for scripting and testing:
-        //   TyrsPAPatch.exe --status [exe]   --apply [exe] [--tweaks]   --revert [exe]
-        // --apply installs the bug fixes; add --tweaks to also install the optional balance tweaks. --revert undoes everything.
+        //   TyrsPAPatch.exe --status [exe]   --apply [exe] [--fixes-only] [--tweaks]   --revert [exe]
+        // --apply installs everything that is on by default (fixes, enhancements, modding extensions); --fixes-only
+        // leaves out all but the bug fixes; --tweaks adds the optional balance tweaks. --revert undoes everything.
         static int Cli(string[] args)
         {
             AttachConsole(ATTACH_PARENT_PROCESS);
@@ -33,6 +34,7 @@ namespace PAPatcher
                 var cmd = args[0].ToLowerInvariant();
                 var exe = args.Skip(1).FirstOrDefault(a => !a.StartsWith("--")) ?? GameLocator.Find();
                 bool withTweaks = args.Any(a => a.Equals("--tweaks", StringComparison.OrdinalIgnoreCase));
+                bool fixesOnly = args.Any(a => a.Equals("--fixes-only", StringComparison.OrdinalIgnoreCase));
                 if (exe == null || !File.Exists(exe)) { stdout.WriteLine("Game executable not found. Pass its path as the second argument."); return 2; }
                 var fixes = PatchEngine.LoadEmbedded();
                 var file = File.ReadAllBytes(exe);
@@ -42,12 +44,13 @@ namespace PAPatcher
                 foreach (var f in fixes) stdout.WriteLine("  [" + PatchEngine.GetState(file, f) + "] " + (f.hidden ? "(base) " : "") + f.ListLabel);
 
                 if (cmd == "--status") return 0;
-                if (cmd != "--apply" && cmd != "--revert") { stdout.WriteLine("Usage: TyrsPAPatch.exe --status|--apply [--tweaks]|--revert [path to Prison Architect64.exe]"); return 1; }
+                if (cmd != "--apply" && cmd != "--revert") { stdout.WriteLine("Usage: TyrsPAPatch.exe --status|--apply [--fixes-only] [--tweaks]|--revert [path to Prison Architect64.exe]"); return 1; }
                 if (GameLocator.IsGameRunning()) { stdout.WriteLine("Prison Architect is running. Close it first."); return 3; }
                 if (!PatchEngine.IsSupportedBuild(file, fixes)) { stdout.WriteLine("Refusing to modify an unsupported build."); return 4; }
 
                 bool apply = cmd == "--apply";
-                var set = (apply && !withTweaks) ? fixes.Where(f => !f.optional && !f.hidden).ToList() : fixes.Where(f => !f.hidden).ToList();
+                var set = fixes.Where(f => !f.hidden).ToList();
+                if (apply) set = set.Where(f => f.Kind == Category.Tweak ? withTweaks : !fixesOnly || f.Kind == Category.Fix).ToList();
                 if (apply) set = PatchEngine.ExpandRequires(fixes, set);
                 var result = PatchEngine.WithEdits(file, set, apply);
                 if (!apply) result = PatchEngine.RevertOrphanedBases(result, fixes);
