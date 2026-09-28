@@ -65,7 +65,7 @@ Each fix has a short page under `docs/`.
 
 ## Checksums (SHA-256)
 
-- `TyrsPAPatch.exe`: `PENDING`
+- `TyrsPAPatch.exe`: `0d666c1fed7ecb753afd1ed28a2f40539ee9c55a213823bc8bd27dbd04547b1e`
 - Original `Prison Architect64.exe` this patch targets: `cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9`
 - `Prison Architect64.exe` with the fifteen fixes only: `b8b8450a52d9c3bc0c873589c60f36cab63db937aa332acde3df545fa73b6316`
 - `Prison Architect64.exe` with the fixes and the three enhancements (the default): `71134365e805fb6f7c804ab5176adb7c02df313ba5f7c0649c6e0de5d56d24f3`
