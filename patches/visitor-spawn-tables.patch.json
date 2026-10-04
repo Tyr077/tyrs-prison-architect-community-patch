@@ -1,0 +1,28 @@
+{
+    "id":  "visitor-spawn-tables",
+    "name":  "Visitors with an unusable visitation table",
+    "version":  "1.0.0",
+    "requires":  [
+                     "code-section"
+                 ],
+    "description":  "A visitor table that no prisoner can be paired with, such as one facing a Protective Custody sector, no longer stops visits in the whole prison.",
+    "game_build":  "Prison Architect 64-bit, Sunset Update (final)",
+    "sha256_original":  "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
+    "sha256_patched":  "dcc94b777663804eeb14394ca8d6f21c778170a2bad10e66d8ada2f33800bfed",
+    "edits":  [
+                  {
+                      "va":  "0x140E89AF0",
+                      "offset":  14427888,
+                      "expect":  "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+                      "replace":  "83BC24A8000000FF740D4C8B04DE4983C038E95F558DFF448BDB488D1CDEE91E558DFF",
+                      "note":  "visitor spawn: a table the pairing found no prisoner for is skipped instead of ending the spawn"
+                  },
+                  {
+                      "va":  "0x14075F05E",
+                      "offset":  7726174,
+                      "expect":  "4C8B04DE4983C038",
+                      "replace":  "E98DAA7200909090",
+                      "note":  "FUN_14075EDA0 after the pairing call routed through the skip stub"
+                  }
+              ]
+}

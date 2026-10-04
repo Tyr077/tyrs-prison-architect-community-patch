@@ -7,7 +7,7 @@ and removed on revert once no applied fix needs it.
 
 ## Allocation map
 
-Data area `+0x000..+0x0FF`, code from `+0x100`; next free code offset `+0xAF0`. Every patch that uses the
+Data area `+0x000..+0x0FF`, code from `+0x100`; next free code offset `+0xB20`. Every patch that uses the
 section must be listed here so ranges never overlap.
 
 | range (section offset) | VA | owner | use |
@@ -38,6 +38,7 @@ section must be listed here so ranges never overlap.
 | `+0x920..+0x96A` | `0x140E89920` | weapon-firerate (2.0.0) | ReloadTimer-by-weapon stub, 75 bytes |
 | `+0x970..+0xAA5` | `0x140E89970` | gunfire-surrender | area surrender stub, 310 bytes (4.0f constant at the end) |
 | `+0xAB0..+0xAE4` | `0x140E89AB0` | disarmed-armed-guards (1.1.0) | entity draw held-item stub, 53 bytes |
+| `+0xAF0..+0xB12` | `0x140E89AF0` | visitor-spawn-tables | skip-unpaired-table stub, 35 bytes |
 
 ## Antivirus
 

@@ -95,6 +95,10 @@ game.
 - **Visitors and civilians stuck at visitor doors.** Mentors, therapists
   and other visitors no longer wait forever at a single visitor
   door or gate. [Details](docs/visitor-door-access.md)
+- **Visits stop with an unusable visitor table.** One visitor table or booth that
+  no prisoner can be matched with, such as a booth facing an empty Protective
+  Custody sector, no longer stops visits in the whole prison.
+  [Details](docs/visitor-spawn-tables.md)
 - **Released prisoners behind revoked keycard doors.** When a keycard door with
   prisoner access revoked is the only way out, released prisoners call a guard to
   let them out instead of standing still forever.
@@ -148,6 +152,14 @@ in the patcher, or pass `--tweaks` on the command line to turn all of them on.
   Protective Custody prisoners take jobs and go to classes in Shared sectors and
   in Custom sectors that include Protective Custody, not only in Protective
   Custody Only sectors.
+
+## Known issues
+
+Not fixed yet. These happen with or without the patch.
+
+- **Injured prisoners wander without a cell when there is no doctor.** A prisoner
+  who needs healing, with no doctor to treat them, can end up without a cell and
+  wander the prison, even at night.
 
 ## Unsupported build
 
