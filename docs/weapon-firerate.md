@@ -23,5 +23,4 @@ The weapon's `RechargeTime` from `materials.txt` is added on top, as before.
 
 ## Status
 
-Shotgun and automatic weapon rates tested in game. Escape Mode not yet
-tested.
+Tested in game: shotgun, automatic weapons and Escape Mode.

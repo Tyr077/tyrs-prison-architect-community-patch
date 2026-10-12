@@ -16,7 +16,7 @@ Test build. Download the new `TyrsPAPatch.exe`, run it, click **Apply selection*
 - **Status effects on staff:** a test mod saw `TyrsPatch` and the table on staff, and 24 staff were saved tazed, with no Lua errors. Without the extension, `TyrsPatch` is `nil` and staff have no table.
 - A game patched with 1.15.0 (default, fixes only, or with the tweaks) upgrades to the same file as a fresh install, and every combination reverts to the original.
 
-Checked in earlier test builds: disarmed armed guards show the game's fists, shop front (on a player's save), visitor tables (issue #4), intake with route-restricted categories, prisoners near gunfire surrender, shotgun fire rate, staff death morale penalty fades (tweak).
+Checked in earlier test builds: disarmed armed guards show the game's fists, shop front (on a player's save), visitor tables (issue #4), intake with route-restricted categories, prisoners near gunfire surrender, fire rate (shotgun, automatic weapons, Escape Mode), staff death morale penalty fades (tweak).
 
 ## Also new since 1.5.0
 
