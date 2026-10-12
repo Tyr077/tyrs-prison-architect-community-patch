@@ -16,7 +16,8 @@ leaves the rest queued for a route that does.
 
 ## Status
 
-Not yet tested in game.
+Tested in game: prisoners of a category the stop does not accept stay queued
+instead of being dropped.
 
 ## Notes
 
