@@ -5,10 +5,14 @@ named `.tyrs` to `Prison Architect64.exe`. It is added by the hidden base patch
 `patches/code-section.patch.json` when the first fix that needs it is applied,
 and removed on revert once no applied fix needs it.
 
+It is 8 KiB since 2.0.0 (patcher 1.16.0); 1.0.0 was 4 KiB. A game file with the
+4 KiB section is grown in place, keeping what is in it.
+
 ## Allocation map
 
-Data area `+0x000..+0x0FF`, code from `+0x100`; next free code offset `+0xCA0`. Every patch that uses the
-section must be listed here so ranges never overlap.
+Fixes: data area `+0x000..+0x0FF`, code `+0x100..+0xFFF`, next free code offset `+0xCA0`. Modding
+extensions: `+0x1000..+0x1FFF`, next free offset `+0x1550`. Every patch that uses the section must be listed
+here so ranges never overlap.
 
 | range (section offset) | VA | owner | use |
 |---|---|---|---|
@@ -41,6 +45,10 @@ section must be listed here so ranges never overlap.
 | `+0xAF0..+0xB12` | `0x140E89AF0` | visitor-spawn-tables | skip-unpaired-table stub, 35 bytes |
 | `+0xB20..+0xB43` | `0x140E89B20` | disarmed-armed-guards (1.2.0) | held-item draw skip stub, 36 bytes; given back in 1.3.0, kept reserved |
 | `+0xB50..+0xC9F` | `0x140E89B50` | disarmed-armed-guards (1.2.0) | hand positions stub, 336 bytes; given back in 1.3.0, kept reserved |
+| `+0x1000..+0x107F` | `0x140E8A000` | modapi-core | Lua text, part 1 (`print = Game.DebugOut`, registry loop) |
+| `+0x1080..+0x127F` | `0x140E8A080` | modapi-core registry | 8 slots of `0x40`, written by the extensions; slot 0 status-effects-entities |
+| `+0x1280..+0x1303` | `0x140E8A280` | modapi-core | Lua text, part 2 (`TyrsPatch` table) |
+| `+0x1400..+0x1544` | `0x140E8A400` | status-effects-entities | RegisterLua stub, string helper, entity test for GiveStatusEffect (`+0x1520`) |
 
 ## Antivirus
 

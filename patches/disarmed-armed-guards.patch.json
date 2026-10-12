@@ -2,7 +2,6 @@
     "id":  "disarmed-armed-guards",
     "name":  "Disarmed armed guards can fight",
     "version":  "1.3.0",
-    "category":  "enhancement",
     "requires":  [
                      "code-section"
                  ],

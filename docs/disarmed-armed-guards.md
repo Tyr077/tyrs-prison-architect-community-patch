@@ -3,7 +3,7 @@
 Patch: `patches/disarmed-armed-guards.patch.json`. Uses the code section
 (`code-section.md`).
 
-An enhancement: on by default, and can be unticked in the patcher.
+A core fix: on by default, and can be unticked in the patcher.
 
 ## What you'll notice
 

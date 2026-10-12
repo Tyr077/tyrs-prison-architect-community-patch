@@ -1,0 +1,43 @@
+{
+    "id":  "modapi-core",
+    "name":  "Modding extensions: TyrsPatch",
+    "version":  "1.0.0",
+    "hidden":  true,
+    "requires":  [
+                     "code-section"
+                 ],
+    "description":  "Gives every Lua state a TyrsPatch table that tells mods which modding extensions are installed. Applied automatically with the first modding extension and removed with the last.",
+    "game_build":  "Prison Architect 64-bit, Sunset Update (final)",
+    "sha256_original":  "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
+    "sha256_patched":  "ef622d8acc04afd2b40498ecd50bee3280fb1c46fd8e07bd0297074489fd15b6",
+    "edits":  [
+                  {
+                      "va":  "0x140E8A000",
+                      "offset":  14429184,
+                      "expect":  "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+                      "replace":  "7072696E74203D2047616D652E44656275674F75740A20202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020206C6F63616C20463D7B7D20666F7220692C7420696E20285B3D5B",
+                      "note":  "Lua text, part 1: print = Game.DebugOut (as the game had it), then the registry loop up to the long string that holds the slots"
+                  },
+                  {
+                      "va":  "0x140E8A280",
+                      "offset":  14429824,
+                      "expect":  "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+                      "replace":  "5D3D5D293A676D6174636828227C285B2577252E5F252D5D2B293D2825612B297C222920646F20465B695D3D7420656E640A5479727350617463683D7B4861733D66756E6374696F6E2869292072657475726E20465B695D7E3D6E696C20656E642C546965723D66756E6374696F6E2869292072657475726E20465B695D20656E647D0A",
+                      "note":  "Lua text, part 2: end of the registry loop and the TyrsPatch table (Has, Tier)"
+                  },
+                  {
+                      "va":  "0x14046D326",
+                      "offset":  4638502,
+                      "expect":  "41B815000000",
+                      "replace":  "41B804030000",
+                      "note":  "script init: chunk length 0x15 -\u003e 0x304"
+                  },
+                  {
+                      "va":  "0x14046D32C",
+                      "offset":  4638508,
+                      "expect":  "488D15F5DA6700",
+                      "replace":  "488D15CDCCA100",
+                      "note":  "script init: chunk source \"print = Game.DebugOut\" -\u003e the text above (the chunk name keeps the original string)"
+                  }
+              ]
+}

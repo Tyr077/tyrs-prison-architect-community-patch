@@ -43,7 +43,8 @@ namespace PAPatcher
         [DataMember] public List<PatchEdit> edits;
         // Optional tweak: changes game balance rather than fixing a bug. Off by default in the UI and in --apply.
         [DataMember] public bool optional;
-        // "fix" (default), "enhancement" or "modapi"; optional == true means "tweak" whatever this says.
+        // "fix" (default, a core fix), "additional" ("enhancement" in older files) or "modapi"; optional == true means
+        // "tweak" whatever this says.
         [DataMember] public string category;
         // Hidden base patch (e.g. the appended code section): never listed, applied when a patch requires it.
         [DataMember] public bool hidden;
@@ -51,12 +52,14 @@ namespace PAPatcher
         // any file an earlier release left it in, whatever the patcher is asked to do. Its edits stay so that
         // those files are still recognised; dropping the flag brings the patch back.
         [DataMember] public bool withdrawn;
+        // Experimental modding extension: off by default, and its Lua names may still change between releases.
+        [DataMember] public bool experimental;
         // Ids of patches that must be applied first (their edits may live inside a base patch's section).
         [DataMember] public List<string> requires;
         public bool HasRequires => requires != null && requires.Count > 0;
 
         public string DisplayName => string.IsNullOrEmpty(version) ? name : name + " v" + version;
-        public string ListLabel => (Kind == Category.Fix ? "" : "[" + Categories.Tag(Kind) + "] ") + DisplayName;
+        public string ListLabel => (Kind == Category.Fix ? "" : "[" + Categories.Tag(Kind) + (experimental ? ", experimental" : "") + "] ") + DisplayName;
 
         public Category Kind
         {
@@ -65,7 +68,8 @@ namespace PAPatcher
                 if (optional) return Category.Tweak;
                 switch ((category ?? "").ToLowerInvariant())
                 {
-                    case "enhancement": return Category.Enhancement;
+                    case "additional":
+                    case "enhancement": return Category.Additional;
                     case "modapi": return Category.ModApi;
                     case "tweak": return Category.Tweak;
                     default: return Category.Fix;
@@ -73,25 +77,25 @@ namespace PAPatcher
             }
         }
 
-        /// <summary>Ticked by default and installed by a plain --apply; only tweaks are opt-in.</summary>
-        public bool OnByDefault => Kind != Category.Tweak;
+        /// <summary>Ticked by default and installed by a plain --apply; tweaks and experimental extensions are opt-in.</summary>
+        public bool OnByDefault => Kind != Category.Tweak && !experimental;
     }
 
-    /// <summary>List order in the patcher: fixes first, tweaks last.</summary>
-    public enum Category { Fix, Enhancement, ModApi, Tweak }
+    /// <summary>List order in the patcher: core fixes first, tweaks last.</summary>
+    public enum Category { Fix, Additional, ModApi, Tweak }
 
     public static class Categories
     {
-        public static readonly Category[] All = { Category.Fix, Category.Enhancement, Category.ModApi, Category.Tweak };
+        public static readonly Category[] All = { Category.Fix, Category.Additional, Category.ModApi, Category.Tweak };
 
         public static string Title(Category c)
         {
             switch (c)
             {
-                case Category.Enhancement: return "Enhancements";
+                case Category.Additional: return "Additional fixes";
                 case Category.ModApi: return "Modding extensions";
                 case Category.Tweak: return "Optional tweaks";
-                default: return "Bug fixes";
+                default: return "Core fixes";
             }
         }
 
@@ -99,19 +103,20 @@ namespace PAPatcher
         {
             switch (c)
             {
-                case Category.Enhancement: return "Enhancement";
+                case Category.Additional: return "Additional fix";
                 case Category.ModApi: return "Modding";
                 case Category.Tweak: return "Optional";
                 default: return "Fix";
             }
         }
 
-        // Settings keys for the remembered collapsed state; "fixes" and "tweaks" match earlier releases.
+        // Settings keys for the remembered collapsed state; they match earlier releases ("enhancements" was the
+        // additional fixes group's old name).
         public static string Key(Category c)
         {
             switch (c)
             {
-                case Category.Enhancement: return "enhancements";
+                case Category.Additional: return "enhancements";
                 case Category.ModApi: return "modapi";
                 case Category.Tweak: return "tweaks";
                 default: return "fixes";
@@ -189,9 +194,19 @@ namespace PAPatcher
                 if (e.IsAppend)
                 {
                     // Presence only: other patches write into the appended region, so its content is not compared.
+                    // An older version may have appended less (superseded); the file length tells them apart.
                     if (file.Length == e.offset) { allNew = false; for (int k = 0; k < versions; k++) allOld[k] = false; continue; }
-                    if (file.Length >= e.offset + rep.Length) { allOrig = false; continue; }
-                    return FixState.NotApplicable;
+                    allOrig = false;
+                    if (file.Length >= e.offset + rep.Length) continue;
+                    allNew = false;
+                    bool anyOld = false;
+                    for (int k = 0; k < versions; k++)
+                    {
+                        if (allOld[k] && file.Length == e.offset + e.SupersededBytes(k).Length) anyOld = true;
+                        else allOld[k] = false;
+                    }
+                    if (!anyOld) return FixState.NotApplicable;
+                    continue;
                 }
                 // Edits inside a required base patch's section are out of range until that base is applied.
                 // They count as still holding their original bytes, so a patch that gained the requirement in a
@@ -260,8 +275,14 @@ namespace PAPatcher
                     if (e.IsAppend)
                     {
                         var rep = e.ReplaceBytes;
-                        if (apply && outb.Length == e.offset) { var n = new byte[outb.Length + rep.Length]; Array.Copy(outb, n, outb.Length); Array.Copy(rep, 0, n, outb.Length, rep.Length); outb = n; }
-                        else if (!apply && outb.Length >= e.offset + rep.Length) { var n = new byte[e.offset]; Array.Copy(outb, n, n.Length); outb = n; }
+                        // Applying over an older, shorter append extends it with the rest of the new one; what other
+                        // patches wrote into the existing part stays.
+                        if (apply && outb.Length >= e.offset && outb.Length < e.offset + rep.Length)
+                        {
+                            var have = (int)(outb.Length - e.offset);
+                            var n = new byte[e.offset + rep.Length]; Array.Copy(outb, n, outb.Length); Array.Copy(rep, have, n, outb.Length, rep.Length - have); outb = n;
+                        }
+                        else if (!apply && outb.Length > e.offset) { var n = new byte[e.offset]; Array.Copy(outb, n, n.Length); outb = n; }
                         continue;
                     }
                     var src = apply ? e.ReplaceBytes : e.ExpectBytes;

@@ -266,10 +266,10 @@ namespace PAPatcher
             var required = fixes.Where(f => f.Kind == Category.Fix).ToList();
             int patched = required.Count(f => PatchEngine.GetState(fileBytes, f).IsApplied());
             int others = Installed().Count - patched;
-            string note = CountNote(Category.Enhancement, "enhancement(s)") + CountNote(Category.ModApi, "modding extension(s)") + CountNote(Category.Tweak, "optional tweak(s)");
-            if (patched == required.Count) SetStatus("Patched", Color.DarkGreen, "All " + required.Count + " fix(es) are installed." + note + " If Steam ever verifies game files it will undo this; just come back and click Apply again.");
+            string note = CountNote(Category.Additional, "additional fix(es)") + CountNote(Category.ModApi, "modding extension(s)") + CountNote(Category.Tweak, "optional tweak(s)");
+            if (patched == required.Count) SetStatus("Patched", Color.DarkGreen, "All " + required.Count + " core fix(es) are installed." + note + " If Steam ever verifies game files it will undo this; just come back and click Apply again.");
             else if (patched == 0 && others == 0) SetStatus("Not patched", Color.DarkOrange, "Original game file. Tick what you want and click Apply selection. A backup is kept next to the game file.");
-            else SetStatus("Partially patched", Color.DarkOrange, patched + " of " + required.Count + " fixes installed." + note);
+            else SetStatus("Partially patched", Color.DarkOrange, patched + " of " + required.Count + " core fixes installed." + note);
             UpdateLabels();
             UpdateButtons();
             ShowFixInfo();
@@ -280,7 +280,7 @@ namespace PAPatcher
             lblStatus.Text = headline; lblStatus.ForeColor = color; lblDetail.Text = detail;
         }
 
-        /// <summary>" 2 of 3 enhancement(s) are on." for a category that has installed items, else "".</summary>
+        /// <summary>" 2 of 3 additional fix(es) are on." for a category that has installed items, else "".</summary>
         string CountNote(Category kind, string noun)
         {
             var members = fixes.Where(f => f.Kind == kind).ToList();
@@ -297,15 +297,15 @@ namespace PAPatcher
                 lblFixInfo.Text = node != null && node.Tag is Category ? GroupInfo((Category)node.Tag) : "";
                 return;
             }
-            lblFixInfo.Text = ItemPrefix(f.Kind) + f.description;
+            lblFixInfo.Text = (f.experimental ? "Experimental modding extension, may change between releases: " : ItemPrefix(f.Kind)) + f.description;
         }
 
         static string GroupInfo(Category c)
         {
             switch (c)
             {
-                case Category.Enhancement: return "Enhancements add behaviour the game was missing rather than fixing a bug. They are on by default; untick any you don't want.";
-                case Category.ModApi: return "Modding extensions give mods more to work with. They are on by default; untick any you don't want.";
+                case Category.Additional: return "Additional fixes add what the game never finished or what players expect it to do. They are on by default; untick any you don't want.";
+                case Category.ModApi: return "Modding extensions give mod authors things they could not do before. They do nothing unless a mod uses them. Stable ones are on by default; experimental ones are off and may change between releases.";
                 case Category.Tweak: return "Optional tweaks change game balance rather than fixing a bug, so they are off unless you turn them on.";
                 default: return "Fixes for bugs in the game's code. Leave them all on unless you have a reason not to.";
             }
@@ -315,7 +315,7 @@ namespace PAPatcher
         {
             switch (c)
             {
-                case Category.Enhancement: return "Enhancement: ";
+                case Category.Additional: return "Additional fix: ";
                 case Category.ModApi: return "Modding extension: ";
                 case Category.Tweak: return "Optional tweak, changes game balance: ";
                 default: return "";

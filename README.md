@@ -43,8 +43,8 @@ SHA256 of the download so you can check it.
 If Steam ever runs "Verify integrity of game files", it restores the original
 executable. Just run the patcher again and click Apply.
 
-The patcher groups everything into **Bug fixes**, **Enhancements** and
-**Optional tweaks**. Fixes and enhancements are on by default, tweaks are off.
+The patcher groups everything into **Core fixes**, **Additional fixes** and
+**Optional tweaks**. Fixes are on by default, tweaks are off.
 Each group is ticked or unticked as a whole, or expanded to pick individual
 items, and each line says whether it is currently installed in your game. Your choices
 are remembered for next time, and **Apply selection** makes the game match them:
@@ -53,7 +53,7 @@ it installs what you ticked and removes what you unticked.
 **Revert to original** restores the unpatched game at any time, whatever is
 ticked.
 
-## Fixes included
+## Core fixes
 
 Each entry links to a short page on the fix and whether it has been tested in
 game.
@@ -107,9 +107,11 @@ game.
   prisoner access revoked is the only way out, released prisoners call a guard to
   let them out instead of standing still forever.
   [Details](docs/keycard-door-released-prisoners.md)
-- **Alert icons with custom sprite-sheet mods.** Alert icons and the bakery oven
-  glow draw correctly with mods that bring their own `sprites.png`. Disable the
-  Alert Icons Partial Fix mod if you use it. [Details](docs/alert-icons.md)
+- **Alert icons with custom sprite-sheet mods.** Alert icons, the bakery oven
+  glow, the bounty hunter trike's rider and object pictures in the staff report
+  and other panels draw correctly with mods that bring their own `sprites.png`.
+  Disable the Alert Icons Partial Fix mod if you use it.
+  [Details](docs/alert-icons.md)
 - **Gang contraband hand-off (Gangs DLC).** Hand-offs no longer leave gang
   members pacing forever or crooked guards doing nothing.
   [Details](docs/gang-handoff.md)
@@ -117,13 +119,6 @@ game.
   instead of once every two seconds, and other guns wait 0.7 s between shots
   instead of two seconds, plus the weapon's `RechargeTime` from `materials.txt`.
   [Details](docs/weapon-firerate.md)
-
-## Enhancements
-
-Changes the game was missing rather than bug fixes. They are **on by default**;
-untick any you don't want in the patcher, or pass `--fixes-only` on the command
-line to leave all of them out.
-
 - **Disarmed armed guards can fight.** An armed guard who loses its shotgun
   fights with its fists while Freefire is on or it is badly hurt, instead of not
   fighting back, and its fists show like a prisoner's in a brawl.
@@ -131,6 +126,25 @@ line to leave all of them out.
 - **Hold to fire automatic weapons.** Holding the mouse button keeps assault
   rifles and SMGs firing in Warden Mode and Escape Mode, at zombies too.
   [Details](docs/full-auto-hold.md)
+
+## Additional fixes
+
+Fixes for things the game never finished, or that players expect it to do. They
+are **on by default**; untick any you don't want in the patcher, or pass
+`--fixes-only` on the command line to leave all of them out. None at the moment:
+disarmed armed guards and hold to fire are core fixes now.
+
+## Modding extensions
+
+New things for mod authors to use from Lua; they do nothing unless a mod uses
+them. Experimental ones are **off by default** and may change between releases:
+tick them in the patcher, or pass `--experimental` on the command line. Mods can
+check what is installed with `TyrsPatch.Has("<id>")`.
+[Details](docs/modding-api.md)
+
+- **Status effects on staff and other characters** (experimental). Every
+  character gets the `StatusEffects` table that only prisoners had, so a mod
+  can taze or sedate a guard. [Details](docs/status-effects-entities.md)
 
 ## Optional tweaks
 
@@ -182,9 +196,11 @@ what happens instead.
   being rejected as an unknown build.
 - A patch marked `withdrawn` is never offered or installed, and the patcher
   removes it from any game file an earlier release left it in.
-- `TyrsPAPatch.exe` also accepts `--status`, `--apply` (installs the fixes and
-  enhancements; add `--fixes-only` to leave the enhancements out, `--tweaks` to
-  add the optional tweaks) and `--revert`. It is a windowed program, so a console does
+- A patch marked `experimental` is a modding extension that is off by default.
+- `TyrsPAPatch.exe` also accepts `--status`, `--apply` (installs the core and
+  additional fixes and stable modding extensions; add `--fixes-only` to leave all
+  but the core fixes out, `--tweaks` to add the optional tweaks, `--experimental` to add
+  the experimental modding extensions) and `--revert`. It is a windowed program, so a console does
   not wait for it; scripts should use `Start-Process -Wait`.
 - Patches that need new code use a small section appended to the executable;
   see `docs/code-section.md`.
