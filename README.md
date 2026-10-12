@@ -58,6 +58,10 @@ ticked.
 Each entry links to a short page on the fix and whether it has been tested in
 game.
 
+- **Shops without prisoners inside.** The shop front can face a hallway and
+  prisoners buy from it without being allowed into the shop, so who works in a
+  shop and who shops there can be kept apart.
+  [Details](docs/shop-front.md)
 - **Prisoners near gunfire surrender.** A guard's gunshot makes up to ten
   prisoners within four squares react as if they were the target.
   [Details](docs/gunfire-surrender.md)
@@ -156,14 +160,6 @@ Not fixed yet. These happen with or without the patch.
 - **Injured prisoners wander without a cell when there is no doctor.** A prisoner
   who needs healing, with no doctor to treat them, can end up without a cell and
   wander the prison, even at night.
-
-## Withdrawn
-
-- **Shops without prisoners inside** (test builds 1.7.0 to 1.14.0). The problem
-  it was meant to fix could not be reproduced in the final game: prisoners buy
-  at the shop front even when the shop is off limits to them or has no door.
-  The patcher takes it out of a game it was installed in. A save that shows a
-  shop front refusing customers would bring it back. [Details](docs/shop-front.md)
 
 ## Unsupported build
 

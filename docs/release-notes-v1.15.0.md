@@ -3,12 +3,12 @@ Test build. Download the new `TyrsPAPatch.exe`, run it, click **Apply selection*
 ## New in 1.15.0
 
 - **Disarmed armed guards show the game's own fists.** A disarmed armed guard now raises its fists and jabs like a prisoner in a brawl. The 1.13.0 and 1.14.0 test builds drew fists of their own instead, which showed as a stray white hand and hid the game's fists.
-- **Shops without prisoners inside is withdrawn.** The problem could not be reproduced in the final game: prisoners buy at the shop front even when the shop is off limits to them or has no door. Applying 1.15.0 takes it out of your game file. If you have a save where a shop front refuses customers, please open an issue.
+- **Shops without prisoners inside is now a bug fix.** It was confirmed on a player's save, where the shop only worked with it. It was listed as an enhancement before. Prisoners buy from the other side of the shop front, so the shop can face a hallway and stay off limits to customers.
 
 ## Tested in game for this build
 
 - **Disarmed armed guards:** a disarmed guard with its weapon drawn fights with the game's fists, and they show. A game patched with 1.14.0 upgrades to the same file as a fresh install and reverts to the original.
-- **Shop front:** on two test saves (the shop zoned Staff only, and a shop with its only door walled up), prisoners bought at the shop front without the patch.
+- **Shop front:** on a player's save, where the shop only worked with the fix.
 
 Checked in earlier test builds: visitor tables (issue #4), intake with route-restricted categories, prisoners near gunfire surrender, shotgun fire rate, staff death morale penalty fades (tweak).
 
@@ -78,8 +78,8 @@ Each fix has a short page under `docs/`.
 
 ## Checksums (SHA-256)
 
-- `TyrsPAPatch.exe`: `c53237ced18aa0d8921a5a80dff5b6c45f203c9f6dc35406231d211eb3cb7e1b`
+- `TyrsPAPatch.exe`: `PENDING`
 - Original `Prison Architect64.exe` this patch targets: `cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9`
-- `Prison Architect64.exe` with the sixteen fixes only: `4914c8a1ed2879bf175b47774f51cb5e9b557338935ce120edf4e5bb149b0f3c`
-- `Prison Architect64.exe` with the fixes and the two enhancements (the default): `186f6c89754d3c0a6c8db320361965531fddae56c16e8553bee92672fb03d6b9`
-- `Prison Architect64.exe` with everything, including all five tweaks: `3d7c98d7b5b6cc97a05ca75250b5c76e5410c41e39cb57cc7ca264ae5fde260e`
+- `Prison Architect64.exe` with the seventeen fixes only: `PENDING`
+- `Prison Architect64.exe` with the fixes and the two enhancements (the default): `PENDING`
+- `Prison Architect64.exe` with everything, including all five tweaks: `PENDING`
