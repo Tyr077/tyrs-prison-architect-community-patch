@@ -3,6 +3,7 @@
     "name":  "Shops usable from outside the shop",
     "version":  "1.0.0",
     "category":  "enhancement",
+    "withdrawn":  true,
     "requires":  [
                      "code-section"
                  ],

@@ -1,15 +1,15 @@
 {
     "id":  "disarmed-armed-guards",
     "name":  "Disarmed armed guards can fight",
-    "version":  "1.1.0",
+    "version":  "1.3.0",
     "category":  "enhancement",
     "requires":  [
                      "code-section"
                  ],
-    "description":  "Armed guards who lose their shotgun fight with their fists while Freefire is on or when badly hurt, instead of not fighting back. Their fists show while they have no weapon.",
+    "description":  "Armed guards who lose their shotgun fight with their fists while Freefire is on or when badly hurt, instead of not fighting back.",
     "game_build":  "Prison Architect 64-bit, Sunset Update (final)",
     "sha256_original":  "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
-    "sha256_patched":  "55ca51070a8ba232fd0134e654369ac875b04d373a61e388c06d7e241f7ebeca",
+    "sha256_patched":  "47d272baa25f97a64b0861be5ce86ced0cac99cd782c544c14fa3aec0466032c",
     "edits":  [
                   {
                       "va":  "0x140E897D0",
@@ -29,20 +29,84 @@
                       "va":  "0x140E89AB0",
                       "offset":  14427824,
                       "expect":  "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
-                      "replace":  "837E406B752783BEF802000000751E83BE000300000075154584E4751041BF0100000041BC01000000448965C8448B9EE8090000C3",
-                      "note":  "Entity draw: an armed guard with nothing in hand is drawn holding Fists",
+                      "replace":  "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+                      "note":  "Entity draw: an armed guard with nothing in hand is drawn holding Fists (1.1.0-1.2.0; given back in 1.3.0)",
                       "superseded":  [
-                                         "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
+                                         "837E406B752783BEF802000000751E83BE000300000075154584E4751041BF0100000041BC01000000448965C8448B9EE8090000C3",
+                                         "837E406B752783BEF802000000751E83BE000300000075154584E4751041BF0100000041BC01000000448965C8448B9EE8090000C3",
+                                         ""
                                      ]
                   },
                   {
                       "va":  "0x140421DE7",
                       "offset":  4329959,
                       "expect":  "448B9EE8090000",
-                      "replace":  "E8C47CA6009090",
-                      "note":  "Entity draw: held-item choice routed through the stub",
+                      "replace":  "448B9EE8090000",
+                      "note":  "Entity draw: held-item choice routed through the stub (1.1.0-1.2.0; given back in 1.3.0)",
                       "superseded":  [
-                                         "448B9EE8090000"
+                                         "E8C47CA6009090",
+                                         "E8C47CA6009090",
+                                         ""
+                                     ]
+                  },
+                  {
+                      "va":  "0x140E89B20",
+                      "offset":  14427936,
+                      "expect":  "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+                      "replace":  "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+                      "note":  "Entity draw: no white Hand item sprite for an empty-handed armed guard (1.2.0; given back in 1.3.0)",
+                      "superseded":  [
+                                         "837E406B75194183FF01751383BEF802000000750A83BE00030000007501C3E9AC8C2BFF",
+                                         "",
+                                         ""
+                                     ]
+                  },
+                  {
+                      "va":  "0x14042545D",
+                      "offset":  4343901,
+                      "expect":  "E88ED3D1FF",
+                      "replace":  "E88ED3D1FF",
+                      "note":  "Entity draw: held-item sprite draw routed through the stub (1.2.0; given back in 1.3.0)",
+                      "superseded":  [
+                                         "E8BE46A600",
+                                         "",
+                                         ""
+                                     ]
+                  },
+                  {
+                      "va":  "0x140E89B50",
+                      "offset":  14427984,
+                      "expect":  "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+                      "replace":  "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+                      "note":  "Entity draw: an empty-handed armed guard holds both fists in front, one punching (1.2.0; given back in 1.3.0)",
+                      "superseded":  [
+                                         "F3440F102D273EC9FF837E406B0F85180100004183FF010F850E01000083BEF8020000000F850101000083BE00030000000F85F4000000807DC8000F84EA00000050488B0567DDECFF488B8098010000F20F108080000000F20F5C861003000058F30F100DD7000000660F2F05BF0000007612660F2F05BD0000007308F30F580DC3000000F30F10442478F30F5905B9000000F30F1075CCF30F5CF0F30F1044247CF30F5905A2000000F30F107DC4F30F5CF8F30F104654F30F590580000000F30F58C6F3440F107E58F3440F593D71000000F3410F58C7F30F114508F30F104654F30F59C1F30F58C6F3410F5CC7440F28F8F30F107658F30F593540000000F30F58F7F30F104654F30F590533000000F30F5CF0F30F58F8F30F104658F30F59C1F30F58F8F30F115518C3CCCCCCCC9A9999999999C93F9A9999999999D93FCDCC4C3E8FC2F53D0000803ECDCC4C3E",
+                                         "",
+                                         ""
+                                     ]
+                  },
+                  {
+                      "va":  "0x1404259D8",
+                      "offset":  4345304,
+                      "expect":  "F3440F102D9F7F6F00",
+                      "replace":  "F3440F102D9F7F6F00",
+                      "note":  "Entity draw: hand positions routed through the stub (1.2.0; given back in 1.3.0)",
+                      "superseded":  [
+                                         "E87341A60090909090",
+                                         "",
+                                         ""
+                                     ]
+                  },
+                  {
+                      "va":  "0x1404889C4",
+                      "offset":  4750788,
+                      "expect":  "8B414083F86B740E83F869751A83B97C0B00000375110F57C00F2F81FC0B00000F92C084C07510",
+                      "replace":  "8379406B740F83794069751B83B97C0B000003751283B9F802000000740983B9FC0B0000007F10",
+                      "note":  "ArmedGuard fights-with-fists (vtable slot 63): a guard carrying nothing counts as not drawn, so its fists show",
+                      "superseded":  [
+                                         "8B414083F86B740E83F869751A83B97C0B00000375110F57C00F2F81FC0B00000F92C084C07510",
+                                         "8B414083F86B740E83F869751A83B97C0B00000375110F57C00F2F81FC0B00000F92C084C07510",
+                                         "8B414083F86B740E83F869751A83B97C0B00000375110F57C00F2F81FC0B00000F92C084C07510"
                                      ]
                   }
               ]

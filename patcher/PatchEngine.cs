@@ -47,6 +47,10 @@ namespace PAPatcher
         [DataMember] public string category;
         // Hidden base patch (e.g. the appended code section): never listed, applied when a patch requires it.
         [DataMember] public bool hidden;
+        // Withdrawn patch (e.g. a fix that could not be reproduced): never listed or applied, and taken out of
+        // any file an earlier release left it in, whatever the patcher is asked to do. Its edits stay so that
+        // those files are still recognised; dropping the flag brings the patch back.
+        [DataMember] public bool withdrawn;
         // Ids of patches that must be applied first (their edits may live inside a base patch's section).
         [DataMember] public List<string> requires;
         public bool HasRequires => requires != null && requires.Count > 0;
@@ -287,6 +291,13 @@ namespace PAPatcher
                 result.Add(p);
             }
             return result;
+        }
+
+        /// <summary>Revert withdrawn patches still present (current or older layout) in the file.</summary>
+        public static byte[] RevertWithdrawn(byte[] file, IList<PatchDoc> all)
+        {
+            var present = all.Where(d => d.withdrawn && GetState(file, d).IsApplied()).ToList();
+            return present.Count > 0 ? WithEdits(file, present, apply: false) : file;
         }
 
         /// <summary>Revert hidden base patches that no applied patch requires any more.</summary>

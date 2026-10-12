@@ -41,7 +41,7 @@ namespace PAPatcher
                 stdout.WriteLine("Exe:    " + exe);
                 stdout.WriteLine("SHA256: " + PatchEngine.Sha256(file));
                 stdout.WriteLine("Build:  " + (PatchEngine.IsSupportedBuild(file, fixes) ? "supported" : "UNKNOWN - not the build these patches were made for"));
-                foreach (var f in fixes) stdout.WriteLine("  [" + PatchEngine.GetState(file, f) + "] " + (f.hidden ? "(base) " : "") + f.ListLabel);
+                foreach (var f in fixes) stdout.WriteLine("  [" + PatchEngine.GetState(file, f) + "] " + (f.hidden ? "(base) " : "") + (f.withdrawn ? "(withdrawn) " : "") + f.ListLabel);
 
                 if (cmd == "--status") return 0;
                 if (cmd != "--apply" && cmd != "--revert") { stdout.WriteLine("Usage: TyrsPAPatch.exe --status|--apply [--fixes-only] [--tweaks]|--revert [path to Prison Architect64.exe]"); return 1; }
@@ -49,11 +49,11 @@ namespace PAPatcher
                 if (!PatchEngine.IsSupportedBuild(file, fixes)) { stdout.WriteLine("Refusing to modify an unsupported build."); return 4; }
 
                 bool apply = cmd == "--apply";
-                var set = fixes.Where(f => !f.hidden).ToList();
+                var set = fixes.Where(f => !f.hidden && !f.withdrawn).ToList();
                 if (apply) set = set.Where(f => f.Kind == Category.Tweak ? withTweaks : !fixesOnly || f.Kind == Category.Fix).ToList();
                 if (apply) set = PatchEngine.ExpandRequires(fixes, set);
-                var result = PatchEngine.WithEdits(file, set, apply);
-                if (!apply) result = PatchEngine.RevertOrphanedBases(result, fixes);
+                var result = PatchEngine.WithEdits(PatchEngine.RevertWithdrawn(file, fixes), set, apply);
+                result = PatchEngine.RevertOrphanedBases(result, fixes);
                 if (result.SequenceEqual(file)) { stdout.WriteLine("Nothing to do: already " + (apply ? "patched." : "original.")); return 0; }
                 if (apply) PatchEngine.EnsureBackup(exe, file);
                 PatchEngine.WriteAtomically(exe, result);

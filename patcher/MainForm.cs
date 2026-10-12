@@ -85,7 +85,7 @@ namespace PAPatcher
 
             Load += (s, e) =>
             {
-                try { all = PatchEngine.LoadEmbedded(); fixes = all.Where(f => !f.hidden).ToList(); }
+                try { all = PatchEngine.LoadEmbedded(); fixes = all.Where(f => !f.hidden && !f.withdrawn).ToList(); }
                 catch (Exception ex) { MessageBox.Show(this, "The embedded patch data is corrupt:\n" + ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error); Close(); return; }
                 fixes = fixes.OrderBy(f => f.Kind).ThenBy(f => f.name, StringComparer.CurrentCultureIgnoreCase).ToList();
                 settings = Settings.Load();
@@ -326,8 +326,10 @@ namespace PAPatcher
 
         IEnumerable<PatchDoc> Selected() => fixes.Where(f => chosen.Contains(f.id));
         List<PatchDoc> ToInstall() => fileBytes == null ? new List<PatchDoc>() : Selected().Where(f => PatchEngine.GetState(fileBytes, f) != FixState.Patched).ToList();
-        List<PatchDoc> ToRemove() => fileBytes == null ? new List<PatchDoc>() : fixes.Where(f => !chosen.Contains(f.id) && PatchEngine.GetState(fileBytes, f).IsApplied()).ToList();
-        List<PatchDoc> Installed() => fileBytes == null ? new List<PatchDoc>() : fixes.Where(f => PatchEngine.GetState(fileBytes, f).IsApplied()).ToList();
+        // A withdrawn patch still in the file counts as something to remove (and as installed, for Revert).
+        List<PatchDoc> LeftWithdrawn() => all.Where(f => f.withdrawn && PatchEngine.GetState(fileBytes, f).IsApplied()).ToList();
+        List<PatchDoc> ToRemove() => fileBytes == null ? new List<PatchDoc>() : fixes.Where(f => !chosen.Contains(f.id) && PatchEngine.GetState(fileBytes, f).IsApplied()).Concat(LeftWithdrawn()).ToList();
+        List<PatchDoc> Installed() => fileBytes == null ? new List<PatchDoc>() : fixes.Where(f => PatchEngine.GetState(fileBytes, f).IsApplied()).Concat(LeftWithdrawn()).ToList();
 
         void UpdateButtons()
         {
@@ -361,19 +363,21 @@ namespace PAPatcher
                 var current = File.ReadAllBytes(exePath);
                 if (!PatchEngine.IsSupportedBuild(current, all)) throw new InvalidOperationException("The game file changed since it was checked and is no longer a supported build.");
 
+                // A withdrawn patch left by an earlier release comes out first, whatever was asked.
+                var start = PatchEngine.RevertWithdrawn(current, all);
                 byte[] result;
                 if (apply)
                 {
                     // Make the file match the ticked boxes: take out what was unticked, put in what was ticked.
-                    var remove = fixes.Where(f => !chosen.Contains(f.id) && PatchEngine.GetState(current, f).IsApplied()).ToList();
-                    result = remove.Count > 0 ? PatchEngine.WithEdits(current, remove, apply: false) : current;
+                    var remove = fixes.Where(f => !chosen.Contains(f.id) && PatchEngine.GetState(start, f).IsApplied()).ToList();
+                    result = remove.Count > 0 ? PatchEngine.WithEdits(start, remove, apply: false) : start;
                     var install = PatchEngine.ExpandRequires(all, Selected());
                     if (install.Count > 0) result = PatchEngine.WithEdits(result, install, apply: true);
                 }
                 else
                 {
                     // "Revert to original" means the whole file, not just the ticked items.
-                    result = PatchEngine.WithEdits(current, fixes.Where(f => PatchEngine.GetState(current, f).IsApplied()).ToList(), apply: false);
+                    result = PatchEngine.WithEdits(start, fixes.Where(f => PatchEngine.GetState(start, f).IsApplied()).ToList(), apply: false);
                 }
                 result = PatchEngine.RevertOrphanedBases(result, all);
                 if (apply) PatchEngine.EnsureBackup(exePath, current);

@@ -120,13 +120,9 @@ Changes the game was missing rather than bug fixes. They are **on by default**;
 untick any you don't want in the patcher, or pass `--fixes-only` on the command
 line to leave all of them out.
 
-- **Shops without prisoners inside.** The shop front can face a hallway and
-  prisoners buy from it without being allowed into the shop, so who works in a
-  shop and who shops there can be kept apart.
-  [Details](docs/shop-front.md)
 - **Disarmed armed guards can fight.** An armed guard who loses its shotgun
   fights with its fists while Freefire is on or it is badly hurt, instead of not
-  fighting back. Its fists show while it has no weapon (untested).
+  fighting back, and its fists show like a prisoner's in a brawl.
   [Details](docs/disarmed-armed-guards.md)
 - **Hold to fire automatic weapons.** Holding the mouse button keeps assault
   rifles and SMGs firing in Warden Mode and Escape Mode, at zombies too.
@@ -161,6 +157,14 @@ Not fixed yet. These happen with or without the patch.
   who needs healing, with no doctor to treat them, can end up without a cell and
   wander the prison, even at night.
 
+## Withdrawn
+
+- **Shops without prisoners inside** (test builds 1.7.0 to 1.14.0). The problem
+  it was meant to fix could not be reproduced in the final game: prisoners buy
+  at the shop front even when the shop is off limits to them or has no door.
+  The patcher takes it out of a game it was installed in. A save that shows a
+  shop front refusing customers would bring it back. [Details](docs/shop-front.md)
+
 ## Unsupported build
 
 The patcher checks the game file before touching anything. If it says
@@ -180,6 +184,8 @@ what happens instead.
   may also carry `superseded`, the bytes earlier releases wrote at that site, so
   a game file patched by an older version is recognised and rewritten instead of
   being rejected as an unknown build.
+- A patch marked `withdrawn` is never offered or installed, and the patcher
+  removes it from any game file an earlier release left it in.
 - `TyrsPAPatch.exe` also accepts `--status`, `--apply` (installs the fixes and
   enhancements; add `--fixes-only` to leave the enhancements out, `--tweaks` to
   add the optional tweaks) and `--revert`. It is a windowed program, so a console does
