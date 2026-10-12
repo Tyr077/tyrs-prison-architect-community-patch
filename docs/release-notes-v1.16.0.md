@@ -80,7 +80,7 @@ Each fix has a short page under `docs/`; the modding extensions are described in
 
 ## Checksums (SHA-256)
 
-- `TyrsPAPatch.exe`: `b8dc5b4ad04cce7f13ae5bfda2312c779aab71ebe30e9d1dea2affb8671be776`
+- `TyrsPAPatch.exe`: `66c6c37e942b5f1c76d8a51cc91fcb87fc7bf0fed71e6c66fdd65ae966cb170f`
 - Original `Prison Architect64.exe` this patch targets: `cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9`
 - `Prison Architect64.exe` with the nineteen core fixes (the default, and `--fixes-only`): `804a367be6180574f97d93f41bc6e6515d517c1ea38875dcf58a8c8f4f431bc5`
 - `Prison Architect64.exe` with the core fixes and all five tweaks: `bb66b4e691a157db5307cdef6a055939fc151f624220366cb62969ea8735a242`
