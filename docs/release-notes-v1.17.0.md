@@ -80,7 +80,7 @@ Each fix has a short page under `docs/`; mod authors start at `docs/modding-api.
 
 ## Checksums (SHA-256)
 
-- `TyrsPAPatch.exe`: `PATCHER_SHA256`
+- `TyrsPAPatch.exe`: `4e195c1e4a804fe21c0ace3170ab169a46a54ff6a040f0212b2c90749fd8e7ed`
 - Original `Prison Architect64.exe` this patch targets: `cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9`
 - `Prison Architect64.exe` with the twenty core fixes (the default, and `--fixes-only`): `a12c4193ad8ac710e36f373f02bd787e79cee2789cfdce8e5be272533a2b2518`
 - `Prison Architect64.exe` with the core fixes and all five tweaks: `16c69c692f9ef799098e58b9564e485836e630ea671c8c4d90d86b340f34bef6`
