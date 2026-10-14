@@ -88,6 +88,9 @@ namespace PAPatcher
     {
         public static readonly Category[] All = { Category.Fix, Category.Additional, Category.ModApi, Category.Tweak };
 
+        /// <summary>A group shown as one box with no items under it: players turn all modding extensions on or off together.</summary>
+        public static bool IsSwitch(Category c) => c == Category.ModApi;
+
         public static string Title(Category c)
         {
             switch (c)

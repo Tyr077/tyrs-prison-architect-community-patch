@@ -137,10 +137,11 @@ disarmed armed guards and hold to fire are core fixes now.
 ## Modding extensions
 
 New things for mod authors to use from Lua; they do nothing unless a mod uses
-them. Experimental ones are **off by default** and may change between releases:
-tick them in the patcher, or pass `--experimental` on the command line. Mods can
-check what is installed with `TyrsPatch.Has("<id>")`.
-[Details](docs/modding-api.md)
+them. They are experimental for now: **off by default**, and they may change
+between releases. Turn them all on with the **Modding extensions** box in the
+patcher, or pass `--experimental` on the command line.
+
+**Mod authors:** [how to detect and use them](docs/modding-api.md).
 
 - **Status effects on staff and other characters** (experimental). Every
   character gets the `StatusEffects` table that only prisoners had, so a mod

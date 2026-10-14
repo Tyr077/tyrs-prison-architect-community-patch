@@ -111,7 +111,8 @@ namespace PAPatcher
         void AddGroup(Category kind, List<PatchDoc> members)
         {
             if (members.Count == 0) return;
-            var group = new TreeNode(Categories.Title(kind)) { Tag = kind, NodeFont = new Font(tree.Font, FontStyle.Bold) };
+            var group = new TreeNode(SwitchTitle(kind)) { Tag = kind, NodeFont = new Font(tree.Font, FontStyle.Bold) };
+            if (Categories.IsSwitch(kind)) { tree.Nodes.Add(group); return; }
             foreach (var f in members)
             {
                 var n = new TreeNode(f.DisplayName) { Tag = f };
@@ -128,6 +129,34 @@ namespace PAPatcher
             settings.SetCollapsed(Categories.Key((Category)node.Tag), !node.IsExpanded);
         }
 
+        List<PatchDoc> Members(Category kind) => fixes.Where(f => f.Kind == kind).ToList();
+
+        /// <summary>"Modding extensions (experimental)" while any extension is experimental; other groups keep their title.</summary>
+        string SwitchTitle(Category kind) =>
+            Categories.Title(kind) + (Categories.IsSwitch(kind) && Members(kind).Any(f => f.experimental) ? " (experimental)" : "");
+
+        /// <summary>
+        /// One choice for a whole switch group: any remembered choice for its members (an extension added by a later
+        /// release follows the others), else on if any member is in the game file, else on only if all are on by default.
+        /// </summary>
+        bool SwitchChoice(Category kind)
+        {
+            var members = Members(kind);
+            var saved = members.Select(f => settings.Choice(f.id)).Where(v => v.HasValue).ToList();
+            if (saved.Count > 0) return saved.Any(v => v.Value);
+            return (fileBytes != null && members.Any(f => PatchEngine.GetState(fileBytes, f).IsApplied())) || members.All(f => f.OnByDefault);
+        }
+
+        /// <summary>A switch group's state: installed when every member is, older version when only some are or any is outdated.</summary>
+        FixState SwitchState(Category kind)
+        {
+            var states = Members(kind).Select(f => PatchEngine.GetState(fileBytes, f)).ToList();
+            if (states.Any(s => s == FixState.Mixed || s == FixState.NotApplicable)) return FixState.Mixed;
+            if (states.All(s => s == FixState.Patched)) return FixState.Patched;
+            if (states.All(s => s == FixState.Unpatched)) return FixState.Unpatched;
+            return FixState.Outdated;
+        }
+
         /// <summary>Ticking a group ticks everything in it; ticking a member re-derives the group box.</summary>
         void OnChecked(TreeNode node)
         {
@@ -137,11 +166,8 @@ namespace PAPatcher
             {
                 if (node.Tag is Category)
                 {
-                    foreach (TreeNode child in node.Nodes)
-                    {
-                        child.Checked = node.Checked;
-                        SetChoice((PatchDoc)child.Tag, node.Checked);
-                    }
+                    foreach (TreeNode child in node.Nodes) child.Checked = node.Checked;
+                    foreach (var f in Members((Category)node.Tag)) SetChoice(f, node.Checked);
                 }
                 else
                 {
@@ -162,8 +188,9 @@ namespace PAPatcher
         }
 
         /// <summary>
-        /// Fill in the tick boxes: a remembered choice wins, otherwise everything but tweaks is on and a tweak is on only
-        /// when it is already in the game file, so someone upgrading from an older release keeps what they had.
+        /// Fill in the tick boxes: a remembered choice wins, otherwise everything but tweaks and experimental extensions
+        /// is on, and those are on only when already in the game file, so someone upgrading from an older release keeps
+        /// what they had. A switch group's members all take the group's one choice.
         /// </summary>
         void ResolveChoices()
         {
@@ -173,13 +200,19 @@ namespace PAPatcher
                 foreach (var f in fixes)
                 {
                     var saved = settings.Choice(f.id);
-                    bool value = saved ?? (f.OnByDefault || (fileBytes != null && PatchEngine.GetState(fileBytes, f).IsApplied()));
+                    bool value = Categories.IsSwitch(f.Kind) ? SwitchChoice(f.Kind)
+                        : saved ?? (f.OnByDefault || (fileBytes != null && PatchEngine.GetState(fileBytes, f).IsApplied()));
                     if (value) chosen.Add(f.id); else chosen.Remove(f.id);
                     TreeNode n;
                     if (nodeOf.TryGetValue(f.id, out n)) n.Checked = value;
                 }
                 foreach (TreeNode group in tree.Nodes)
-                    group.Checked = group.Nodes.Count > 0 && group.Nodes.Cast<TreeNode>().All(c => c.Checked);
+                {
+                    var kind = (Category)group.Tag;
+                    group.Checked = Categories.IsSwitch(kind)
+                        ? Members(kind).All(f => chosen.Contains(f.id))
+                        : group.Nodes.Count > 0 && group.Nodes.Cast<TreeNode>().All(c => c.Checked);
+                }
             }
             finally { loadingTree = false; }
         }
@@ -189,6 +222,14 @@ namespace PAPatcher
             tree.BeginUpdate();
             foreach (TreeNode group in tree.Nodes)
             {
+                var kind = (Category)group.Tag;
+                if (Categories.IsSwitch(kind))
+                {
+                    var st = fileBytes == null ? FixState.NotApplicable : SwitchState(kind);
+                    group.Text = SwitchTitle(kind) + (fileBytes == null ? "" : "  —  " + StateWord(st));
+                    group.ForeColor = fileBytes == null ? SystemColors.ControlText : StateColour(st);
+                    continue;
+                }
                 int applied = 0;
                 foreach (TreeNode n in group.Nodes)
                 {
@@ -283,6 +324,12 @@ namespace PAPatcher
         /// <summary>" 2 of 3 additional fix(es) are on." for a category that has installed items, else "".</summary>
         string CountNote(Category kind, string noun)
         {
+            if (Categories.IsSwitch(kind) && Members(kind).Count > 0)
+            {
+                var st = SwitchState(kind);
+                return st == FixState.Patched ? " " + Categories.Title(kind) + " are on."
+                    : st == FixState.Outdated ? " " + Categories.Title(kind) + " are on (older version)." : "";
+            }
             var members = fixes.Where(f => f.Kind == kind).ToList();
             int on = members.Count(f => PatchEngine.GetState(fileBytes, f).IsApplied());
             return on == 0 ? "" : " " + on + " of " + members.Count + " " + noun + " are on.";
@@ -294,7 +341,7 @@ namespace PAPatcher
             var f = node == null ? null : node.Tag as PatchDoc;
             if (f == null)
             {
-                lblFixInfo.Text = node != null && node.Tag is Category ? GroupInfo((Category)node.Tag) : "";
+                lblFixInfo.Text = node != null && node.Tag is Category ? GroupInfo((Category)node.Tag) + SwitchInfo((Category)node.Tag) : "";
                 return;
             }
             lblFixInfo.Text = (f.experimental ? "Experimental modding extension, may change between releases: " : ItemPrefix(f.Kind)) + f.description;
@@ -305,10 +352,19 @@ namespace PAPatcher
             switch (c)
             {
                 case Category.Additional: return "Additional fixes add what the game never finished or what players expect it to do. They are on by default; untick any you don't want.";
-                case Category.ModApi: return "Modding extensions give mod authors things they could not do before. They do nothing unless a mod uses them. Stable ones are on by default; experimental ones are off and may change between releases.";
+                case Category.ModApi: return "Modding extensions give mod authors things they could not do before. They do nothing unless a mod uses them, so turn them on if a mod you use asks for them.";
                 case Category.Tweak: return "Optional tweaks change game balance rather than fixing a bug, so they are off unless you turn them on.";
                 default: return "Fixes for bugs in the game's code. Leave them all on unless you have a reason not to.";
             }
+        }
+
+        /// <summary>For a switch group: whether it is experimental and what it includes, since its items are not listed.</summary>
+        string SwitchInfo(Category c)
+        {
+            if (!Categories.IsSwitch(c)) return "";
+            var members = Members(c);
+            return (members.Any(f => f.experimental) ? " They are experimental for now: off by default, and they may change between releases." : "") +
+                " Includes: " + string.Join("; ", members.Select(f => f.DisplayName)) + ".";
         }
 
         static string ItemPrefix(Category c)
