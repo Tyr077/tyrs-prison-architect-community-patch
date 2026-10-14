@@ -1,0 +1,36 @@
+{
+    "id": "visitor-no-family",
+    "name": "Visitors wasted on prisoners with no family",
+    "version": "1.0.0",
+    "requires": [
+        "code-section",
+        "modapi-core"
+    ],
+    "description": "A visitor is no longer matched with a prisoner who has no family, who can never be visited, so waiting visitors are not used up for nothing.",
+    "game_build": "Prison Architect 64-bit, Sunset Update (final)",
+    "sha256_original": "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
+    "sha256_patched": "a2fcea859c43656ebdf691327d2983f091b99b7262c1c51ef9237174a00905f6",
+    "edits": [
+        {
+            "va": "0x140E89D10",
+            "offset": 14428432,
+            "expect": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+            "replace": "41837E406D750F4183BE940D0000007405E9C84A8DFFE9E24C8DFF",
+            "note": "visitor pairing: a prisoner with no family is not matched with a visitor"
+        },
+        {
+            "va": "0x14075E7E3",
+            "offset": 7724003,
+            "expect": "41837E406D0F851F020000",
+            "replace": "E928B57200909090909090",
+            "note": "FUN_14075E5A0 prisoner test routed through the family stub"
+        },
+        {
+            "va": "0x140E8B3B0",
+            "offset": 14434224,
+            "expect": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+            "replace": "7C76697369746F722D6E6F2D66616D696C793D6669787C",
+            "note": "TyrsPatch registry slot 17: |visitor-no-family=fix|"
+        }
+    ]
+}

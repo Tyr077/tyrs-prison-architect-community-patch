@@ -1,28 +1,39 @@
 {
-    "id":  "exercise-grading",
-    "name":  "Exercise on equipment counts for grading",
-    "version":  "1.0.0",
-    "requires":  [
-                     "code-section"
-                 ],
-    "description":  "Time on gym equipment counts towards the exercise score of the Health grade, not just jogging laps around the yard.",
-    "game_build":  "Prison Architect 64-bit, Sunset Update (final)",
-    "sha256_original":  "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
-    "sha256_patched":  "f631d4d441b9b8bcf10e8a02d3f217f201c4d1e50ceb5a12bc07b1540ef4672b",
-    "edits":  [
-                  {
-                      "va":  "0x140E891D0",
-                      "offset":  14425552,
-                      "expect":  "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
-                      "replace":  "83F808746083F8017565488B0D1FE7ECFF488B89980100004881C1601B0000498D91E40D00004883EC20E8D1647DFF4883C4204C8B05F6E6ECFF4885C074308B4808498B90980100003B8AB41B0000731E4863C948C1E10748038AA81B000083794007750ABF08000000E927F96FFFE9E8F86FFF",
-                      "note":  "stub: count ActionType Use against the Exercise counter when the provider in use serves the Exercise need"
-                  },
-                  {
-                      "va":  "0x140588B23",
-                      "offset":  5799715,
-                      "expect":  "83F80875048BF8EB3A",
-                      "replace":  "E9A80690000F1F4000",
-                      "note":  "Experience tick: ask the stub which actions count as exercise"
-                  }
-              ]
+    "id": "exercise-grading",
+    "name": "Exercise on equipment counts for grading",
+    "version": "1.0.1",
+    "requires": [
+        "code-section",
+        "modapi-core"
+    ],
+    "description": "Time on gym equipment counts towards the exercise score of the Health grade, not just jogging laps around the yard.",
+    "game_build": "Prison Architect 64-bit, Sunset Update (final)",
+    "sha256_original": "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
+    "sha256_patched": "889f3184550842923b01a717c9c450970e79388424d9e8de9f5cac74cde19d5a",
+    "edits": [
+        {
+            "va": "0x140E891D0",
+            "offset": 14425552,
+            "expect": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+            "replace": "83F808746083F8017565488B0D1FE7ECFF488B89980100004881C1601B0000498D91E40D00004883EC20E8D1647DFF4883C4204C8B05F6E6ECFF4885C074308B4808498B90980100003B8AB41B0000731E4863C948C1E10748038AA81B000083794007750ABF08000000E927F96FFFE9E8F86FFF",
+            "note": "stub: count ActionType Use against the Exercise counter when the provider in use serves the Exercise need"
+        },
+        {
+            "va": "0x140588B23",
+            "offset": 5799715,
+            "expect": "83F80875048BF8EB3A",
+            "replace": "E9A80690000F1F4000",
+            "note": "Experience tick: ask the stub which actions count as exercise"
+        },
+        {
+            "va": "0x140E8B170",
+            "offset": 14433648,
+            "expect": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+            "replace": "7C65786572636973652D67726164696E673D6669787C",
+            "note": "TyrsPatch registry slot 5: |exercise-grading=fix|",
+            "superseded": [
+                "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
+            ]
+        }
+    ]
 }

@@ -1,123 +1,145 @@
 {
-    "id":  "alert-icons",
-    "name":  "Alert icons with custom sprite-sheet mods",
-    "version":  "1.1.0",
-    "description":  "Alert icons, the bakery oven glow, the bounty hunter trike rider and object portraits in UI panels draw correctly when a mod brings its own sprites.png. Disable the Alert Icons Partial Fix mod if you use it.",
-    "game_build":  "Prison Architect 64-bit, Sunset Update (final)",
-    "sha256_original":  "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
-    "sha256_patched":  "3d8c4c02b1ad4c9c71cbd560818ba91ae20003d1436ff1aabc0571ab80e79fc6",
-    "edits":  [
-                  {
-                      "va":  "0x1405FD4F0",
-                      "offset":  6277360,
-                      "expect":  "4C8BC0488B0506A47500488B88B00700004A8B0CC1",
-                      "replace":  "488B0D09A47500488B89B0070000488B1CC1488BCB",
-                      "note":  "MarkerIcon::DrawSprite: keep the fetched sprite bank in RBX"
-                  },
-                  {
-                      "va":  "0x1405FD524",
-                      "offset":  6277412,
-                      "expect":  "498D9E30070000",
-                      "replace":  "0F1F8000000000",
-                      "note":  "MarkerIcon::DrawSprite: do not replace RBX with the Objects bank"
-                  },
-                  {
-                      "va":  "0x1406CFFE0",
-                      "offset":  7140320,
-                      "expect":  "488B88B0070000",
-                      "replace":  "488B98B0070000",
-                      "note":  "overlay draw: mov rbx,[rax+0x7B0] (bank array) instead of rcx"
-                  },
-                  {
-                      "va":  "0x1406CFFFE",
-                      "offset":  7140350,
-                      "expect":  "488B4908",
-                      "replace":  "488B4B08",
-                      "note":  "overlay draw: mov rcx,[rbx+8] (objects_d11_2 bank) for the sprite lookup"
-                  },
-                  {
-                      "va":  "0x1406D0033",
-                      "offset":  7140403,
-                      "expect":  "66440F6E4828F30F10A198070000660F6E682C0F28C4F30F10919C070000",
-                      "replace":  "488B5B0866440F6E4828F30F106368660F6E682C0F28C4F30F10536C6690",
-                      "note":  "overlay draw: rbx = bank; scale pads from [rbx+0x68]/[rbx+0x6C]"
-                  },
-                  {
-                      "va":  "0x1406D005B",
-                      "offset":  7140443,
-                      "expect":  "F30F109990070000F30F108994070000",
-                      "replace":  "F30F105B60F30F104B64660F1F440000",
-                      "note":  "overlay draw: cell scale from [rbx+0x60]/[rbx+0x64]"
-                  },
-                  {
-                      "va":  "0x14049EA8C",
-                      "offset":  4841100,
-                      "expect":  "488B14C8",
-                      "replace":  "488B1CC8",
-                      "note":  "trike rider: mov rbx,[rax+rcx*8] (ObjectDef bank) instead of rdx",
-                      "superseded":  [
-                                         "488B14C8"
-                                     ]
-                  },
-                  {
-                      "va":  "0x14049EA92",
-                      "offset":  4841106,
-                      "expect":  "488D9730070000",
-                      "replace":  "488D9F30070000",
-                      "note":  "trike rider: lea rbx,[rdi+0x730] (Objects bank when the ObjectDef names none) instead of rdx",
-                      "superseded":  [
-                                         "488D9730070000"
-                                     ]
-                  },
-                  {
-                      "va":  "0x14049EA99",
-                      "offset":  4841113,
-                      "expect":  "837A143C",
-                      "replace":  "837B143C",
-                      "note":  "trike rider: cmp dword [rbx+0x14],0x3C (sprite count) instead of rdx",
-                      "superseded":  [
-                                         "837A143C"
-                                     ]
-                  },
-                  {
-                      "va":  "0x14049EA9F",
-                      "offset":  4841119,
-                      "expect":  "488B4220",
-                      "replace":  "488B4320",
-                      "note":  "trike rider: mov rax,[rbx+0x20] (sprite present flags) instead of rdx",
-                      "superseded":  [
-                                         "488B4220"
-                                     ]
-                  },
-                  {
-                      "va":  "0x14049EAA9",
-                      "offset":  4841129,
-                      "expect":  "488B4218",
-                      "replace":  "488B4318",
-                      "note":  "trike rider: mov rax,[rbx+0x18] (sprite array) instead of rdx",
-                      "superseded":  [
-                                         "488B4218"
-                                     ]
-                  },
-                  {
-                      "va":  "0x14049EAEB",
-                      "offset":  4841195,
-                      "expect":  "488D9F30070000",
-                      "replace":  "0F1F8000000000",
-                      "note":  "trike rider: do not replace RBX with the Objects bank",
-                      "superseded":  [
-                                         "488D9F30070000"
-                                     ]
-                  },
-                  {
-                      "va":  "0x1401FD7E7",
-                      "offset":  2083815,
-                      "expect":  "4D8DB730070000",
-                      "replace":  "4C8BF60F1F4000",
-                      "note":  "object portrait: mov r14,rsi (the bank the sprite came from) instead of the Objects bank",
-                      "superseded":  [
-                                         "4D8DB730070000"
-                                     ]
-                  }
-              ]
+    "id": "alert-icons",
+    "name": "Alert icons with custom sprite-sheet mods",
+    "version": "1.1.1",
+    "description": "Alert icons, the bakery oven glow, the bounty hunter trike rider and object portraits in UI panels draw correctly when a mod brings its own sprites.png. Disable the Alert Icons Partial Fix mod if you use it.",
+    "game_build": "Prison Architect 64-bit, Sunset Update (final)",
+    "sha256_original": "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
+    "sha256_patched": "8b40fe274675669cb42c7eddabd94940fd728c91cb5542da2bb266c745a0c23a",
+    "edits": [
+        {
+            "va": "0x1405FD4F0",
+            "offset": 6277360,
+            "expect": "4C8BC0488B0506A47500488B88B00700004A8B0CC1",
+            "replace": "488B0D09A47500488B89B0070000488B1CC1488BCB",
+            "note": "MarkerIcon::DrawSprite: keep the fetched sprite bank in RBX"
+        },
+        {
+            "va": "0x1405FD524",
+            "offset": 6277412,
+            "expect": "498D9E30070000",
+            "replace": "0F1F8000000000",
+            "note": "MarkerIcon::DrawSprite: do not replace RBX with the Objects bank"
+        },
+        {
+            "va": "0x1406CFFE0",
+            "offset": 7140320,
+            "expect": "488B88B0070000",
+            "replace": "488B98B0070000",
+            "note": "overlay draw: mov rbx,[rax+0x7B0] (bank array) instead of rcx"
+        },
+        {
+            "va": "0x1406CFFFE",
+            "offset": 7140350,
+            "expect": "488B4908",
+            "replace": "488B4B08",
+            "note": "overlay draw: mov rcx,[rbx+8] (objects_d11_2 bank) for the sprite lookup"
+        },
+        {
+            "va": "0x1406D0033",
+            "offset": 7140403,
+            "expect": "66440F6E4828F30F10A198070000660F6E682C0F28C4F30F10919C070000",
+            "replace": "488B5B0866440F6E4828F30F106368660F6E682C0F28C4F30F10536C6690",
+            "note": "overlay draw: rbx = bank; scale pads from [rbx+0x68]/[rbx+0x6C]"
+        },
+        {
+            "va": "0x1406D005B",
+            "offset": 7140443,
+            "expect": "F30F109990070000F30F108994070000",
+            "replace": "F30F105B60F30F104B64660F1F440000",
+            "note": "overlay draw: cell scale from [rbx+0x60]/[rbx+0x64]"
+        },
+        {
+            "va": "0x14049EA8C",
+            "offset": 4841100,
+            "expect": "488B14C8",
+            "replace": "488B1CC8",
+            "note": "trike rider: mov rbx,[rax+rcx*8] (ObjectDef bank) instead of rdx",
+            "superseded": [
+                "",
+                "488B14C8"
+            ]
+        },
+        {
+            "va": "0x14049EA92",
+            "offset": 4841106,
+            "expect": "488D9730070000",
+            "replace": "488D9F30070000",
+            "note": "trike rider: lea rbx,[rdi+0x730] (Objects bank when the ObjectDef names none) instead of rdx",
+            "superseded": [
+                "",
+                "488D9730070000"
+            ]
+        },
+        {
+            "va": "0x14049EA99",
+            "offset": 4841113,
+            "expect": "837A143C",
+            "replace": "837B143C",
+            "note": "trike rider: cmp dword [rbx+0x14],0x3C (sprite count) instead of rdx",
+            "superseded": [
+                "",
+                "837A143C"
+            ]
+        },
+        {
+            "va": "0x14049EA9F",
+            "offset": 4841119,
+            "expect": "488B4220",
+            "replace": "488B4320",
+            "note": "trike rider: mov rax,[rbx+0x20] (sprite present flags) instead of rdx",
+            "superseded": [
+                "",
+                "488B4220"
+            ]
+        },
+        {
+            "va": "0x14049EAA9",
+            "offset": 4841129,
+            "expect": "488B4218",
+            "replace": "488B4318",
+            "note": "trike rider: mov rax,[rbx+0x18] (sprite array) instead of rdx",
+            "superseded": [
+                "",
+                "488B4218"
+            ]
+        },
+        {
+            "va": "0x14049EAEB",
+            "offset": 4841195,
+            "expect": "488D9F30070000",
+            "replace": "0F1F8000000000",
+            "note": "trike rider: do not replace RBX with the Objects bank",
+            "superseded": [
+                "",
+                "488D9F30070000"
+            ]
+        },
+        {
+            "va": "0x1401FD7E7",
+            "offset": 2083815,
+            "expect": "4D8DB730070000",
+            "replace": "4C8BF60F1F4000",
+            "note": "object portrait: mov r14,rsi (the bank the sprite came from) instead of the Objects bank",
+            "superseded": [
+                "",
+                "4D8DB730070000"
+            ]
+        },
+        {
+            "va": "0x140E8B0B0",
+            "offset": 14433456,
+            "expect": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+            "replace": "7C616C6572742D69636F6E733D6669787C",
+            "note": "TyrsPatch registry slot 1: |alert-icons=fix|",
+            "superseded": [
+                "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+                "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
+            ]
+        }
+    ],
+    "requires": [
+        "code-section",
+        "modapi-core"
+    ]
 }

@@ -1,18 +1,32 @@
 {
-    "id":  "visitor-door-access",
-    "name":  "Visitors and civilians stuck at visitor doors",
-    "version":  "1.0.0",
-    "description":  "Mentors, therapists and other visitors no longer wait forever at visitor doors and gates. Prisoners still cannot open them.",
-    "game_build":  "Prison Architect 64-bit, Sunset Update (final)",
-    "sha256_original":  "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
-    "sha256_patched":  "bec00181c4e4b0f6cfc4bba8c880d84f5068893b9933b3f9050d8c7a2a443f7a",
-    "edits":  [
-                  {
-                      "va":  "0x140526DBA",
-                      "offset":  5398970,
-                      "expect":  "8D419683F818770A",
-                      "replace":  "83F96D754FEB0B90",
-                      "note":  "Door::Open visitor-door class: refuse only prisoners instead of an allow list that misses several NPC types"
-                  }
-              ]
+    "id": "visitor-door-access",
+    "name": "Visitors and civilians stuck at visitor doors",
+    "version": "1.0.1",
+    "description": "Mentors, therapists and other visitors no longer wait forever at visitor doors and gates. Prisoners still cannot open them.",
+    "game_build": "Prison Architect 64-bit, Sunset Update (final)",
+    "sha256_original": "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
+    "sha256_patched": "8c60bd9e89235a11582ce8dc77edba4feed16e874485f57da47dea5b107e0490",
+    "edits": [
+        {
+            "va": "0x140526DBA",
+            "offset": 5398970,
+            "expect": "8D419683F818770A",
+            "replace": "83F96D754FEB0B90",
+            "note": "Door::Open visitor-door class: refuse only prisoners instead of an allow list that misses several NPC types"
+        },
+        {
+            "va": "0x140E8B380",
+            "offset": 14434176,
+            "expect": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+            "replace": "7C76697369746F722D646F6F722D6163636573733D6669787C",
+            "note": "TyrsPatch registry slot 16: |visitor-door-access=fix|",
+            "superseded": [
+                "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
+            ]
+        }
+    ],
+    "requires": [
+        "code-section",
+        "modapi-core"
+    ]
 }

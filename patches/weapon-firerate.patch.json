@@ -1,58 +1,75 @@
 {
-    "id":  "weapon-firerate",
-    "name":  "Ranged weapon fire-rate fix",
-    "version":  "2.0.0",
-    "requires":  [
-                     "code-section"
-                 ],
-    "description":  "Assault rifles and SMGs fire automatically, and other guns wait 0.7 s between shots instead of two seconds.",
-    "game_build":  "Prison Architect 64-bit, Sunset Update (final)",
-    "sha256_original":  "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
-    "sha256_patched":  "4219e7af778720295285651b7efb725cd17300cfe643ff04496f41c611558d7c",
-    "edits":  [
-                  {
-                      "va":  "0x140537CC5",
-                      "offset":  5468357,
-                      "expect":  "C7834C03000000000040",
-                      "replace":  "E9561C95009090909090",
-                      "note":  "FireRangedShot: ReloadTimer by weapon (2018 values) instead of 2.0 s for all",
-                      "superseded":  [
-                                         "C7834C0300006F12833A",
-                                         "C7834C03000000000000"
-                                     ]
-                  },
-                  {
-                      "va":  "0x140E89920",
-                      "offset":  14427424,
-                      "expect":  "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
-                      "replace":  "488B059933F6FF498BCF482BC8B8000000404881F9D01400007425B80AD7A33C4881F95019000074174881F9E0190000740E4881F9803A00007405B83333333F89834C030000E964E36AFF",
-                      "note":  "stub: ReloadTimer 0.02 automatic rifles, 2.0 Tazer, 0.7 others",
-                      "superseded":  [
-                                         "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
-                                         "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
-                                     ]
-                  },
-                  {
-                      "va":  "0x140557372",
-                      "offset":  5597042,
-                      "expect":  "0F57C00F2F834C0300000F82A0000000",
-                      "replace":  "0F57C00F2F834C0300000F82A0000000",
-                      "note":  "escape-mode attack: original ReloadTimer gate (1.x replaced it)",
-                      "superseded":  [
-                                         "E949D04E009090909090909090909090",
-                                         "E949D04E009090909090909090909090"
-                                     ]
-                  },
-                  {
-                      "va":  "0x140A443C0",
-                      "offset":  10762176,
-                      "expect":  "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-                      "replace":  "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-                      "note":  ".text cave: the 1.x escape-mode gate stub is removed",
-                      "superseded":  [
-                                         "488BCB488D542440E8E328AFFFF30F5A4850488B0527353100488B8098010000F20F108080000000F20F5C8310030000660F2FC10F822830B1FFE9832FB1FF",
-                                         "488BCB488D542440E8E328AFFFF30F5A4850488B0527353100488B8098010000F20F108080000000F20F5C8310030000660F2FC10F822830B1FFE9832FB1FF"
-                                     ]
-                  }
-              ]
+    "id": "weapon-firerate",
+    "name": "Ranged weapon fire-rate fix",
+    "version": "2.0.1",
+    "requires": [
+        "code-section",
+        "modapi-core"
+    ],
+    "description": "Assault rifles and SMGs fire automatically, and other guns wait 0.7 s between shots instead of two seconds.",
+    "game_build": "Prison Architect 64-bit, Sunset Update (final)",
+    "sha256_original": "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
+    "sha256_patched": "bc168c4226a7cd2c6a9ec07e7355c506429528f9cfba73b00c1982aed7b9b176",
+    "edits": [
+        {
+            "va": "0x140537CC5",
+            "offset": 5468357,
+            "expect": "C7834C03000000000040",
+            "replace": "E9561C95009090909090",
+            "note": "FireRangedShot: ReloadTimer by weapon (2018 values) instead of 2.0 s for all",
+            "superseded": [
+                "",
+                "C7834C0300006F12833A",
+                "C7834C03000000000000"
+            ]
+        },
+        {
+            "va": "0x140E89920",
+            "offset": 14427424,
+            "expect": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+            "replace": "488B059933F6FF498BCF482BC8B8000000404881F9D01400007425B80AD7A33C4881F95019000074174881F9E0190000740E4881F9803A00007405B83333333F89834C030000E964E36AFF",
+            "note": "stub: ReloadTimer 0.02 automatic rifles, 2.0 Tazer, 0.7 others",
+            "superseded": [
+                "",
+                "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+                "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
+            ]
+        },
+        {
+            "va": "0x140557372",
+            "offset": 5597042,
+            "expect": "0F57C00F2F834C0300000F82A0000000",
+            "replace": "0F57C00F2F834C0300000F82A0000000",
+            "note": "escape-mode attack: original ReloadTimer gate (1.x replaced it)",
+            "superseded": [
+                "",
+                "E949D04E009090909090909090909090",
+                "E949D04E009090909090909090909090"
+            ]
+        },
+        {
+            "va": "0x140A443C0",
+            "offset": 10762176,
+            "expect": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+            "replace": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+            "note": ".text cave: the 1.x escape-mode gate stub is removed",
+            "superseded": [
+                "",
+                "488BCB488D542440E8E328AFFFF30F5A4850488B0527353100488B8098010000F20F108080000000F20F5C8310030000660F2FC10F822830B1FFE9832FB1FF",
+                "488BCB488D542440E8E328AFFFF30F5A4850488B0527353100488B8098010000F20F108080000000F20F5C8310030000660F2FC10F822830B1FFE9832FB1FF"
+            ]
+        },
+        {
+            "va": "0x140E8B440",
+            "offset": 14434368,
+            "expect": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+            "replace": "7C776561706F6E2D66697265726174653D6669787C",
+            "note": "TyrsPatch registry slot 20: |weapon-firerate=fix|",
+            "superseded": [
+                "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+                "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+                "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
+            ]
+        }
+    ]
 }

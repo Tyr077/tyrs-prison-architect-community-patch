@@ -5,14 +5,16 @@ named `.tyrs` to `Prison Architect64.exe`. It is added by the hidden base patch
 `patches/code-section.patch.json` when the first fix that needs it is applied,
 and removed on revert once no applied fix needs it.
 
-It is 8 KiB since 2.0.0 (patcher 1.16.0); 1.0.0 was 4 KiB. A game file with the
-4 KiB section is grown in place, keeping what is in it.
+It is 16 KiB since 3.0.0 (patcher 1.17.0); 2.0.0 was 8 KiB and 1.0.0 4 KiB. A
+game file with a smaller section is grown in place, keeping what is in it.
 
 ## Allocation map
 
-Fixes: data area `+0x000..+0x0FF`, code `+0x100..+0xFFF`, next free code offset `+0xD10`. Modding
-extensions: `+0x1000..+0x1FFF`, next free offset `+0x1550`. Every patch that uses the section must be listed
-here so ranges never overlap.
+Fixes: data area `+0x000..+0x0FF`, code `+0x100..+0xFFF`, next free code offset `+0xD30`, then the
+second fix code area `+0x3000..+0x3FFF` (free). Modding extensions: `+0x1000..+0x1FFF`, next free offset
+`+0x1550`. TyrsPatch core and registry: `+0x2000..+0x2FFF`. Every patch that uses the section must be
+listed here so ranges never overlap. Ranges marked reserved held code or text in an earlier release; they
+stay unused so older installs are still recognised.
 
 | range (section offset) | VA | owner | use |
 |---|---|---|---|
@@ -47,10 +49,35 @@ here so ranges never overlap.
 | `+0xB20..+0xB43` | `0x140E89B20` | disarmed-armed-guards (1.2.0) | held-item draw skip stub, 36 bytes; given back in 1.3.0, kept reserved |
 | `+0xB50..+0xC9F` | `0x140E89B50` | disarmed-armed-guards (1.2.0) | hand positions stub, 336 bytes; given back in 1.3.0, kept reserved |
 | `+0xCA0..+0xD0D` | `0x140E89CA0` | visitor-spawn-tables (1.1.0) | table-list rotation stub, 110 bytes |
-| `+0x1000..+0x107F` | `0x140E8A000` | modapi-core | Lua text, part 1 (`print = Game.DebugOut`, registry loop) |
-| `+0x1080..+0x127F` | `0x140E8A080` | modapi-core registry | 8 slots of `0x40`, written by the extensions; slot 0 status-effects-entities |
-| `+0x1280..+0x1303` | `0x140E8A280` | modapi-core | Lua text, part 2 (`TyrsPatch` table) |
+| `+0xD10..+0xD2A` | `0x140E89D10` | visitor-no-family | pairing prisoner-test stub, 27 bytes |
+| `+0x1000..+0x107F` | `0x140E8A000` | modapi-core 1.0.0 | Lua text, part 1; moved to `+0x2000` in 2.0.0, reserved |
+| `+0x1080..+0x127F` | `0x140E8A080` | modapi-core 1.0.0 registry | 8 slots of `0x40`; slot 0 was status-effects-entities 1.0.0; reserved |
+| `+0x1280..+0x1303` | `0x140E8A280` | modapi-core 1.0.0 | Lua text, part 2; reserved |
 | `+0x1400..+0x1544` | `0x140E8A400` | status-effects-entities | RegisterLua stub, string helper, entity test for GiveStatusEffect (`+0x1520`) |
+| `+0x2000..+0x207F` | `0x140E8B000` | modapi-core (2.0.0) | Lua text, part 1 (`print = Game.DebugOut`, registry loop) |
+| `+0x2080..+0x2C7F` | `0x140E8B080` | registry | 64 slots of `0x30`, each written by its own patch (`scripts/build_registry.py`); slots below |
+| `+0x2C80..+0x2D03` | `0x140E8BC80` | modapi-core (2.0.0) | Lua text, part 2 (`TyrsPatch` table) |
+
+## Registry slots
+
+Slot `n` is at `+0x2080 + n * 0x30` and holds `|<id>=<kind>|`. Slots never move once released; new patches
+take the next free slot.
+
+| slot | patch | slot | patch |
+|---|---|---|---|
+| 0 | status-effects-entities (`status-effects.entities`) | 13 | pavilion-reload |
+| 1 | alert-icons | 14 | shop-front |
+| 2 | direction-save | 15 | visitor-booth-facing |
+| 3 | disarmed-armed-guards | 16 | visitor-door-access |
+| 4 | escape-freefire-sectors | 17 | visitor-no-family |
+| 5 | exercise-grading | 18 | visitor-spawn-tables |
+| 6 | full-auto-hold | 19 | weapon-effects |
+| 7 | gang-handoff | 20 | weapon-firerate |
+| 8 | gunfire-surrender | 21 | tweak-armed-guard-warnings |
+| 9 | intake-route-categories | 22 | tweak-no-reoffend-fine |
+| 10 | keycard-door-path-cost | 23 | tweak-no-returning-prisoners |
+| 11 | keycard-door-released-prisoners | 24 | tweak-pc-shared-zones |
+| 12 | lua-status-effects | 25 | tweak-staff-death-morale-decay |
 
 ## Antivirus
 

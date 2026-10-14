@@ -1,19 +1,33 @@
 {
-    "id":  "tweak-no-returning-prisoners",
-    "name":  "No returning prisoners (Second Chances)",
-    "version":  "1.0.0",
-    "optional":  true,
-    "description":  "Intake always generates new prisoners instead of bringing back reoffenders with all their old reputations.",
-    "game_build":  "Prison Architect 64-bit, Sunset Update (final)",
-    "sha256_original":  "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
-    "sha256_patched":  "eafe632261d9d9bb8fea9dc508d98e4f41a1e2e6895e22db2d28d61c3451c6a1",
-    "edits":  [
-                  {
-                      "va":  "0x1406A89E8",
-                      "offset":  6979048,
-                      "expect":  "837E3404",
-                      "replace":  "837E347F",
-                      "note":  "returning-prisoner scan: compare ReleaseStatus with an impossible value"
-                  }
-              ]
+    "id": "tweak-no-returning-prisoners",
+    "name": "No returning prisoners (Second Chances)",
+    "version": "1.0.1",
+    "optional": true,
+    "description": "Intake always generates new prisoners instead of bringing back reoffenders with all their old reputations.",
+    "game_build": "Prison Architect 64-bit, Sunset Update (final)",
+    "sha256_original": "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
+    "sha256_patched": "60637fc3a2ed18891b9cb452ae71994747e1ef14527848810cad0ed08843542d",
+    "edits": [
+        {
+            "va": "0x1406A89E8",
+            "offset": 6979048,
+            "expect": "837E3404",
+            "replace": "837E347F",
+            "note": "returning-prisoner scan: compare ReleaseStatus with an impossible value"
+        },
+        {
+            "va": "0x140E8B4D0",
+            "offset": 14434512,
+            "expect": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+            "replace": "7C747765616B2D6E6F2D72657475726E696E672D707269736F6E6572733D747765616B7C",
+            "note": "TyrsPatch registry slot 23: |tweak-no-returning-prisoners=tweak|",
+            "superseded": [
+                "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
+            ]
+        }
+    ],
+    "requires": [
+        "code-section",
+        "modapi-core"
+    ]
 }

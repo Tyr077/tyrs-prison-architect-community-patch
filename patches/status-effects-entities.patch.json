@@ -1,227 +1,240 @@
 {
-    "id":  "status-effects-entities",
-    "name":  "Status effects on staff and other characters",
-    "version":  "1.0.0",
-    "category":  "modapi",
-    "experimental":  true,
-    "requires":  [
-                     "code-section",
-                     "modapi-core"
-                 ],
-    "description":  "Mods can read and set status effects on staff, dogs, visitors and every other character, not just prisoners: obj.StatusEffects.\u003cname\u003e and Object.GiveStatusEffect. Detect with TyrsPatch.Has(\"status-effects.entities\").",
-    "game_build":  "Prison Architect 64-bit, Sunset Update (final)",
-    "sha256_original":  "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
-    "sha256_patched":  "897131890abb53537ca1cced7180d738e4647a677d853289191d2b6d6cbe7451",
-    "edits":  [
-                  {
-                      "va":  "0x140E8A400",
-                      "offset":  14430208,
-                      "expect":  "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
-                      "replace":  "535657415441554881EC90000000488BD9488BF2498BF84D8BE1E891C194FF49837C24100074164C8D054E69C2FF498BD4488D4C2420E8059326FFEB1748C74424380F00000048C744243000000000C6442420004C8BC7488D542420488D4C2440E88AEB27FF488D4C2420E88D00000041B1014C8BC7488BD6488D8C2480000000E8CA085DFF48C74424780F00000048C744247000000000C64424600041B80D000000488D15068EC3FF488D4C2460E83C3026FF4C8D4C24404C8D442460488BD6488D8BC8030000E8732B8AFF488D4C2460E826000000488D8C2480000000E8ACEB5CFF488D4C2440E80F0000004881C490000000415D415C5F5E5BC34C8B41184983F810720B488B1149FFC0E94E3326FFC3CCCCCCCCCCCCCCCCCCCCCCCCCC488B03488B80E0000000488D0DCFFEFFFF483BC1740A488D0D93C383FF483BC1488D4F30C3",
-                      "note":  "RegisterLua stub for non-prisoner entities (StatusEffects table) at 0x140E8A400; entity test for GiveStatusEffect at 0x140E8A520"
-                  },
-                  {
-                      "va":  "0x140AEE988",
-                      "offset":  11456904,
-                      "expect":  "B0657D4001000000",
-                      "replace":  "00A4E84001000000",
-                      "note":  "Administrator vtable slot 28 (RegisterLua): base -\u003e stub"
-                  },
-                  {
-                      "va":  "0x140AEFA70",
-                      "offset":  11461232,
-                      "expect":  "B0657D4001000000",
-                      "replace":  "00A4E84001000000",
-                      "note":  "ArmedGuard vtable slot 28 (RegisterLua): base -\u003e stub"
-                  },
-                  {
-                      "va":  "0x140AEFC78",
-                      "offset":  11461752,
-                      "expect":  "B0657D4001000000",
-                      "replace":  "00A4E84001000000",
-                      "note":  "Avatar vtable slot 28 (RegisterLua): base -\u003e stub"
-                  },
-                  {
-                      "va":  "0x140AF0E58",
-                      "offset":  11466328,
-                      "expect":  "B0657D4001000000",
-                      "replace":  "00A4E84001000000",
-                      "note":  "DeliveryMan vtable slot 28 (RegisterLua): base -\u003e stub"
-                  },
-                  {
-                      "va":  "0x140AF1198",
-                      "offset":  11467160,
-                      "expect":  "B0657D4001000000",
-                      "replace":  "00A4E84001000000",
-                      "note":  "BountyHunter vtable slot 28 (RegisterLua): base -\u003e stub"
-                  },
-                  {
-                      "va":  "0x140AF2300",
-                      "offset":  11471616,
-                      "expect":  "B0657D4001000000",
-                      "replace":  "00A4E84001000000",
-                      "note":  "Chief vtable slot 28 (RegisterLua): base -\u003e stub"
-                  },
-                  {
-                      "va":  "0x140AF26C0",
-                      "offset":  11472576,
-                      "expect":  "B0657D4001000000",
-                      "replace":  "00A4E84001000000",
-                      "note":  "CivilianChild vtable slot 28 (RegisterLua): base -\u003e stub"
-                  },
-                  {
-                      "va":  "0x140AF4FE0",
-                      "offset":  11483104,
-                      "expect":  "B0657D4001000000",
-                      "replace":  "00A4E84001000000",
-                      "note":  "Doctor vtable slot 28 (RegisterLua): base -\u003e stub"
-                  },
-                  {
-                      "va":  "0x140AF5410",
-                      "offset":  11484176,
-                      "expect":  "B0657D4001000000",
-                      "replace":  "00A4E84001000000",
-                      "note":  "Dog vtable slot 28 (RegisterLua): base -\u003e stub"
-                  },
-                  {
-                      "va":  "0x140AF5760",
-                      "offset":  11485024,
-                      "expect":  "B0657D4001000000",
-                      "replace":  "00A4E84001000000",
-                      "note":  "DogHandler vtable slot 28 (RegisterLua): base -\u003e stub"
-                  },
-                  {
-                      "va":  "0x140AF6948",
-                      "offset":  11489608,
-                      "expect":  "B0657D4001000000",
-                      "replace":  "00A4E84001000000",
-                      "note":  "Entity vtable slot 28 (RegisterLua): base -\u003e stub"
-                  },
-                  {
-                      "va":  "0x140AF8B20",
-                      "offset":  11498272,
-                      "expect":  "B0657D4001000000",
-                      "replace":  "00A4E84001000000",
-                      "note":  "ExecutionWitness vtable slot 28 (RegisterLua): base -\u003e stub"
-                  },
-                  {
-                      "va":  "0x140AFAF50",
-                      "offset":  11507536,
-                      "expect":  "B0657D4001000000",
-                      "replace":  "00A4E84001000000",
-                      "note":  "Fireman vtable slot 28 (RegisterLua): base -\u003e stub"
-                  },
-                  {
-                      "va":  "0x140AFD7F8",
-                      "offset":  11517944,
-                      "expect":  "B0657D4001000000",
-                      "replace":  "00A4E84001000000",
-                      "note":  "RiotGuard vtable slot 28 (RegisterLua): base -\u003e stub"
-                  },
-                  {
-                      "va":  "0x140AFDA08",
-                      "offset":  11518472,
-                      "expect":  "B0657D4001000000",
-                      "replace":  "00A4E84001000000",
-                      "note":  "Guard vtable slot 28 (RegisterLua): base -\u003e stub"
-                  },
-                  {
-                      "va":  "0x140B03EC0",
-                      "offset":  11544256,
-                      "expect":  "B0657D4001000000",
-                      "replace":  "00A4E84001000000",
-                      "note":  "Orderly vtable slot 28 (RegisterLua): base -\u003e stub"
-                  },
-                  {
-                      "va":  "0x140B04B28",
-                      "offset":  11547432,
-                      "expect":  "B0657D4001000000",
-                      "replace":  "00A4E84001000000",
-                      "note":  "Repairman vtable slot 28 (RegisterLua): base -\u003e stub"
-                  },
-                  {
-                      "va":  "0x140B04FB8",
-                      "offset":  11548600,
-                      "expect":  "B0657D4001000000",
-                      "replace":  "00A4E84001000000",
-                      "note":  "RestaurantCustomer vtable slot 28 (RegisterLua): base -\u003e stub"
-                  },
-                  {
-                      "va":  "0x140B05E30",
-                      "offset":  11552304,
-                      "expect":  "B0657D4001000000",
-                      "replace":  "00A4E84001000000",
-                      "note":  "Staff vtable slot 28 (RegisterLua): base -\u003e stub"
-                  },
-                  {
-                      "va":  "0x140B0AF88",
-                      "offset":  11573128,
-                      "expect":  "B0657D4001000000",
-                      "replace":  "00A4E84001000000",
-                      "note":  "Actor vtable slot 28 (RegisterLua): base -\u003e stub"
-                  },
-                  {
-                      "va":  "0x140B0DB20",
-                      "offset":  11584288,
-                      "expect":  "B0657D4001000000",
-                      "replace":  "00A4E84001000000",
-                      "note":  "Sniper vtable slot 28 (RegisterLua): base -\u003e stub"
-                  },
-                  {
-                      "va":  "0x140B0DD28",
-                      "offset":  11584808,
-                      "expect":  "B0657D4001000000",
-                      "replace":  "00A4E84001000000",
-                      "note":  "Soldier vtable slot 28 (RegisterLua): base -\u003e stub"
-                  },
-                  {
-                      "va":  "0x140B0EB70",
-                      "offset":  11588464,
-                      "expect":  "B0657D4001000000",
-                      "replace":  "00A4E84001000000",
-                      "note":  "Teacher vtable slot 28 (RegisterLua): base -\u003e stub"
-                  },
-                  {
-                      "va":  "0x140B10E28",
-                      "offset":  11597352,
-                      "expect":  "B0657D4001000000",
-                      "replace":  "00A4E84001000000",
-                      "note":  "Visitor vtable slot 28 (RegisterLua): base -\u003e stub"
-                  },
-                  {
-                      "va":  "0x140B11330",
-                      "offset":  11598640,
-                      "expect":  "B0657D4001000000",
-                      "replace":  "00A4E84001000000",
-                      "note":  "Waterman vtable slot 28 (RegisterLua): base -\u003e stub"
-                  },
-                  {
-                      "va":  "0x140B136C8",
-                      "offset":  11607752,
-                      "expect":  "B0657D4001000000",
-                      "replace":  "00A4E84001000000",
-                      "note":  "Worker vtable slot 28 (RegisterLua): base -\u003e stub"
-                  },
-                  {
-                      "va":  "0x140B18A20",
-                      "offset":  11629088,
-                      "expect":  "B0657D4001000000",
-                      "replace":  "00A4E84001000000",
-                      "note":  "Zombie vtable slot 28 (RegisterLua): base -\u003e stub"
-                  },
-                  {
-                      "va":  "0x1401A690F",
-                      "offset":  1727759,
-                      "expect":  "837B406D7521488D4F30",
-                      "replace":  "E80C3CCE007520909090",
-                      "note":  "GiveStatusEffect executor: \"is a Prisoner\" (type 0x6D) -\u003e \"is an entity\" (call pred; jnz to the same exit)"
-                  },
-                  {
-                      "va":  "0x140E8A080",
-                      "offset":  14429312,
-                      "expect":  "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
-                      "replace":  "7C7374617475732D656666656374732E656E7469746965733D6578706572696D656E74616C7C",
-                      "note":  "TyrsPatch registry slot 0: status-effects.entities, experimental"
-                  }
-              ]
+    "id": "status-effects-entities",
+    "name": "Status effects on staff and other characters",
+    "version": "1.0.1",
+    "category": "modapi",
+    "experimental": true,
+    "requires": [
+        "code-section",
+        "modapi-core"
+    ],
+    "description": "Mods can read and set status effects on staff, dogs, visitors and every other character, not just prisoners: obj.StatusEffects.<name> and Object.GiveStatusEffect. Detect with TyrsPatch.Has(\"status-effects.entities\").",
+    "game_build": "Prison Architect 64-bit, Sunset Update (final)",
+    "sha256_original": "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
+    "sha256_patched": "ff3bdcb5f29b26361b45a6279bf3e450652dcb9df9f872d9351b0664ee374ccc",
+    "edits": [
+        {
+            "va": "0x140E8A400",
+            "offset": 14430208,
+            "expect": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+            "replace": "535657415441554881EC90000000488BD9488BF2498BF84D8BE1E891C194FF49837C24100074164C8D054E69C2FF498BD4488D4C2420E8059326FFEB1748C74424380F00000048C744243000000000C6442420004C8BC7488D542420488D4C2440E88AEB27FF488D4C2420E88D00000041B1014C8BC7488BD6488D8C2480000000E8CA085DFF48C74424780F00000048C744247000000000C64424600041B80D000000488D15068EC3FF488D4C2460E83C3026FF4C8D4C24404C8D442460488BD6488D8BC8030000E8732B8AFF488D4C2460E826000000488D8C2480000000E8ACEB5CFF488D4C2440E80F0000004881C490000000415D415C5F5E5BC34C8B41184983F810720B488B1149FFC0E94E3326FFC3CCCCCCCCCCCCCCCCCCCCCCCCCC488B03488B80E0000000488D0DCFFEFFFF483BC1740A488D0D93C383FF483BC1488D4F30C3",
+            "note": "RegisterLua stub for non-prisoner entities (StatusEffects table) at 0x140E8A400; entity test for GiveStatusEffect at 0x140E8A520"
+        },
+        {
+            "va": "0x140AEE988",
+            "offset": 11456904,
+            "expect": "B0657D4001000000",
+            "replace": "00A4E84001000000",
+            "note": "Administrator vtable slot 28 (RegisterLua): base -> stub"
+        },
+        {
+            "va": "0x140AEFA70",
+            "offset": 11461232,
+            "expect": "B0657D4001000000",
+            "replace": "00A4E84001000000",
+            "note": "ArmedGuard vtable slot 28 (RegisterLua): base -> stub"
+        },
+        {
+            "va": "0x140AEFC78",
+            "offset": 11461752,
+            "expect": "B0657D4001000000",
+            "replace": "00A4E84001000000",
+            "note": "Avatar vtable slot 28 (RegisterLua): base -> stub"
+        },
+        {
+            "va": "0x140AF0E58",
+            "offset": 11466328,
+            "expect": "B0657D4001000000",
+            "replace": "00A4E84001000000",
+            "note": "DeliveryMan vtable slot 28 (RegisterLua): base -> stub"
+        },
+        {
+            "va": "0x140AF1198",
+            "offset": 11467160,
+            "expect": "B0657D4001000000",
+            "replace": "00A4E84001000000",
+            "note": "BountyHunter vtable slot 28 (RegisterLua): base -> stub"
+        },
+        {
+            "va": "0x140AF2300",
+            "offset": 11471616,
+            "expect": "B0657D4001000000",
+            "replace": "00A4E84001000000",
+            "note": "Chief vtable slot 28 (RegisterLua): base -> stub"
+        },
+        {
+            "va": "0x140AF26C0",
+            "offset": 11472576,
+            "expect": "B0657D4001000000",
+            "replace": "00A4E84001000000",
+            "note": "CivilianChild vtable slot 28 (RegisterLua): base -> stub"
+        },
+        {
+            "va": "0x140AF4FE0",
+            "offset": 11483104,
+            "expect": "B0657D4001000000",
+            "replace": "00A4E84001000000",
+            "note": "Doctor vtable slot 28 (RegisterLua): base -> stub"
+        },
+        {
+            "va": "0x140AF5410",
+            "offset": 11484176,
+            "expect": "B0657D4001000000",
+            "replace": "00A4E84001000000",
+            "note": "Dog vtable slot 28 (RegisterLua): base -> stub"
+        },
+        {
+            "va": "0x140AF5760",
+            "offset": 11485024,
+            "expect": "B0657D4001000000",
+            "replace": "00A4E84001000000",
+            "note": "DogHandler vtable slot 28 (RegisterLua): base -> stub"
+        },
+        {
+            "va": "0x140AF6948",
+            "offset": 11489608,
+            "expect": "B0657D4001000000",
+            "replace": "00A4E84001000000",
+            "note": "Entity vtable slot 28 (RegisterLua): base -> stub"
+        },
+        {
+            "va": "0x140AF8B20",
+            "offset": 11498272,
+            "expect": "B0657D4001000000",
+            "replace": "00A4E84001000000",
+            "note": "ExecutionWitness vtable slot 28 (RegisterLua): base -> stub"
+        },
+        {
+            "va": "0x140AFAF50",
+            "offset": 11507536,
+            "expect": "B0657D4001000000",
+            "replace": "00A4E84001000000",
+            "note": "Fireman vtable slot 28 (RegisterLua): base -> stub"
+        },
+        {
+            "va": "0x140AFD7F8",
+            "offset": 11517944,
+            "expect": "B0657D4001000000",
+            "replace": "00A4E84001000000",
+            "note": "RiotGuard vtable slot 28 (RegisterLua): base -> stub"
+        },
+        {
+            "va": "0x140AFDA08",
+            "offset": 11518472,
+            "expect": "B0657D4001000000",
+            "replace": "00A4E84001000000",
+            "note": "Guard vtable slot 28 (RegisterLua): base -> stub"
+        },
+        {
+            "va": "0x140B03EC0",
+            "offset": 11544256,
+            "expect": "B0657D4001000000",
+            "replace": "00A4E84001000000",
+            "note": "Orderly vtable slot 28 (RegisterLua): base -> stub"
+        },
+        {
+            "va": "0x140B04B28",
+            "offset": 11547432,
+            "expect": "B0657D4001000000",
+            "replace": "00A4E84001000000",
+            "note": "Repairman vtable slot 28 (RegisterLua): base -> stub"
+        },
+        {
+            "va": "0x140B04FB8",
+            "offset": 11548600,
+            "expect": "B0657D4001000000",
+            "replace": "00A4E84001000000",
+            "note": "RestaurantCustomer vtable slot 28 (RegisterLua): base -> stub"
+        },
+        {
+            "va": "0x140B05E30",
+            "offset": 11552304,
+            "expect": "B0657D4001000000",
+            "replace": "00A4E84001000000",
+            "note": "Staff vtable slot 28 (RegisterLua): base -> stub"
+        },
+        {
+            "va": "0x140B0AF88",
+            "offset": 11573128,
+            "expect": "B0657D4001000000",
+            "replace": "00A4E84001000000",
+            "note": "Actor vtable slot 28 (RegisterLua): base -> stub"
+        },
+        {
+            "va": "0x140B0DB20",
+            "offset": 11584288,
+            "expect": "B0657D4001000000",
+            "replace": "00A4E84001000000",
+            "note": "Sniper vtable slot 28 (RegisterLua): base -> stub"
+        },
+        {
+            "va": "0x140B0DD28",
+            "offset": 11584808,
+            "expect": "B0657D4001000000",
+            "replace": "00A4E84001000000",
+            "note": "Soldier vtable slot 28 (RegisterLua): base -> stub"
+        },
+        {
+            "va": "0x140B0EB70",
+            "offset": 11588464,
+            "expect": "B0657D4001000000",
+            "replace": "00A4E84001000000",
+            "note": "Teacher vtable slot 28 (RegisterLua): base -> stub"
+        },
+        {
+            "va": "0x140B10E28",
+            "offset": 11597352,
+            "expect": "B0657D4001000000",
+            "replace": "00A4E84001000000",
+            "note": "Visitor vtable slot 28 (RegisterLua): base -> stub"
+        },
+        {
+            "va": "0x140B11330",
+            "offset": 11598640,
+            "expect": "B0657D4001000000",
+            "replace": "00A4E84001000000",
+            "note": "Waterman vtable slot 28 (RegisterLua): base -> stub"
+        },
+        {
+            "va": "0x140B136C8",
+            "offset": 11607752,
+            "expect": "B0657D4001000000",
+            "replace": "00A4E84001000000",
+            "note": "Worker vtable slot 28 (RegisterLua): base -> stub"
+        },
+        {
+            "va": "0x140B18A20",
+            "offset": 11629088,
+            "expect": "B0657D4001000000",
+            "replace": "00A4E84001000000",
+            "note": "Zombie vtable slot 28 (RegisterLua): base -> stub"
+        },
+        {
+            "va": "0x1401A690F",
+            "offset": 1727759,
+            "expect": "837B406D7521488D4F30",
+            "replace": "E80C3CCE007520909090",
+            "note": "GiveStatusEffect executor: \"is a Prisoner\" (type 0x6D) -> \"is an entity\" (call pred; jnz to the same exit)"
+        },
+        {
+            "va": "0x140E8A080",
+            "offset": 14429312,
+            "expect": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+            "replace": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+            "note": "modapi-core 1.0.0 registry slot, given back (the entry moved to the 2.0.0 registry)",
+            "superseded": [
+                "7C7374617475732D656666656374732E656E7469746965733D6578706572696D656E74616C7C"
+            ]
+        },
+        {
+            "va": "0x140E8B080",
+            "offset": 14433408,
+            "expect": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+            "replace": "7C7374617475732D656666656374732E656E7469746965733D6578706572696D656E74616C7C",
+            "note": "TyrsPatch registry slot 0: |status-effects.entities=experimental|",
+            "superseded": [
+                "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
+            ]
+        }
+    ]
 }

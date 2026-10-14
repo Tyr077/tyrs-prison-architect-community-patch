@@ -104,6 +104,10 @@ game.
   Custody sector, no longer stops visits in the whole prison, and with several
   visitation rooms every room gets visitors, not only one.
   [Details](docs/visitor-spawn-tables.md)
+- **Visitors wasted on prisoners with no family.** A visitor is no longer
+  matched with a prisoner who has no family and can never be visited, so
+  waiting visitors are no longer used up for nothing.
+  [Details](docs/visitor-no-family.md)
 - **Released prisoners behind revoked keycard doors.** When a keycard door with
   prisoner access revoked is the only way out, released prisoners call a guard to
   let them out instead of standing still forever.
@@ -142,7 +146,9 @@ them. They are experimental for now: **off by default**, and they may change
 between releases. Turn them all on with the **Modding extensions** box in the
 patcher, or pass `--experimental` on the command line.
 
-**Mod authors:** [how to detect and use them](docs/modding-api.md).
+**Mod authors:** [how to detect and use them](docs/modding-api.md). Mods can also
+check which bug fixes and tweaks are installed, for example to leave out their own
+workaround for a bug the patch fixes.
 
 - **Status effects on staff and other characters** (experimental). Every
   character gets the `StatusEffects` table that only prisoners had, so a mod

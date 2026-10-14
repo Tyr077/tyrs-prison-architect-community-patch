@@ -1,58 +1,73 @@
 {
-    "id":  "visitor-spawn-tables",
-    "name":  "Visitors in every visitation room",
-    "version":  "1.1.0",
-    "requires":  [
-                     "code-section"
-                 ],
-    "description":  "Visits no longer stop because of one visitor table that no prisoner can be matched with, and with several visitation rooms every room gets visitors, not only the first.",
-    "game_build":  "Prison Architect 64-bit, Sunset Update (final)",
-    "sha256_original":  "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
-    "sha256_patched":  "fb85448ed8b62edd2f761eb32043210eafa6da037d44d679552acd4eb44290fd",
-    "edits":  [
-                  {
-                      "va":  "0x140E89AF0",
-                      "offset":  14427888,
-                      "expect":  "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
-                      "replace":  "83BC24A8000000FF740D4C8B04DE4983C038E95F558DFF448BDB488D1CDEE91E558DFF",
-                      "note":  "visitor spawn: a table the pairing found no prisoner for is skipped instead of ending the spawn"
-                  },
-                  {
-                      "va":  "0x14075F05E",
-                      "offset":  7726174,
-                      "expect":  "4C8B04DE4983C038",
-                      "replace":  "E98DAA7200909090",
-                      "note":  "FUN_14075EDA0 after the pairing call routed through the skip stub"
-                  },
-                  {
-                      "va":  "0x140E89020",
-                      "offset":  14425120,
-                      "expect":  "CCCCCCCC",
-                      "replace":  "00000000",
-                      "note":  "visitor spawn: rotation counter (spawns so far this session), int32",
-                      "superseded":  [
-                                         "CCCCCCCC"
-                                     ]
-                  },
-                  {
-                      "va":  "0x140E89CA0",
-                      "offset":  14428320,
-                      "expect":  "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
-                      "replace":  "83FF017E3B8B0575F3FFFF8D4801890D6CF3FFFF33D2F7F785D274244533C0448D4AFFE828000000448BC2448D4FFFE81C0000004533C0448D4FFFE810000000458BDD85FF0F8EF5538DFFE9BF528DFF453BC17D184A8B04C64A8B0CCE4A890CC64A8904CE41FFC041FFC9EBE3C3",
-                      "note":  "visitor spawn: rotate the spawn\u0027s table list so each spawn starts one table further on",
-                      "superseded":  [
-                                         "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
-                                     ]
-                  },
-                  {
-                      "va":  "0x14075EFA4",
-                      "offset":  7725988,
-                      "expect":  "458BDD85FF0F8E31010000",
-                      "replace":  "E9F7AC7200909090909090",
-                      "note":  "FUN_14075EDA0 loop entry routed through the rotation stub",
-                      "superseded":  [
-                                         "458BDD85FF0F8E31010000"
-                                     ]
-                  }
-              ]
+    "id": "visitor-spawn-tables",
+    "name": "Visitors in every visitation room",
+    "version": "1.1.1",
+    "requires": [
+        "code-section",
+        "modapi-core"
+    ],
+    "description": "Visits no longer stop because of one visitor table that no prisoner can be matched with, and with several visitation rooms every room gets visitors, not only the first.",
+    "game_build": "Prison Architect 64-bit, Sunset Update (final)",
+    "sha256_original": "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
+    "sha256_patched": "2df41f935d3db396e0e84384c5b246b8290ddb446de6f70d73bd05ba28236454",
+    "edits": [
+        {
+            "va": "0x140E89AF0",
+            "offset": 14427888,
+            "expect": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+            "replace": "83BC24A8000000FF740D4C8B04DE4983C038E95F558DFF448BDB488D1CDEE91E558DFF",
+            "note": "visitor spawn: a table the pairing found no prisoner for is skipped instead of ending the spawn"
+        },
+        {
+            "va": "0x14075F05E",
+            "offset": 7726174,
+            "expect": "4C8B04DE4983C038",
+            "replace": "E98DAA7200909090",
+            "note": "FUN_14075EDA0 after the pairing call routed through the skip stub"
+        },
+        {
+            "va": "0x140E89020",
+            "offset": 14425120,
+            "expect": "CCCCCCCC",
+            "replace": "00000000",
+            "note": "visitor spawn: rotation counter (spawns so far this session), int32",
+            "superseded": [
+                "",
+                "CCCCCCCC"
+            ]
+        },
+        {
+            "va": "0x140E89CA0",
+            "offset": 14428320,
+            "expect": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+            "replace": "83FF017E3B8B0575F3FFFF8D4801890D6CF3FFFF33D2F7F785D274244533C0448D4AFFE828000000448BC2448D4FFFE81C0000004533C0448D4FFFE810000000458BDD85FF0F8EF5538DFFE9BF528DFF453BC17D184A8B04C64A8B0CCE4A890CC64A8904CE41FFC041FFC9EBE3C3",
+            "note": "visitor spawn: rotate the spawn's table list so each spawn starts one table further on",
+            "superseded": [
+                "",
+                "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
+            ]
+        },
+        {
+            "va": "0x14075EFA4",
+            "offset": 7725988,
+            "expect": "458BDD85FF0F8E31010000",
+            "replace": "E9F7AC7200909090909090",
+            "note": "FUN_14075EDA0 loop entry routed through the rotation stub",
+            "superseded": [
+                "",
+                "458BDD85FF0F8E31010000"
+            ]
+        },
+        {
+            "va": "0x140E8B3E0",
+            "offset": 14434272,
+            "expect": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+            "replace": "7C76697369746F722D737061776E2D7461626C65733D6669787C",
+            "note": "TyrsPatch registry slot 18: |visitor-spawn-tables=fix|",
+            "superseded": [
+                "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+                "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
+            ]
+        }
+    ]
 }

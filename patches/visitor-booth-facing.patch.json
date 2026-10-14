@@ -1,28 +1,39 @@
 {
-    "id":  "visitor-booth-facing",
-    "name":  "Visitor booths facing up",
-    "version":  "1.0.0",
-    "requires":  [
-                     "code-section"
-                 ],
-    "description":  "Visitor booths work with the prisoners\u0027 side at the top, not just the bottom. Rotate the booth to face your prisoners while placing it.",
-    "game_build":  "Prison Architect 64-bit, Sunset Update (final)",
-    "sha256_original":  "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
-    "sha256_patched":  "78d695ceea9d0173c33f2fcdd9f2a0b8627a2100e002db29a26852d00c0d20b2",
-    "edits":  [
-                  {
-                      "va":  "0x140E89500",
-                      "offset":  14426368,
-                      "expect":  "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
-                      "replace":  "33D2817B4018010000750E817B58000080BF7505BA01000000488BCBFF5068E97C518DFF",
-                      "note":  "pairing check: ask for the slot the prisoner will use (1 for a booth facing up)"
-                  },
-                  {
-                      "va":  "0x14075E698",
-                      "offset":  7723672,
-                      "expect":  "33D2488BCBFF5068",
-                      "replace":  "E963AE7200909090",
-                      "note":  "VisitationSystem pairing check: slot choice routed through the stub"
-                  }
-              ]
+    "id": "visitor-booth-facing",
+    "name": "Visitor booths facing up",
+    "version": "1.0.1",
+    "requires": [
+        "code-section",
+        "modapi-core"
+    ],
+    "description": "Visitor booths work with the prisoners' side at the top, not just the bottom. Rotate the booth to face your prisoners while placing it.",
+    "game_build": "Prison Architect 64-bit, Sunset Update (final)",
+    "sha256_original": "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
+    "sha256_patched": "a8cf444a82fe554ae218b5c25454d161fe4cbb295ef511620d31afc68f14e741",
+    "edits": [
+        {
+            "va": "0x140E89500",
+            "offset": 14426368,
+            "expect": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+            "replace": "33D2817B4018010000750E817B58000080BF7505BA01000000488BCBFF5068E97C518DFF",
+            "note": "pairing check: ask for the slot the prisoner will use (1 for a booth facing up)"
+        },
+        {
+            "va": "0x14075E698",
+            "offset": 7723672,
+            "expect": "33D2488BCBFF5068",
+            "replace": "E963AE7200909090",
+            "note": "VisitationSystem pairing check: slot choice routed through the stub"
+        },
+        {
+            "va": "0x140E8B350",
+            "offset": 14434128,
+            "expect": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+            "replace": "7C76697369746F722D626F6F74682D666163696E673D6669787C",
+            "note": "TyrsPatch registry slot 15: |visitor-booth-facing=fix|",
+            "superseded": [
+                "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
+            ]
+        }
+    ]
 }

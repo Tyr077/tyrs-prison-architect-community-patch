@@ -1,19 +1,33 @@
 {
-    "id":  "tweak-armed-guard-warnings",
-    "name":  "Armed guard warnings ignore overall staff morale",
-    "version":  "1.0.0",
-    "optional":  true,
-    "description":  "With Staff Needs on, an armed guard\u0027s chance to shout a warning before attacking no longer scales with the prison\u0027s overall staff morale. A guard whose own needs are neglected still attacks without warning.",
-    "game_build":  "Prison Architect 64-bit, Sunset Update (final)",
-    "sha256_original":  "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
-    "sha256_patched":  "04fb3bcce645c27852ed38030f30c666560b29542df76ceba7c35f54e342cca5",
-    "edits":  [
-                  {
-                      "va":  "0x1405D7DED",
-                      "offset":  6124013,
-                      "expect":  "7415",
-                      "replace":  "EB15",
-                      "note":  "guard combat step: skip the multiply of the warning chance by global staff morale (jz -\u003e jmp over it)"
-                  }
-              ]
+    "id": "tweak-armed-guard-warnings",
+    "name": "Armed guard warnings ignore overall staff morale",
+    "version": "1.0.1",
+    "optional": true,
+    "description": "With Staff Needs on, an armed guard's chance to shout a warning before attacking no longer scales with the prison's overall staff morale. A guard whose own needs are neglected still attacks without warning.",
+    "game_build": "Prison Architect 64-bit, Sunset Update (final)",
+    "sha256_original": "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
+    "sha256_patched": "b47b9b209a1065bcea90d1bdb365d86212d667231f9919212bad26d5ff73b5df",
+    "edits": [
+        {
+            "va": "0x1405D7DED",
+            "offset": 6124013,
+            "expect": "7415",
+            "replace": "EB15",
+            "note": "guard combat step: skip the multiply of the warning chance by global staff morale (jz -> jmp over it)"
+        },
+        {
+            "va": "0x140E8B470",
+            "offset": 14434416,
+            "expect": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+            "replace": "7C747765616B2D61726D65642D67756172642D7761726E696E67733D747765616B7C",
+            "note": "TyrsPatch registry slot 21: |tweak-armed-guard-warnings=tweak|",
+            "superseded": [
+                "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
+            ]
+        }
+    ],
+    "requires": [
+        "code-section",
+        "modapi-core"
+    ]
 }

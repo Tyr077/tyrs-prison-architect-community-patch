@@ -65,13 +65,14 @@ has not been checked yet.
 ## Changes
 
 - 1.0.0 (patch 1.16.0): first version.
+- 1.0.1 (patch 1.17.0): no change for mods (the patch's own detection entry moved).
 
 ## Status
 
 Tested in game on 2026-10-12 with a test mod on staff tiles: with the
 extension, staff have the table, effects can be read and set, 24 staff were
 saved tazed, and `TyrsPatch.Has` and `Tier` answered correctly; without it,
-`TyrsPatch` is `nil` and staff have no table. The full example above was run in
+staff have no table. The full example above was run in
 game on 2026-10-13: with the extension it tazed guards; without it, it tazed
 none and set its tooltip.
 

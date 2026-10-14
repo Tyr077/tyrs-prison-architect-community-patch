@@ -1,49 +1,60 @@
 {
-    "id":  "intake-route-categories",
-    "name":  "Intake routes that accept only some categories",
-    "version":  "1.0.0",
-    "requires":  [
-                     "code-section"
-                 ],
-    "description":  "A road, helipad or boat dock that accepts only some prisoner categories no longer leaves the prison closed to new inmates while cells stand empty. Every category you take still needs at least one route that accepts it.",
-    "game_build":  "Prison Architect 64-bit, Sunset Update (final)",
-    "sha256_original":  "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
-    "sha256_patched":  "8d9047a5bd2ac8fc96f50e0a64ba89366fe3fd72c0daebf12dba608ba93f9434",
-    "edits":  [
-                  {
-                      "va":  "0x140E89018",
-                      "offset":  14425112,
-                      "expect":  "CCCCCCCCCCCCCCCC",
-                      "replace":  "0000000000000000",
-                      "note":  "accepted-category pointer for the current filtered draw (0 = none)"
-                  },
-                  {
-                      "va":  "0x140E89410",
-                      "offset":  14426128,
-                      "expect":  "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
-                      "replace":  "4C8B0D01FCFFFF4D85C97448458B93A40200004585D27E3C498B939802000033C033C9833C11087508C744111800000000837C1114007411448B04114183F808770743803C01007522FFC04883C11C413BC27CCF4532C033C0413983A40200000F8EA6BF7DFFE952BF7DFF4532C0E94DBF7DFF",
-                      "note":  "queue scan: prefer the first queued category the current stop accepts"
-                  },
-                  {
-                      "va":  "0x140E894A0",
-                      "offset":  14426272,
-                      "expect":  "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
-                      "replace":  "488B074889056EFBFFFF4883EC28E8BDBE7DFF4883C42848C70556FBFFFF00000000C3",
-                      "note":  "spawn wrapper: publish the stop\u0027s accepted set around the queue draw"
-                  },
-                  {
-                      "va":  "0x1406653C2",
-                      "offset":  6703042,
-                      "expect":  "8BC6413983A40200007E4F",
-                      "replace":  "E949408200909090909090",
-                      "note":  "queue draw: scan for an accepted category before the original search"
-                  },
-                  {
-                      "va":  "0x140608A91",
-                      "offset":  6323857,
-                      "expect":  "E8DAC80500",
-                      "replace":  "E80A0A8800",
-                      "note":  "filtered spawner: draw through the wrapper"
-                  }
-              ]
+    "id": "intake-route-categories",
+    "name": "Intake routes that accept only some categories",
+    "version": "1.0.1",
+    "requires": [
+        "code-section",
+        "modapi-core"
+    ],
+    "description": "A road, helipad or boat dock that accepts only some prisoner categories no longer leaves the prison closed to new inmates while cells stand empty. Every category you take still needs at least one route that accepts it.",
+    "game_build": "Prison Architect 64-bit, Sunset Update (final)",
+    "sha256_original": "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
+    "sha256_patched": "036e509fb1fca0ad7d92e59d0256684874a7b5442c514ed722c77b2d79e414b2",
+    "edits": [
+        {
+            "va": "0x140E89018",
+            "offset": 14425112,
+            "expect": "CCCCCCCCCCCCCCCC",
+            "replace": "0000000000000000",
+            "note": "accepted-category pointer for the current filtered draw (0 = none)"
+        },
+        {
+            "va": "0x140E89410",
+            "offset": 14426128,
+            "expect": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+            "replace": "4C8B0D01FCFFFF4D85C97448458B93A40200004585D27E3C498B939802000033C033C9833C11087508C744111800000000837C1114007411448B04114183F808770743803C01007522FFC04883C11C413BC27CCF4532C033C0413983A40200000F8EA6BF7DFFE952BF7DFF4532C0E94DBF7DFF",
+            "note": "queue scan: prefer the first queued category the current stop accepts"
+        },
+        {
+            "va": "0x140E894A0",
+            "offset": 14426272,
+            "expect": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+            "replace": "488B074889056EFBFFFF4883EC28E8BDBE7DFF4883C42848C70556FBFFFF00000000C3",
+            "note": "spawn wrapper: publish the stop's accepted set around the queue draw"
+        },
+        {
+            "va": "0x1406653C2",
+            "offset": 6703042,
+            "expect": "8BC6413983A40200007E4F",
+            "replace": "E949408200909090909090",
+            "note": "queue draw: scan for an accepted category before the original search"
+        },
+        {
+            "va": "0x140608A91",
+            "offset": 6323857,
+            "expect": "E8DAC80500",
+            "replace": "E80A0A8800",
+            "note": "filtered spawner: draw through the wrapper"
+        },
+        {
+            "va": "0x140E8B230",
+            "offset": 14433840,
+            "expect": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+            "replace": "7C696E74616B652D726F7574652D63617465676F726965733D6669787C",
+            "note": "TyrsPatch registry slot 9: |intake-route-categories=fix|",
+            "superseded": [
+                "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
+            ]
+        }
+    ]
 }
