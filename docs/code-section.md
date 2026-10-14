@@ -10,7 +10,7 @@ It is 8 KiB since 2.0.0 (patcher 1.16.0); 1.0.0 was 4 KiB. A game file with the
 
 ## Allocation map
 
-Fixes: data area `+0x000..+0x0FF`, code `+0x100..+0xFFF`, next free code offset `+0xCA0`. Modding
+Fixes: data area `+0x000..+0x0FF`, code `+0x100..+0xFFF`, next free code offset `+0xD10`. Modding
 extensions: `+0x1000..+0x1FFF`, next free offset `+0x1550`. Every patch that uses the section must be listed
 here so ranges never overlap.
 
@@ -21,6 +21,7 @@ here so ranges never overlap.
 | `+0x008..+0x00F` | `0x140E89008` | tweak-staff-death-morale-decay | double 1440.0 |
 | `+0x010..+0x017` | `0x140E89010` | shop-front | neighbour offset table, 8 bytes |
 | `+0x018..+0x01F` | `0x140E89018` | intake-route-categories | pointer to the accepted-category bytes of the stop being loaded, 0 when none |
+| `+0x020..+0x023` | `0x140E89020` | visitor-spawn-tables (1.1.0) | visitor spawns so far this session, int32, starts 0 |
 | `+0x100..+0x166` | `0x140E89100` | tweak-staff-death-morale-decay | stub, 103 bytes |
 | `+0x170..+0x1C9` | `0x140E89170` | lua-status-effects | stub, 90 bytes |
 | `+0x1D0..+0x243` | `0x140E891D0` | exercise-grading | stub, 116 bytes |
@@ -45,6 +46,7 @@ here so ranges never overlap.
 | `+0xAF0..+0xB12` | `0x140E89AF0` | visitor-spawn-tables | skip-unpaired-table stub, 35 bytes |
 | `+0xB20..+0xB43` | `0x140E89B20` | disarmed-armed-guards (1.2.0) | held-item draw skip stub, 36 bytes; given back in 1.3.0, kept reserved |
 | `+0xB50..+0xC9F` | `0x140E89B50` | disarmed-armed-guards (1.2.0) | hand positions stub, 336 bytes; given back in 1.3.0, kept reserved |
+| `+0xCA0..+0xD0D` | `0x140E89CA0` | visitor-spawn-tables (1.1.0) | table-list rotation stub, 110 bytes |
 | `+0x1000..+0x107F` | `0x140E8A000` | modapi-core | Lua text, part 1 (`print = Game.DebugOut`, registry loop) |
 | `+0x1080..+0x127F` | `0x140E8A080` | modapi-core registry | 8 slots of `0x40`, written by the extensions; slot 0 status-effects-entities |
 | `+0x1280..+0x1303` | `0x140E8A280` | modapi-core | Lua text, part 2 (`TyrsPatch` table) |

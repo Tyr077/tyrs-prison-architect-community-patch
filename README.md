@@ -99,9 +99,10 @@ game.
 - **Visitors and civilians stuck at visitor doors.** Mentors, therapists
   and other visitors no longer wait forever at a single visitor
   door or gate. [Details](docs/visitor-door-access.md)
-- **Visits stop with an unusable visitor table.** One visitor table or booth that
-  no prisoner can be matched with, such as a booth facing an empty Protective
-  Custody sector, no longer stops visits in the whole prison.
+- **Visitors in every visitation room.** One visitor table or booth that no
+  prisoner can be matched with, such as a booth facing an empty Protective
+  Custody sector, no longer stops visits in the whole prison, and with several
+  visitation rooms every room gets visitors, not only one.
   [Details](docs/visitor-spawn-tables.md)
 - **Released prisoners behind revoked keycard doors.** When a keycard door with
   prisoner access revoked is the only way out, released prisoners call a guard to
