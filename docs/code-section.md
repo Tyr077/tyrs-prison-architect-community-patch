@@ -11,8 +11,8 @@ game file with a smaller section is grown in place, keeping what is in it.
 ## Allocation map
 
 Fixes: data area `+0x000..+0x0FF`, code `+0x100..+0xFFF`, next free code offset `+0xD30`, then the
-second fix code area `+0x3000..+0x3FFF` (free). Modding extensions: `+0x1000..+0x1FFF`, next free offset
-`+0x1550`. TyrsPatch core and registry: `+0x2000..+0x2FFF`. Every patch that uses the section must be
+second fix code area `+0x3000..+0x3FFF`, next free offset `+0x3480`. Modding extensions: `+0x1000..+0x1FFF`, next free offset
+`+0x19E0`. TyrsPatch core and registry: `+0x2000..+0x2FFF`. Every patch that uses the section must be
 listed here so ranges never overlap. Ranges marked reserved held code or text in an earlier release; they
 stay unused so older installs are still recognised.
 
@@ -33,16 +33,16 @@ stay unused so older installs are still recognised.
 | `+0x410..+0x482` | `0x140E89410` | intake-route-categories | queue scan stub, 115 bytes |
 | `+0x4A0..+0x4C2` | `0x140E894A0` | intake-route-categories | spawn wrapper, 35 bytes |
 | `+0x500..+0x523` | `0x140E89500` | visitor-booth-facing | pairing-check slot stub, 36 bytes |
-| `+0x530..+0x705` | `0x140E89530` | weapon-effects | effects stub, 470 bytes (constants at the end) |
-| `+0x710..+0x782` | `0x140E89710` | weapon-effects | burst-sound stub, 115 bytes |
+| `+0x530..+0x705` | `0x140E89530` | weapon-effects (1.0.x) | effects stub, 470 bytes; moved to `+0x3000` in 1.1.0, reserved |
+| `+0x710..+0x782` | `0x140E89710` | weapon-effects (1.0.x) | burst-sound stub, 115 bytes; moved to `+0x3260` in 1.1.0, reserved |
 | `+0x790..+0x7CC` | `0x140E89790` | pavilion-reload | reload stub, 61 bytes |
 | `+0x7D0..+0x7E2` | `0x140E897D0` | disarmed-armed-guards | weapon-drawn stub, 19 bytes |
 | `+0x7F0..+0x839` | `0x140E897F0` | escape-freefire-sectors | Freefire on stub, 74 bytes |
 | `+0x840..+0x87B` | `0x140E89840` | escape-freefire-sectors | Freefire off stub, 60 bytes |
-| `+0x880..+0x89B` | `0x140E89880` | full-auto-hold | Escape Mode stub, 28 bytes |
-| `+0x8A0..+0x8EC` | `0x140E898A0` | full-auto-hold | warden mode stub, 77 bytes (64 of code since 1.1.0, rest `CC`) |
+| `+0x880..+0x89B` | `0x140E89880` | full-auto-hold (1.1.x) | Escape Mode stub, 28 bytes; moved to `+0x3390` in 1.2.0, reserved |
+| `+0x8A0..+0x8EC` | `0x140E898A0` | full-auto-hold (1.0.0-1.1.x) | warden mode stub, 77 bytes; moved to `+0x3400` in 1.2.0, reserved |
 | `+0x8F0..+0x916` | `0x140E898F0` | full-auto-hold | warden held-frame refusal stub, 39 bytes |
-| `+0x920..+0x96A` | `0x140E89920` | weapon-firerate (2.0.0) | ReloadTimer-by-weapon stub, 75 bytes |
+| `+0x920..+0x96A` | `0x140E89920` | weapon-firerate (2.0.x) | ReloadTimer-by-weapon stub, 75 bytes; moved to `+0x3310` in 2.1.0, reserved |
 | `+0x970..+0xAA5` | `0x140E89970` | gunfire-surrender | area surrender stub, 310 bytes (4.0f constant at the end) |
 | `+0xAB0..+0xAE4` | `0x140E89AB0` | disarmed-armed-guards (1.1.0-1.2.0) | entity draw held-item stub, 53 bytes; given back in 1.3.0 (`CC`), kept reserved so older installs upgrade |
 | `+0xAF0..+0xB12` | `0x140E89AF0` | visitor-spawn-tables | skip-unpaired-table stub, 35 bytes |
@@ -54,9 +54,19 @@ stay unused so older installs are still recognised.
 | `+0x1080..+0x127F` | `0x140E8A080` | modapi-core 1.0.0 registry | 8 slots of `0x40`; slot 0 was status-effects-entities 1.0.0; reserved |
 | `+0x1280..+0x1303` | `0x140E8A280` | modapi-core 1.0.0 | Lua text, part 2; reserved |
 | `+0x1400..+0x1544` | `0x140E8A400` | status-effects-entities | RegisterLua stub, string helper, entity test for GiveStatusEffect (`+0x1520`) |
+| `+0x1560..+0x1574` | `0x140E8A560` | status-effects-entities (1.1.0) | target-scoring guard, 21 bytes |
+| `+0x1580..+0x15B7` | `0x140E8A580` | status-effects-entities (1.1.0) | effect lookup that refuses two effects on non-prisoners, 56 bytes |
+| `+0x1600..+0x1693` | `0x140E8A600` | weapon-effects-key | Equipment registrar stub that registers `Tyrs.WeaponEffects`, 148 bytes |
+| `+0x16C0..+0x16D2` | `0x140E8A6C0` | weapon-effects-key | key name, 19 bytes |
+| `+0x1700..+0x19DF` | `0x140E8A700` | weapon-effects-key | bitmask name table, 23 inline strings of `0x20` |
 | `+0x2000..+0x207F` | `0x140E8B000` | modapi-core (2.0.0) | Lua text, part 1 (`print = Game.DebugOut`, registry loop) |
 | `+0x2080..+0x2C7F` | `0x140E8B080` | registry | 64 slots of `0x30`, each written by its own patch (`scripts/build_registry.py`); slots below |
 | `+0x2C80..+0x2D03` | `0x140E8BC80` | modapi-core (2.0.0) | Lua text, part 2 (`TyrsPatch` table) |
+| `+0x3000..+0x3204` | `0x140E8C000` | weapon-effects (1.1.0) | effects stub by weapon flags, 517 bytes (constants at the end) |
+| `+0x3260..+0x32E8` | `0x140E8C260` | weapon-effects (1.1.0) | burst-sound stub, 137 bytes |
+| `+0x3310..+0x338B` | `0x140E8C310` | weapon-firerate (2.1.0) | ReloadTimer-by-weapon stub, 124 bytes |
+| `+0x3390..+0x33E7` | `0x140E8C390` | full-auto-hold (1.2.0) | Escape Mode stub, 88 bytes |
+| `+0x3400..+0x3473` | `0x140E8C400` | full-auto-hold (1.2.0) | warden mode stub, 116 bytes |
 
 ## Registry slots
 
@@ -78,6 +88,8 @@ take the next free slot.
 | 10 | keycard-door-path-cost | 23 | tweak-no-returning-prisoners |
 | 11 | keycard-door-released-prisoners | 24 | tweak-pc-shared-zones |
 | 12 | lua-status-effects | 25 | tweak-staff-death-morale-decay |
+| | | 26 | assigned-guard-jobs |
+| | | 27 | weapon-effects-key (`weapons.effects`) |
 
 ## Antivirus
 

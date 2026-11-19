@@ -20,6 +20,8 @@ After each shot a gun now waits:
 | Every other gun | 0.7 s |
 
 The weapon's `RechargeTime` from `materials.txt` is added on top, as before.
+A mod weapon gets 0.02 s if its `materials.txt` block asks for `FullAuto`
+([Weapon effects for mod weapons](weapon-effects-key.md)).
 
 ## Status
 

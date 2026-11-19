@@ -15,7 +15,8 @@ smoke, and automatic rifles play the firing sound at most every half second.
 
 Each shot from an assault rifle, SMG, the DLC modified assault rifle or a
 shotgun now adds its effects. Only what you see and hear changes. Damage, hit
-chance and fire rate are not affected.
+chance and fire rate are not affected. Mod weapons can ask for the same effects
+([Weapon effects for mod weapons](weapon-effects-key.md)).
 
 ## Status
 

@@ -1,0 +1,43 @@
+{
+    "id": "assigned-guard-jobs",
+    "name": "Assigned guards blocking solitary and treatment",
+    "version": "1.0.0",
+    "requires": [
+        "code-section",
+        "modapi-core"
+    ],
+    "description": "Prisoners with a guard assigned to them are taken to solitary and treated by doctors again; the assigned guard's watch no longer blocks those jobs.",
+    "game_build": "Prison Architect 64-bit, Sunset Update (final)",
+    "sha256_original": "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
+    "sha256_patched": "58aaa7cdf0df34522328680c5543ca8e858b5adab628c9d7aa5209206f176a60",
+    "edits": [
+        {
+            "va": "0x14079B9A0",
+            "offset": 7974304,
+            "expect": "448B9AC40000004183FBFF741D",
+            "replace": "837A201E7424448B9AC4000000",
+            "note": "PunishPrisoner job creator FUN_14079B940: a WatchOverPrisoner job no longer counts as an existing job on the prisoner"
+        },
+        {
+            "va": "0x14079BF00",
+            "offset": 7975680,
+            "expect": "448B9AC40000004183FBFF741D",
+            "replace": "837A201E7424448B9AC4000000",
+            "note": "HealPrisoner job creator FUN_14079BDF0: a WatchOverPrisoner job no longer counts as an existing job on the prisoner"
+        },
+        {
+            "va": "0x140612D15",
+            "offset": 6365461,
+            "expect": "7527",
+            "replace": "9090",
+            "note": "misconduct system FUN_140612A00: drop the any-job pre-check; the Punish creator makes the same test without the watch job"
+        },
+        {
+            "va": "0x140E8B560",
+            "offset": 14434656,
+            "expect": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+            "replace": "7C61737369676E65642D67756172642D6A6F62733D6669787C",
+            "note": "TyrsPatch registry slot 26: |assigned-guard-jobs=fix|"
+        }
+    ]
+}

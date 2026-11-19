@@ -1,17 +1,17 @@
 {
     "id": "status-effects-entities",
     "name": "Status effects on staff and other characters",
-    "version": "1.0.1",
+    "version": "1.1.0",
     "category": "modapi",
     "experimental": true,
     "requires": [
         "code-section",
         "modapi-core"
     ],
-    "description": "Mods can read and set status effects on staff, dogs, visitors and every other character, not just prisoners: obj.StatusEffects.<name> and Object.GiveStatusEffect. Detect with TyrsPatch.Has(\"status-effects.entities\").",
+    "description": "Mods can read and set status effects on staff, dogs, visitors and every other character, not just prisoners: obj.StatusEffects.<name>. Detect with TyrsPatch.Has(\"status-effects.entities\").",
     "game_build": "Prison Architect 64-bit, Sunset Update (final)",
     "sha256_original": "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
-    "sha256_patched": "ff3bdcb5f29b26361b45a6279bf3e450652dcb9df9f872d9351b0664ee374ccc",
+    "sha256_patched": "a50e3fc96b0b0ce75fcef2f1dce301bb236f9a0246998c7ec6849e8ce53ec42c",
     "edits": [
         {
             "va": "0x140E8A400",
@@ -217,12 +217,68 @@
             "note": "GiveStatusEffect executor: \"is a Prisoner\" (type 0x6D) -> \"is an entity\" (call pred; jnz to the same exit)"
         },
         {
+            "va": "0x140E8A560",
+            "offset": 14430560,
+            "expect": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+            "replace": "4885F60F840FBC6BFF498B8698010000E9D2BB6BFF",
+            "note": "target scoring: an entity that is not a prisoner is skipped where the game reads the prisoner field +0xA78 (virusdeadly / calamityflu carriers)",
+            "superseded": [
+                "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+                "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
+            ]
+        },
+        {
+            "va": "0x140546140",
+            "offset": 5526848,
+            "expect": "498B8698010000",
+            "replace": "E91B4494009090",
+            "note": "FUN_140545D50 disease time test routed through the non-prisoner guard",
+            "superseded": [
+                "498B8698010000",
+                "498B8698010000"
+            ]
+        },
+        {
+            "va": "0x140E8A580",
+            "offset": 14430592,
+            "expect": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+            "replace": "4883EC28E8D71C8AFF4883C4288B8F78FCFFFFEB104883EC28E8C21C8AFF4883C4288B4B4083F80D740583F819750883F96D740383C8FFC3",
+            "note": "effect lookup that refuses virusdeadly and calamityflu on anything but a prisoner (Lua setter and GiveStatusEffect entries)",
+            "superseded": [
+                "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+                "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
+            ]
+        },
+        {
+            "va": "0x14072DE04",
+            "offset": 7524868,
+            "expect": "E857E4FFFF",
+            "replace": "E877C77500",
+            "note": "StatusEffects Lua setter: effect name lookup through the refusal stub",
+            "superseded": [
+                "E857E4FFFF",
+                "E857E4FFFF"
+            ]
+        },
+        {
+            "va": "0x1401A6919",
+            "offset": 1727769,
+            "expect": "E842595800",
+            "replace": "E8773CCE00",
+            "note": "GiveStatusEffect executor: effect name lookup through the refusal stub",
+            "superseded": [
+                "E842595800",
+                "E842595800"
+            ]
+        },
+        {
             "va": "0x140E8A080",
             "offset": 14429312,
             "expect": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
             "replace": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
             "note": "modapi-core 1.0.0 registry slot, given back (the entry moved to the 2.0.0 registry)",
             "superseded": [
+                "",
                 "7C7374617475732D656666656374732E656E7469746965733D6578706572696D656E74616C7C"
             ]
         },
@@ -233,6 +289,7 @@
             "replace": "7C7374617475732D656666656374732E656E7469746965733D6578706572696D656E74616C7C",
             "note": "TyrsPatch registry slot 0: |status-effects.entities=experimental|",
             "superseded": [
+                "",
                 "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
             ]
         }

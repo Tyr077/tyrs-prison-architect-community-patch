@@ -17,7 +17,9 @@ both modes, at zombies too.
 
 Holding the button attacks whatever a click would, at the weapon's normal rate
 and using ammo as a click does. Holding it over something a click cannot attack
-does not repeat the "order failed" sound. Other weapons still need a click.
+does not repeat the "order failed" sound. Other weapons still need a click,
+except mod weapons that ask for `FullAuto`
+([Weapon effects for mod weapons](weapon-effects-key.md)).
 Guards and other characters you do not control are not affected.
 
 ## Notes

@@ -131,6 +131,9 @@ game.
 - **Hold to fire automatic weapons.** Holding the mouse button keeps assault
   rifles and SMGs firing in Warden Mode and Escape Mode, at zombies too.
   [Details](docs/full-auto-hold.md)
+- **Assigned guards blocking solitary and treatment.** Prisoners with a guard
+  assigned to them are taken to solitary and treated by doctors again.
+  [Details](docs/assigned-guard-jobs.md)
 
 ## Additional fixes
 
@@ -141,8 +144,8 @@ disarmed armed guards and hold to fire are core fixes now.
 
 ## Modding extensions
 
-New things for mod authors to use from Lua; they do nothing unless a mod uses
-them. They are experimental for now: **off by default**, and they may change
+New things for mod authors to use from Lua or data files; they do nothing unless
+a mod uses them. They are experimental for now: **off by default**, and they may change
 between releases. Turn them all on with the **Modding extensions** box in the
 patcher, or pass `--experimental` on the command line.
 
@@ -152,7 +155,12 @@ workaround for a bug the patch fixes.
 
 - **Status effects on staff and other characters** (experimental). Every
   character gets the `StatusEffects` table that only prisoners had, so a mod
-  can taze or sedate a guard. [Details](docs/status-effects-entities.md)
+  can set and read effects on a guard. Most effects change nothing in what
+  staff do. [Details](docs/status-effects-entities.md)
+- **Weapon effects for mod weapons** (experimental). A `materials.txt` key,
+  `Tyrs.WeaponEffects`, gives a mod's guns a muzzle flash, smoke, buckshot, a
+  burst sound or automatic fire, like the vanilla ones.
+  [Details](docs/weapon-effects-key.md)
 
 ## Optional tweaks
 

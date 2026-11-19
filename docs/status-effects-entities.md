@@ -53,19 +53,39 @@ function Update()
 end
 ```
 
-`Object.GiveStatusEffect` also accepts any character instead of only prisoners.
-It finds the character by its script name. Not tested in game.
+`virusdeadly` and `calamityflu` are refused on anything that is not a
+prisoner: setting them does nothing and they read back as 0 (see Limits).
 
 ## Limits
 
 The game stores and saves the effect on any character, but how a character
-reacts to an effect is the game's own code. Which effects change what staff do
-has not been checked yet.
+reacts to it is the game's own code. Each effect was set to 60 on guards,
+armed guards, doctors, workmen, dogs and visitors and watched for 90 game
+minutes next to untouched characters (2026-11-10):
+
+| effect | what happened |
+|---|---|
+| most effects | wears off in about 30 game minutes (2 per game minute); no change seen in what the character does |
+| `virus`, `StatusSwimming`, `StatusDrowning`, `StatusSmelly` | stays at the value you set; does not wear off |
+| `heatstroke` | the game clears it on staff within a few minutes; dogs keep it |
+| `infected` | the character is replaced straight away: guards, doctors and visitors became zombies; the workman, armed guard and dog were gone with no zombie in their place |
+| `virusdeadly`, `calamityflu` | refused on non-prisoners (they crashed the game) |
+
+"No change seen" means movement, damage, equipment and other effects looked
+the same as for the untouched characters. Tazed guards keep walking, for
+example. Each effect was tried on one character per type.
+
+`Object.GiveStatusEffect` cannot be used by mods: it does not exist in object
+scripts, and calling `Game.GiveStatusEffect` from `world.lua` crashes the game.
 
 ## Changes
 
 - 1.0.0 (patch 1.16.0): first version.
 - 1.0.1 (patch 1.17.0): no change for mods (the patch's own detection entry moved).
+- 1.1.0 (patch 1.18.0): giving a non-prisoner `virusdeadly` or `calamityflu`
+  crashed the game, and so did loading a save with such a character on a game
+  without the patch. Both effects are now refused on non-prisoners. Saves made
+  with 1.0.x that already contain such a character load again.
 
 ## Status
 
@@ -75,6 +95,11 @@ saved tazed, and `TyrsPatch.Has` and `Tier` answered correctly; without it,
 staff have no table. The full example above was run in
 game on 2026-10-13: with the extension it tazed guards; without it, it tazed
 none and set its tooltip.
+
+1.1.0 was tested in game on 2026-11-10 with all 27 effects on six character
+types: no crash, effects read back (the two refused ones read 0) and are kept
+in the save, a patched game reads them back after loading, and the unpatched
+game loads and plays the save.
 
 Patch: `patches/status-effects-entities.patch.json`. Uses the code section
 (`code-section.md`).

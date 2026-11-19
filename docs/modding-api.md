@@ -3,7 +3,7 @@
 Tyr's Community Patch gives mods a `TyrsPatch` table. With it a mod can check
 which modding extensions, bug fixes and tweaks are installed.
 
-**Modding extensions** give mod authors things the game's Lua API could not do
+**Modding extensions** give mod authors things the game's Lua API and data files could not do
 before. They do nothing unless a mod uses them. All extensions are
 **experimental** for now: off by default, and they may still change or be
 removed between releases. Stable extensions will come later. They will change
@@ -18,6 +18,7 @@ your mod has for a bug the patch fixes.
 | extension | id | tier | since | what it adds |
 |---|---|---|---|---|
 | [Status effects on staff and other characters](status-effects-entities.md) | `status-effects.entities` | experimental | 1.16.0 | a `StatusEffects` table on staff and every other character, like prisoners have |
+| [Weapon effects for mod weapons](weapon-effects-key.md) | `weapons.effects` | experimental | 1.18.0 | a `materials.txt` key that gives mod weapons a muzzle flash, smoke, buckshot, a burst sound and automatic fire |
 
 Each extension's page shows how to detect it and how to use it.
 
@@ -104,6 +105,7 @@ The id is the patch id from this table. Each page says what the fix changes.
 | id | kind | what it is |
 |---|---|---|
 | `alert-icons` | fix | [Alert icons with custom sprite-sheet mods](alert-icons.md) |
+| `assigned-guard-jobs` | fix | [Assigned guards blocking solitary and treatment](assigned-guard-jobs.md) |
 | `direction-save` | fix | [Prisoner and staff directions not saved](direction-save.md) |
 | `disarmed-armed-guards` | fix | [Disarmed armed guards can fight](disarmed-armed-guards.md) |
 | `escape-freefire-sectors` | fix | [Escape Mode Freefire with per-sector actions](escape-freefire-sectors.md) |
