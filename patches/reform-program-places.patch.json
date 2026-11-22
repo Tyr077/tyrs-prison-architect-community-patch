@@ -1,0 +1,36 @@
+{
+    "id": "reform-program-places",
+    "name": "Reform programs without equipment restart every session",
+    "version": "1.0.0",
+    "requires": [
+        "code-section",
+        "modapi-core"
+    ],
+    "description": "Flower Therapy and Three Strikes (and mod programs without equipment) no longer re-enrol their students before every session, so progress builds up over the sessions as in other programs.",
+    "game_build": "Prison Architect 64-bit, Sunset Update (final)",
+    "sha256_original": "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
+    "sha256_patched": "d2667bf3c7c4acc7f78a5410c48b915ff37af713139fe02abe215c5fca875ccf",
+    "edits": [
+        {
+            "va": "0x140E8C480",
+            "offset": 14438528,
+            "expect": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+            "replace": "448B75608B453485C07E223B057BC0F6FF7D1A48984869C0B80000004803050DBCF6FF837854007F04448B70244D8BC1488BD5E9812D85FF",
+            "note": "AutoAllocateStudents drop step: a program without Equipment uses its Places, as the refill does"
+        },
+        {
+            "va": "0x1406DF22F",
+            "offset": 7202351,
+            "expect": "448B75604D8BC1488BD5",
+            "replace": "E94CD27A009090909090",
+            "note": "FUN_1406DF140 MaxPlaces load routed through the places stub"
+        },
+        {
+            "va": "0x140E8B5F0",
+            "offset": 14434800,
+            "expect": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+            "replace": "7C7265666F726D2D70726F6772616D2D706C616365733D6669787C",
+            "note": "TyrsPatch registry slot 29: |reform-program-places=fix|"
+        }
+    ]
+}

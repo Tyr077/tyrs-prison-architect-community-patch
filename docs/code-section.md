@@ -11,7 +11,7 @@ game file with a smaller section is grown in place, keeping what is in it.
 ## Allocation map
 
 Fixes: data area `+0x000..+0x0FF`, code `+0x100..+0xFFF`, next free code offset `+0xD30`, then the
-second fix code area `+0x3000..+0x3FFF`, next free offset `+0x3480`. Modding extensions: `+0x1000..+0x1FFF`, next free offset
+second fix code area `+0x3000..+0x3FFF`, next free offset `+0x3610`. Modding extensions: `+0x1000..+0x1FFF`, next free offset
 `+0x19E0`. TyrsPatch core and registry: `+0x2000..+0x2FFF`. Every patch that uses the section must be
 listed here so ranges never overlap. Ranges marked reserved held code or text in an earlier release; they
 stay unused so older installs are still recognised.
@@ -43,7 +43,7 @@ stay unused so older installs are still recognised.
 | `+0x8A0..+0x8EC` | `0x140E898A0` | full-auto-hold (1.0.0-1.1.x) | warden mode stub, 77 bytes; moved to `+0x3400` in 1.2.0, reserved |
 | `+0x8F0..+0x916` | `0x140E898F0` | full-auto-hold | warden held-frame refusal stub, 39 bytes |
 | `+0x920..+0x96A` | `0x140E89920` | weapon-firerate (2.0.x) | ReloadTimer-by-weapon stub, 75 bytes; moved to `+0x3310` in 2.1.0, reserved |
-| `+0x970..+0xAA5` | `0x140E89970` | gunfire-surrender | area surrender stub, 310 bytes (4.0f constant at the end) |
+| `+0x970..+0xAA5` | `0x140E89970` | gunfire-surrender (1.0.x) | area surrender stub, 310 bytes; moved to `+0x34C0` in 1.1.0, reserved |
 | `+0xAB0..+0xAE4` | `0x140E89AB0` | disarmed-armed-guards (1.1.0-1.2.0) | entity draw held-item stub, 53 bytes; given back in 1.3.0 (`CC`), kept reserved so older installs upgrade |
 | `+0xAF0..+0xB12` | `0x140E89AF0` | visitor-spawn-tables | skip-unpaired-table stub, 35 bytes |
 | `+0xB20..+0xB43` | `0x140E89B20` | disarmed-armed-guards (1.2.0) | held-item draw skip stub, 36 bytes; given back in 1.3.0, kept reserved |
@@ -67,6 +67,8 @@ stay unused so older installs are still recognised.
 | `+0x3310..+0x338B` | `0x140E8C310` | weapon-firerate (2.1.0) | ReloadTimer-by-weapon stub, 124 bytes |
 | `+0x3390..+0x33E7` | `0x140E8C390` | full-auto-hold (1.2.0) | Escape Mode stub, 88 bytes |
 | `+0x3400..+0x3473` | `0x140E8C400` | full-auto-hold (1.2.0) | warden mode stub, 116 bytes |
+| `+0x3480..+0x34B7` | `0x140E8C480` | reform-program-places | AutoAllocateStudents places stub, 56 bytes |
+| `+0x34C0..+0x360A` | `0x140E8C4C0` | gunfire-surrender (1.1.0) | area surrender stub with the shooter check, 331 bytes (4.0f constant at the end) |
 
 ## Registry slots
 
@@ -90,6 +92,8 @@ take the next free slot.
 | 12 | lua-status-effects | 25 | tweak-staff-death-morale-decay |
 | | | 26 | assigned-guard-jobs |
 | | | 27 | weapon-effects-key (`weapons.effects`) |
+| | | 28 | available-guards-patrol |
+| | | 29 | reform-program-places |
 
 ## Antivirus
 

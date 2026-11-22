@@ -106,6 +106,7 @@ The id is the patch id from this table. Each page says what the fix changes.
 |---|---|---|
 | `alert-icons` | fix | [Alert icons with custom sprite-sheet mods](alert-icons.md) |
 | `assigned-guard-jobs` | fix | [Assigned guards blocking solitary and treatment](assigned-guard-jobs.md) |
+| `available-guards-patrol` | fix | [Patrolling guards counted as available](available-guards-patrol.md) |
 | `direction-save` | fix | [Prisoner and staff directions not saved](direction-save.md) |
 | `disarmed-armed-guards` | fix | [Disarmed armed guards can fight](disarmed-armed-guards.md) |
 | `escape-freefire-sectors` | fix | [Escape Mode Freefire with per-sector actions](escape-freefire-sectors.md) |
@@ -118,6 +119,7 @@ The id is the patch id from this table. Each page says what the fix changes.
 | `keycard-door-released-prisoners` | fix | [Released prisoners stuck behind revoked keycard doors](keycard-door-released-prisoners.md) |
 | `lua-status-effects` | fix | [Lua StatusEffects assignment](lua-status-effects.md) |
 | `pavilion-reload` | fix | [Armed guards reload in pavilions](pavilion-reload.md) |
+| `reform-program-places` | fix | [Reform programs without equipment restart every session](reform-program-places.md) |
 | `shop-front` | fix | [Shops usable from outside the shop](shop-front.md) |
 | `visitor-booth-facing` | fix | [Visitor booths facing up](visitor-booth-facing.md) |
 | `visitor-door-access` | fix | [Visitors and civilians stuck at visitor doors](visitor-door-access.md) |
