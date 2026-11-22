@@ -20,4 +20,8 @@ chance and fire rate are not affected. Mod weapons can ask for the same effects
 
 ## Status
 
-Not yet tested in game.
+Tested in game with armed guards in a riot. Without the fix every shot drew one
+tracer, with no smoke or muzzle flash. With it the shotgun fired 15 tracers and 5
+smoke puffs per shot, the assault rifle, SMG and modified assault rifle showed a
+muzzle flash on every shot, and the automatic rifles played the firing sound on
+fewer than every shot. The modified assault rifle fired only once in the test.

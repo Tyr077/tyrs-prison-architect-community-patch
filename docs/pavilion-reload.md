@@ -18,4 +18,6 @@ changes.
 
 ## Status
 
-Not yet tested in game.
+Tested in game with an armed guard in a Guard Pavilion shooting at zombies:
+without the fix it fired once and its reload time never went down; with it the
+same guard fired five times.

@@ -1,48 +1,31 @@
-Test build. Download the new `TyrsPAPatch.exe`, run it, click **Apply selection**. Your choices are kept.
+Stable release, the first since 1.5.0. It has every fix from the test builds since then. Existing users: download the new `TyrsPAPatch.exe`, run it, click **Apply selection**. Your choices are kept.
 
-## New in 1.19.0
+## New fixes since 1.5.0
 
-- **Reform programs without equipment restart every session.** Flower Therapy and Three Strikes took all their students off before every session and put them back on, which started their progress over. Students now stay on, their progress builds up over the sessions, and these programs pass prisoners like the others. Issue #5.
+- **Reform programs without equipment restart every session.** Flower Therapy and Three Strikes took all their students off before every session and put them back on, which started their progress over. Students now stay on and their progress builds up, so these programs pass prisoners like the others. Issue #5.
 - **Patrolling guards counted as available.** The top bar's available guards no longer include guards and armed guards on patrol, who only take jobs where they happen to walk. They still show under Patrolling in the tooltip. Issue #7.
-- **Bounty hunters set upon by prisoners.** Since the gunfire surrender fix, any shot except a prisoner's made nearby prisoners react, and prisoners can't surrender to a bounty hunter, so they attacked it instead, for example when bounty hunters shot at zombies. Now only shots by armed guards, soldiers and snipers make nearby prisoners react.
-
-Prisoners near gunfire surrender gets a small update for this: the patcher shows it as an older version until you click **Apply selection**.
-
-## Tested in game for this build
-
-- **Reform programs:** a Three Strikes student without the fix was taken off before the second session and lost their progress; with it the same student stayed for three sessions and their attendance kept growing. Only one prisoner could take part in the test prison, and Flower Therapy is not tested.
-- **Available guards:** without the fix the count included up to ten idle patrolling guards; with it they were left out in 62 of 63 checks. Armed guards on patrol are not tested.
-- **Bounty hunters:** on the reported save with zombies spawned next to the bounty hunters, prisoners reacted to bounty hunter shots 67 times with 1.18.0 and never with this build.
-- A game patched with 1.5.0, 1.15.0, 1.16.2, 1.17.0 or 1.18.0 upgrades to the same file as a fresh install, and every combination reverts to the original.
-
-Checked in earlier test builds: assigned guards and solitary, weapon effects for mod weapons, status effects on staff (crash fix), visitors wasted on prisoners with no family, fix detection for mods, visitors in every visitation room, modding extension detection and the docs' example scripts, bounty hunter trike rider (sprite-sheet fix), disarmed armed guards show the game's fists, shop front (on a player's save), intake with route-restricted categories, prisoners near gunfire surrender, fire rate (shotgun, automatic weapons, Escape Mode), staff death morale penalty fades (tweak).
-
-## Also new since 1.5.0
-
 - **Assigned guards blocking solitary and treatment.** A prisoner with a guard assigned to them is taken to solitary and treated like everyone else again.
-- **Weapon effects for mod weapons (modding extension, experimental).** A mod gun can ask for a muzzle flash, smoke, buckshot, a burst sound or automatic fire with the `materials.txt` key `Tyrs.WeaponEffects`. Mod authors: see `docs/weapon-effects-key.md`.
-- **Status effects on staff: crash fixed (modding extension).** `virusdeadly` and `calamityflu` are refused on non-prisoners, which crashed the game before.
-- **Visitors wasted on prisoners with no family.** Visitors are no longer matched with prisoners who have no family and can never be visited, so they are not used up for nothing.
-- **Mods can check which fixes are installed.** Besides the modding extensions, a mod can ask whether a bug fix or tweak is installed, for example to leave out its own workaround. Mod authors: see `docs/modding-api.md`.
-- **Visitors in every visitation room.** With several visitation rooms, the room the game checked first could take nearly all visitors while the others got few or none. Each new visitor now starts looking one visitor table further along, so every room gets its turn, and one visitor table that no prisoner can be matched with no longer stops visits in the whole prison. Issue #4.
-- **One box for modding extensions.** The patcher shows **Modding extensions** as a single box that turns all of them on or off, instead of a list. Still off by default.
-- **Guide for mod authors.** `docs/modding-api.md` lists the extensions and shows how a mod checks for one and how to tell players what to tick. Each extension has its own page with a full example script.
-- **More sprite-sheet pictures fixed.** With a mod that brings its own sprite sheet, the rider on the bounty hunters' trike (Undead DLC) and object pictures in panels such as the staff report drew the wrong part of the sheet, like the alert icons did. The alert icons fix now covers them too. Disable the Alert Icons Partial Fix mod if you use it.
-- **Modding extensions (experimental, off by default).** New things for mod authors to use from Lua; they do nothing unless a mod uses them. **Status effects on staff and other characters** gives every character the `StatusEffects` table that only prisoners had, so a mod can taze or sedate a guard. The extra code needs a larger code section in the game file (8 KiB instead of 4 KiB) for everyone; a game patched by an older release is upgraded in place.
-- **Core fixes and additional fixes.** The patcher's groups are now **Core fixes** (bugs in the game's code) and **Additional fixes** (things the game never finished, or that players expect it to do). Disarmed armed guards can fight and hold to fire automatic weapons are core fixes now, so `--fixes-only` on the command line includes them. Additional fixes is empty for now, so the patcher doesn't show it.
-- **Disarmed armed guards can fight.** An armed guard who loses its shotgun fights with its fists while Freefire is on or it is badly hurt, instead of not fighting back, and shows the game's own fists.
-- **Hold to fire automatic weapons.** Holding the mouse button keeps assault rifles and SMGs firing in Warden Mode and Escape Mode, at zombies too.
+- **Visitors in every visitation room.** With several visitation rooms, every room now gets its turn, and one visitor table that no prisoner can be matched with no longer stops visits in the whole prison. Issue #4.
+- **Visitors wasted on prisoners with no family.** Visitors are no longer matched with prisoners who can never be visited.
 - **Shops without prisoners inside.** Prisoners buy from the other side of the shop front, so the shop can face a hallway and stay off limits to customers.
-- **Prisoners near gunfire surrender.** A guard's gunshot makes up to ten prisoners within four squares react as if they were the target.
-- **Fire rate revised.** Automatic weapons fire in a steady stream, while a revolver fires every 1.2 s and a shotgun every 1.7 s.
-- **Muzzle flash, smoke and buckshot.** Assault rifles and SMGs show a muzzle flash and the shotgun fires a spread of buckshot with smoke again.
-- **Armed guards reload in pavilions.** An armed guard manning a Guard Pavilion keeps firing instead of stopping after one shot.
-- **Escape Mode Freefire with per-sector actions.** The warden's Freefire order after your gang kills someone now reaches the guards with "Search and Actions per sector" on.
 - **Intake with route-restricted categories.** A helipad, boat dock or road that accepts only some prisoner categories no longer ends with *Your prison is closed to new inmates* while cells stand empty.
 - **Visitor booths facing up.** Booths work with the prisoners' side at the top. Rotate the booth to face your prisoners while placing it.
 - **Exercise equipment counts for grading.** Time on gym equipment counts towards the Health grade's exercise score.
-- **Armed guard warnings is an optional tweak.** It was a fix in the 1.10.0 test build.
-- **Patcher window rebuilt.** Items are grouped, your selections are remembered, and **Apply selection** also removes anything you untick.
+- **Prisoners near gunfire surrender.** A shot by an armed guard, soldier or sniper makes up to ten prisoners within four squares react as if they were the target. Bounty hunters' shots don't count, so prisoners no longer turn on them (a problem in the 1.11 to 1.18 test builds).
+- **Armed guards reload in pavilions.** An armed guard manning a Guard Pavilion keeps firing instead of stopping after one shot.
+- **Disarmed armed guards can fight.** An armed guard who loses its shotgun fights with its fists while Freefire is on or it is badly hurt, and shows the game's own fists.
+- **Muzzle flash, smoke and buckshot.** Assault rifles and SMGs show a muzzle flash and the shotgun fires a spread of buckshot with smoke again.
+- **Fire rate revised.** Automatic weapons fire in a steady stream, while a revolver fires every 1.2 s and a shotgun every 1.7 s.
+- **Hold to fire automatic weapons.** Holding the mouse button keeps assault rifles and SMGs firing in Warden Mode and Escape Mode.
+- **Escape Mode Freefire with per-sector actions.** The warden's Freefire order after your gang kills someone now reaches the guards with "Search and Actions per sector" on.
+- **More sprite-sheet pictures fixed.** With a mod that brings its own sprite sheet, the bounty hunters' trike rider (Undead DLC) and object pictures in panels such as the staff report now draw correctly, like the alert icons. Disable the Alert Icons Partial Fix mod if you use it.
+
+## Patcher and modding
+
+- **Patcher window rebuilt.** Fixes and tweaks are grouped, your selections are remembered, and **Apply selection** also removes anything you untick.
+- **Modding extensions (experimental, off by default).** New things for mod authors to use from Lua, behind one **Modding extensions** box. They do nothing unless a mod uses them: status effects on staff and other characters, and weapon effects for mod weapons (the `materials.txt` key `Tyrs.WeaponEffects`).
+- **Mods can check which fixes are installed**, for example to leave out their own workaround.
+- Mod authors: start at `docs/modding-api.md`.
 
 ## Also included
 
@@ -68,24 +51,20 @@ Checked in earlier test builds: assigned guards and solitary, weapon effects for
 
 If Steam verifies game files, run the patcher again. **Revert to original** undoes everything at any time. The patcher works on the final version of the game only; if you have the 2018 beta branch selected in Steam, switch back first.
 
-## Please test
+## Not yet confirmed in game
 
-These need someone playing; they can't be checked automatically:
+Every fix has been tested in game, but these parts of them haven't been seen yet. Reports welcome:
 
-- **Reform programs:** Flower Therapy and Three Strikes with several students. Students should stay on from one session to the next, and their pass chance on the rap sheet should keep rising.
-- **Available guards:** the top bar's guard count should leave out guards and armed guards on patrol, while the tooltip still lists them under Patrolling.
-- **Gunfire near bounty hunters:** prisoners near bounty hunters shooting (at zombies, for example) should no longer turn on them. Shots by armed guards should still make nearby prisoners react.
-- **Assigned guards:** a prisoner with an assigned guard who gets hurt in their cell should be treated by a doctor, and searches should still happen.
-- **Mod weapons:** with a `FullAuto` mod gun, holding the left button keeps it firing in Warden Mode and Escape Mode.
-- **Sprite-sheet pictures:** with a mod that brings its own sprite sheet, the staff report and the security menu's prisoner pictures draw correctly, for bounty hunters too.
-- **Visits:** with several visitation rooms, does every room get visitors? If visits had stopped in your prison, do they start again?
-- **Hold to fire:** in Warden Mode with an assault rifle or SMG, hold the left button on a target; it keeps firing. Also in Escape Mode with the assault rifle, SMG and modified assault rifle. Pistols and shotguns still need a click per shot.
-- **Escape Mode Freefire:** in Escape Mode with "Search and Actions per sector" on, kill someone with your gang. Guards should switch to lethal force, and back after about three minutes.
-- **Guard pavilion:** an armed guard stationed in a Guard Pavilion should keep firing during a riot or Freefire.
-- **Weapon effects:** muzzle flash on assault rifles and SMGs, smoke and buckshot on shotguns.
-- **Mod authors:** try the weapon key on your own guns and the status effects extension on staff, using the guide in `docs/modding-api.md`.
+- Flower Therapy (Three Strikes is tested).
+- Armed guards on patrol left out of the guard count.
+- Doctors treating a prisoner who has an assigned guard (solitary is tested).
+- Whether more prisoners end up surrendering during a riot (that they react is tested).
+- Visitor booths facing other ways than up.
+- Hold to fire with the modified assault rifle, and at zombies.
+- The sprite-sheet fix's panel pictures (staff report, security menu) on screen; the trike rider is tested.
+- Holding the button with a `FullAuto` mod weapon (modding extension).
 
-Each fix has a short page under `docs/`; mod authors start at `docs/modding-api.md`.
+Each fix has a short page under `docs/`.
 
 ## Credits
 

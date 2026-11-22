@@ -29,4 +29,7 @@ waits two seconds between shots.
 
 ## Status
 
-Not yet tested in game.
+Tested in game. In Warden Mode during a riot, holding the button kept the SMG
+firing, and the pistol still fired once per click. In Escape Mode it kept the
+SMG and the assault rifle firing. The modified assault rifle and shooting at
+zombies are not tested.

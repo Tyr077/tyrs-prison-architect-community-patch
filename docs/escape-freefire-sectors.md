@@ -18,4 +18,6 @@ on. The Freefire buttons in normal play are not affected.
 
 ## Status
 
-Not yet tested in game.
+Tested in game with per-sector actions on: after the gang killed someone,
+Freefire was set in every sector and the guards switched to lethal force. When
+the order ran out, Freefire was cleared in every sector again.
