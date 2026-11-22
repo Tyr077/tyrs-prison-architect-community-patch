@@ -19,6 +19,7 @@ your mod has for a bug the patch fixes.
 |---|---|---|---|---|
 | [Status effects on staff and other characters](status-effects-entities.md) | `status-effects.entities` | experimental | 1.16.0 | a `StatusEffects` table on staff and every other character, like prisoners have |
 | [Weapon effects for mod weapons](weapon-effects-key.md) | `weapons.effects` | experimental | 1.18.0 | a `materials.txt` key that gives mod weapons a muzzle flash, smoke, buckshot, a burst sound and automatic fire |
+| [Hand colours for characters](hand-colours.md) | `hands.colours` | experimental | 1.20.0 | a `materials.txt` block that sets the hand colour of any character type, per sprite variant |
 
 Each extension's page shows how to detect it and how to use it.
 

@@ -12,7 +12,7 @@ game file with a smaller section is grown in place, keeping what is in it.
 
 Fixes: data area `+0x000..+0x0FF`, code `+0x100..+0xFFF`, next free code offset `+0xD30`, then the
 second fix code area `+0x3000..+0x3FFF`, next free offset `+0x3610`. Modding extensions: `+0x1000..+0x1FFF`, next free offset
-`+0x19E0`. TyrsPatch core and registry: `+0x2000..+0x2FFF`. Every patch that uses the section must be
+`+0x1E50`. TyrsPatch core and registry: `+0x2000..+0x2FFF`. Every patch that uses the section must be
 listed here so ranges never overlap. Ranges marked reserved held code or text in an earlier release; they
 stay unused so older installs are still recognised.
 
@@ -59,6 +59,11 @@ stay unused so older installs are still recognised.
 | `+0x1600..+0x1693` | `0x140E8A600` | weapon-effects-key | Equipment registrar stub that registers `Tyrs.WeaponEffects`, 148 bytes |
 | `+0x16C0..+0x16D2` | `0x140E8A6C0` | weapon-effects-key | key name, 19 bytes |
 | `+0x1700..+0x19DF` | `0x140E8A700` | weapon-effects-key | bitmask name table, 23 inline strings of `0x20` |
+| `+0x1A00..+0x1A0F` | `0x140E8AA00` | hand-colours | data: table pointer (heap), entry count, object count at the last block |
+| `+0x1A10..+0x1AEF` | `0x140E8AA10` | hand-colours | block and key names, two `debug.txt` messages |
+| `+0x1B00..+0x1B5F` | `0x140E8AB00` | hand-colours | colour join lookup, 96 bytes |
+| `+0x1B80..+0x1BF7` | `0x140E8AB80` | hand-colours | hands-up pose lookup, 120 bytes |
+| `+0x1C00..+0x1E40` | `0x140E8AC00` | hand-colours | `HandColours` reader in front of the loader's Callout check, 577 bytes |
 | `+0x2000..+0x207F` | `0x140E8B000` | modapi-core (2.0.0) | Lua text, part 1 (`print = Game.DebugOut`, registry loop) |
 | `+0x2080..+0x2C7F` | `0x140E8B080` | registry | 64 slots of `0x30`, each written by its own patch (`scripts/build_registry.py`); slots below |
 | `+0x2C80..+0x2D03` | `0x140E8BC80` | modapi-core (2.0.0) | Lua text, part 2 (`TyrsPatch` table) |
@@ -94,6 +99,7 @@ take the next free slot.
 | | | 27 | weapon-effects-key (`weapons.effects`) |
 | | | 28 | available-guards-patrol |
 | | | 29 | reform-program-places |
+| | | 30 | hand-colours (`hands.colours`) |
 
 ## Antivirus
 

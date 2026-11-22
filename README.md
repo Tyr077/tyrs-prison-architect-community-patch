@@ -168,6 +168,10 @@ workaround for a bug the patch fixes.
   `Tyrs.WeaponEffects`, gives a mod's guns a muzzle flash, smoke, buckshot, a
   burst sound or automatic fire, like the vanilla ones.
   [Details](docs/weapon-effects-key.md)
+- **Hand colours for characters** (experimental). A `materials.txt` block,
+  `HandColours`, sets the hand colour of any character type per sprite variant,
+  so mod characters and redrawn staff get hands that match their sprites.
+  [Details](docs/hand-colours.md)
 
 ## Optional tweaks
 
