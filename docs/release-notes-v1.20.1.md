@@ -30,7 +30,7 @@ If Steam verifies game files, run the patcher again. **Revert to original** undo
 
 ## Checksums (SHA-256)
 
-- `TyrsPAPatch.exe`: `PENDING`
+- `TyrsPAPatch.exe`: `567645eff77ec522cf9848e9a8df1cecdf280e81d157b6b6f31f6a3d6f4a862c`
 - Original `Prison Architect64.exe` this patch targets: `cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9`
 - `Prison Architect64.exe` with the twenty-three core fixes (the default, and `--fixes-only`): `ebdba2bf0c3516303eb79cf567ef688732910778df912b6f30ea9de02dee14db`
 - `Prison Architect64.exe` with the core fixes and all five tweaks: `fd470d1ef9252e3ed5b954a3a82e042ab68d762bf878a29dd3a992346a86ffaf`
