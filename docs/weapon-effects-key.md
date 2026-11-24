@@ -26,6 +26,13 @@ The vanilla Shotgun has `Buckshot` and `Smoke`, and the AssaultRifle,
 SubMachineGun and ModifiedAssaultRifle have `MuzzleFlash`, `BurstSound` and
 `FullAuto`, unless your mod redefines them with the key.
 
+On a vanilla weapon you redefine, any `Tyrs.WeaponEffects` line replaces its
+built-in effects with exactly the names you list. For example, a
+SubMachineGun with only `MuzzleFlash` keeps the flash and loses `BurstSound`
+and `FullAuto`. `None` on its own gives no effects. The order of the lines
+doesn't matter, and `None` isn't needed in front of other names. Only `None`
+on a vanilla weapon has been tested in game; the rest is from the code.
+
 ## Detect it
 
 Nothing to set up in `materials.txt`: a game without the extension ignores the

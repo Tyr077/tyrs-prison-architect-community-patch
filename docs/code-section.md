@@ -11,8 +11,8 @@ game file with a smaller section is grown in place, keeping what is in it.
 ## Allocation map
 
 Fixes: data area `+0x000..+0x0FF`, code `+0x100..+0xFFF`, next free code offset `+0xD30`, then the
-second fix code area `+0x3000..+0x3FFF`, next free offset `+0x3610`. Modding extensions: `+0x1000..+0x1FFF`, next free offset
-`+0x1E50`. TyrsPatch core and registry: `+0x2000..+0x2FFF`. Every patch that uses the section must be
+second fix code area `+0x3000..+0x3FFF`, next free offset `+0x3650`. Modding extensions: `+0x1000..+0x1FFF`, next free offset
+`+0x1F80`. TyrsPatch core and registry: `+0x2000..+0x2FFF`. Every patch that uses the section must be
 listed here so ranges never overlap. Ranges marked reserved held code or text in an earlier release; they
 stay unused so older installs are still recognised.
 
@@ -63,7 +63,8 @@ stay unused so older installs are still recognised.
 | `+0x1A10..+0x1AEF` | `0x140E8AA10` | hand-colours | block and key names, two `debug.txt` messages |
 | `+0x1B00..+0x1B5F` | `0x140E8AB00` | hand-colours | colour join lookup, 96 bytes |
 | `+0x1B80..+0x1BF7` | `0x140E8AB80` | hand-colours | hands-up pose lookup, 120 bytes |
-| `+0x1C00..+0x1E40` | `0x140E8AC00` | hand-colours | `HandColours` reader in front of the loader's Callout check, 577 bytes |
+| `+0x1C00..+0x1E85` | `0x140E8AC00` | hand-colours | `HandColours` reader in front of the loader's Callout check, 646 bytes (577 in 1.0.0) |
+| `+0x1F00..+0x1F7C` | `0x140E8AF00` | hand-colours (1.1.0) | `debug.txt` message for a skipped lower block |
 | `+0x2000..+0x207F` | `0x140E8B000` | modapi-core (2.0.0) | Lua text, part 1 (`print = Game.DebugOut`, registry loop) |
 | `+0x2080..+0x2C7F` | `0x140E8B080` | registry | 64 slots of `0x30`, each written by its own patch (`scripts/build_registry.py`); slots below |
 | `+0x2C80..+0x2D03` | `0x140E8BC80` | modapi-core (2.0.0) | Lua text, part 2 (`TyrsPatch` table) |
@@ -74,6 +75,7 @@ stay unused so older installs are still recognised.
 | `+0x3400..+0x3473` | `0x140E8C400` | full-auto-hold (1.2.0) | warden mode stub, 116 bytes |
 | `+0x3480..+0x34B7` | `0x140E8C480` | reform-program-places | AutoAllocateStudents places stub, 56 bytes |
 | `+0x34C0..+0x360A` | `0x140E8C4C0` | gunfire-surrender (1.1.0) | area surrender stub with the shooter check, 331 bytes (4.0f constant at the end) |
+| `+0x3610..+0x3645` | `0x140E8C610` | available-guards-patrol (1.1.0) | available counter: incapacitated or in the Warden Mode squad, 54 bytes |
 
 ## Registry slots
 

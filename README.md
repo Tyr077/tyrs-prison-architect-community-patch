@@ -135,8 +135,8 @@ game.
   assigned to them are taken to solitary and treated by doctors again.
   [Details](docs/assigned-guard-jobs.md)
 - **Patrolling guards counted as available.** The top bar's available guards no
-  longer include guards on patrol, who only take jobs where they are walking.
-  Issue #7. [Details](docs/available-guards-patrol.md)
+  longer include guards, armed guards and dog handlers on patrol, snipers in
+  their towers, or the warden's squad in Warden Mode. Issue #7. [Details](docs/available-guards-patrol.md)
 - **Reform programs without equipment restart every session.** Flower Therapy and
   Three Strikes keep their students between sessions, so their progress builds up
   and they pass prisoners as other programs do. Issue #5.

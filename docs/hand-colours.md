@@ -30,8 +30,10 @@ One block per object:
 
 - `Object` names the character type (`Name` in its `Object` block).
 - Each `Colour` line is one sprite variant (`SubType`), in order: the first line
-  is SubType 0, the next SubType 1, and so on. A type has as many variants as
-  its `SpriteVariants`.
+  is SubType 0, the next SubType 1, and so on. `SpriteVariants` sets the
+  variants a new character is given; a type can have more sprites than that,
+  used by scripts. Lines past `SpriteVariants` are kept for those (not tested
+  in game).
 - `All` covers every variant that has no `Colour` line of its own.
 
 Colours are written `0xAARRGGBB`. For example, these bright colours are easy
@@ -61,12 +63,14 @@ from the list below and change the lines you need. A mod that adds variants
 ## Rules
 
 - Put the block **after** the `Object` it names: in the same file below it, or
-  in a mod that loads later. Vanilla objects can be named anywhere. A block
-  naming an object that isn't defined yet is skipped, with a line in
+  in a mod lower in the mod list. Vanilla objects can be named anywhere. A
+  block naming an object that isn't defined yet is skipped, with a line in
   `debug.txt`.
-- When several blocks name the same object (from different mods, say), the
-  later one wins for each variant it sets. A `Colour` line for a variant beats
-  an `All` line.
+- When several blocks name the same object, the first one read wins as a
+  whole, as with the game's own `Object` definitions: the mod highest in the
+  mod list wins, and within one file the earlier block. The other blocks for
+  that object are skipped, each with a line in `debug.txt`.
+- Within a block, a `Colour` line for a variant beats an `All` line.
 - A line whose value isn't a colour is skipped with no message, but it still
   takes its variant's place, so the lines after it keep their variants.
 - Write colours as `0xAARRGGBB`. A plain number only works up to `2147483647`.
@@ -190,6 +194,9 @@ the list is read from the game's code.
 ## Changes
 
 - 1.0.0 (patch 1.20.0): first version.
+- 1.1.0: when several blocks name the same object, the first one read (the mod
+  highest in the list) wins as a whole, as for the game's own definitions.
+  1.0.0 let a later block override it variant by variant.
 
 ## Status
 
@@ -200,6 +207,11 @@ unparsable first line, prisoners had their block's colour, also with their hands
 up, and a block naming an unknown object and one without an `Object` line were
 each reported in `debug.txt`. Without the extension the blocks were ignored and
 hands kept the game's colours.
+
+1.1.0, tested in game on 2026-11-23 with a second mod below the first, naming
+Guard and ArmedGuard again: the first mod's colours were drawn for every
+variant, none of the second mod's, and `debug.txt` had a line for each of
+its two skipped blocks.
 
 Patch: `patches/hand-colours.patch.json`. Uses the code section
 (`code-section.md`).

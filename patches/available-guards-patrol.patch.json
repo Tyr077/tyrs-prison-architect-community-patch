@@ -1,15 +1,15 @@
 {
     "id": "available-guards-patrol",
     "name": "Patrolling guards counted as available",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "requires": [
         "code-section",
         "modapi-core"
     ],
-    "description": "The top bar's available guards no longer include guards and armed guards on patrol, who only take jobs where they are walking.",
+    "description": "The top bar's available guards no longer include guards, armed guards and dog handlers on patrol, snipers in their towers, or the warden's squad in Warden Mode.",
     "game_build": "Prison Architect 64-bit, Sunset Update (final)",
     "sha256_original": "cc460fc435f2af4b1165f32cadde62b7943890ec8c9b2994e9f120830b2de1d9",
-    "sha256_patched": "adc789760e6bf7df8ee31ee4e0fe37a7323d648c074eb011576f94c0603e4d8c",
+    "sha256_patched": "a8c48fa52d63b5e51f2edd1552847568aed9c388dfbaaa4798a712305591d4b7",
     "edits": [
         {
             "va": "0x1407BBBED",
@@ -38,6 +38,136 @@
             "expect": "83BB24030000FF7409",
             "replace": "80BB900B000000752D",
             "note": "world update FUN_1407BC880, ArmedGuard: a patrolling armed guard is not counted as available"
+        },
+        {
+            "va": "0x140E8C610",
+            "offset": 14438928,
+            "expect": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+            "replace": "4883EC2848894C2420E8B26E6BFF84C0751F488B542420488B0DD2B2ECFF488B89980100004881C198430000E82F6F8DFF4883C428C3",
+            "note": "available counter: incapacitated, or a member of the Warden Mode squad",
+            "superseded": [
+                "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
+            ]
+        },
+        {
+            "va": "0x1407BBC89",
+            "offset": 8106121,
+            "expect": "83BB24030000FF7409",
+            "replace": "80BB900B000000752D",
+            "note": "world update FUN_1407BB360, DogHandler: a patrolling dog handler is not counted as available",
+            "superseded": [
+                "83BB24030000FF7409"
+            ]
+        },
+        {
+            "va": "0x1407BBCDA",
+            "offset": 8106202,
+            "expect": "83BB24030000FF7409",
+            "replace": "80BB6E00000000752D",
+            "note": "world update FUN_1407BB360, Sniper: a sniper in a tower is not counted as available",
+            "superseded": [
+                "83BB24030000FF7409"
+            ]
+        },
+        {
+            "va": "0x1407BBC02",
+            "offset": 8105986,
+            "expect": "E8C978D8FF",
+            "replace": "E8090A6D00",
+            "note": "world update FUN_1407BB360, Guard: a warden's squad member is not counted as available",
+            "superseded": [
+                "E8C978D8FF"
+            ]
+        },
+        {
+            "va": "0x1407BBC50",
+            "offset": 8106064,
+            "expect": "E87B78D8FF",
+            "replace": "E8BB096D00",
+            "note": "world update FUN_1407BB360, ArmedGuard: a warden's squad member is not counted as available",
+            "superseded": [
+                "E87B78D8FF"
+            ]
+        },
+        {
+            "va": "0x1407BBC9E",
+            "offset": 8106142,
+            "expect": "E82D78D8FF",
+            "replace": "E86D096D00",
+            "note": "world update FUN_1407BB360, DogHandler: a warden's squad member is not counted as available",
+            "superseded": [
+                "E82D78D8FF"
+            ]
+        },
+        {
+            "va": "0x1407BBCEF",
+            "offset": 8106223,
+            "expect": "E8DC77D8FF",
+            "replace": "E81C096D00",
+            "note": "world update FUN_1407BB360, Sniper: a warden's squad member is not counted as available",
+            "superseded": [
+                "E8DC77D8FF"
+            ]
+        },
+        {
+            "va": "0x1407BCC4D",
+            "offset": 8110157,
+            "expect": "83BB24030000FF7409",
+            "replace": "80BB900B000000752D",
+            "note": "world update FUN_1407BC880, DogHandler: a patrolling dog handler is not counted as available",
+            "superseded": [
+                "83BB24030000FF7409"
+            ]
+        },
+        {
+            "va": "0x1407BCC9E",
+            "offset": 8110238,
+            "expect": "83BB24030000FF7409",
+            "replace": "80BB6E00000000752D",
+            "note": "world update FUN_1407BC880, Sniper: a sniper in a tower is not counted as available",
+            "superseded": [
+                "83BB24030000FF7409"
+            ]
+        },
+        {
+            "va": "0x1407BCBC6",
+            "offset": 8110022,
+            "expect": "E80569D8FF",
+            "replace": "E845FA6C00",
+            "note": "world update FUN_1407BC880, Guard: a warden's squad member is not counted as available",
+            "superseded": [
+                "E80569D8FF"
+            ]
+        },
+        {
+            "va": "0x1407BCC14",
+            "offset": 8110100,
+            "expect": "E8B768D8FF",
+            "replace": "E8F7F96C00",
+            "note": "world update FUN_1407BC880, ArmedGuard: a warden's squad member is not counted as available",
+            "superseded": [
+                "E8B768D8FF"
+            ]
+        },
+        {
+            "va": "0x1407BCC62",
+            "offset": 8110178,
+            "expect": "E86968D8FF",
+            "replace": "E8A9F96C00",
+            "note": "world update FUN_1407BC880, DogHandler: a warden's squad member is not counted as available",
+            "superseded": [
+                "E86968D8FF"
+            ]
+        },
+        {
+            "va": "0x1407BCCB3",
+            "offset": 8110259,
+            "expect": "E81868D8FF",
+            "replace": "E858F96C00",
+            "note": "world update FUN_1407BC880, Sniper: a warden's squad member is not counted as available",
+            "superseded": [
+                "E81868D8FF"
+            ]
         },
         {
             "va": "0x140E8B5C0",
